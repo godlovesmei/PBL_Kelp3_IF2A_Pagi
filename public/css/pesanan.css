@@ -1,0 +1,384 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Belleza&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* Navbar container */
+.navbar {
+    background-color: #f4e8d9 !important;
+    /* Warna latar belakang navbar */
+    padding: 10px 20px;
+    /* Padding di dalam navbar */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Shadow ringan */
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Branding bagian (judul dan subtitle) */
+.navbar .branding {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar .branding .title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 28px;
+    margin: 0;
+}
+
+.navbar .branding .subtitle {
+    font-family: 'Belleza', sans-serif;
+    font-size: 20px;
+    margin: 0;
+    padding-left: 130px;
+}
+
+/* Navbar-toggler untuk layar kecil */
+.navbar .navbar-toggler {
+    border-color: transparent;
+    /* Menghilangkan border default */
+}
+
+/* Tombol logout */
+.navbar .icon .btn {
+    background-color: #F44336;
+    /* Warna latar tombol logout */
+    color: #FFF;
+    /* Warna teks putih */
+    padding: 5px 15px;
+    /* Padding di tombol */
+    border-radius: 5px;
+    /* Membuat sudut tombol melengkung */
+}
+
+/* Hover effect pada tombol logout */
+.navbar .icon .btn:hover {
+    background-color: #d32f2f;
+    /* Warna lebih gelap saat hover */
+}
+
+/* Tampil di layar kecil, navbar penuh */
+@media (max-width: 991px) {
+    .navbar .branding .subtitle {
+        padding-left: 0;
+    }
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #f4e8d9;
+    height: 100vh;
+    position: fixed;
+    top: 30;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 70px;
+}
+
+.sidebar h1 {
+    text-align: center;
+    font-family: 'Georgia', serif;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #000;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 5px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.sidebar a i {
+    font-size: 18px;
+}
+
+.sidebar a:hover {
+    background-color: #e6d0ba;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.content h2 {
+    margin-bottom: 20px;
+    margin-left: 5px;
+}
+
+h2 i.fas {
+    margin-right: 10px;
+    /* Atur jarak antara ikon dan teks */
+    margin-top: 60px;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #f4e8d9;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.tab:hover {
+    background-color: #d3b794;
+}
+
+.tab.active {
+    background-color: #d3b794;
+    color: #fff;
+    font-weight: bold;
+}
+
+
+/* TABEL */
+.table-wrapper {
+    overflow-x: auto;
+    /* Agar tabel bisa scroll horizontal */
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+th,
+td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.table th {
+    background-color: #f4e8d9;
+}
+
+tr {
+    min-height: 50px;
+    /* Tinggi baris seragam */
+}
+
+td img {
+    border-radius: 5px;
+    /* Membuat gambar sedikit membulat */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Menambah bayangan */
+    object-fit: cover;
+}
+
+td div {
+    display: flex;
+    align-items: center;
+    /* Menjaga agar gambar dan teks sejajar secara vertikal */
+    gap: 10px;
+    /* Memberikan jarak antara gambar dan teks */
+}
+
+td span {
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.2;
+}
+
+/* BUTTONS */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-buttons .btn {
+    margin: 0;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-sizing: border-box; /* Pastikan padding tidak merusak ukuran */
+}
+
+.btn.print {
+    background-color: #4CAF50;
+    color: #fff;
+    align-items: center;
+}
+
+.btn.confirm {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.btn.reject {
+    background-color: #2196F3; /* Biru untuk Reject */
+    color: #fff;
+}
+
+/* Tambahkan layout vertikal */
+.action-buttons-vertical {
+    display: flex !important; /* Pastikan flex diterapkan */
+    flex-direction: column !important; /* Susun elemen secara vertikal */
+    align-items: flex-start !important; /* Rata kiri */
+    gap: 10px !important; /* Jarak antar tombol */
+}
+
+.action-buttons-vertical .btn {
+    width: auto !important; /* Pastikan tombol tidak melebar penuh */
+    text-align: center !important;
+}
+
+
+/* MODAL */
+.modal {
+    display: none; /* Modal default-nya disembunyikan */
+    position: fixed; 
+    z-index: 1200; /* Pastikan berada di atas elemen lainnya */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay transparan */
+}
+
+/* Kontainer isi modal */
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Lebar modal */
+    border-radius: 10px; /* Membuat sudut melengkung */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation-name: fadeIn; /* Animasi muncul */
+    animation-duration: 0.3s;
+}
+
+/* Tombol konfirmasi dan batal */
+.modal-content .btn {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Tombol konfirmasi */
+.modal-content .btn.confirm {
+    background-color: #4CAF50; /* Hijau */
+    color: white;
+}
+
+/* Tombol batal */
+.modal-content .btn.cancel {
+    background-color: #f44336; /* Merah */
+    color: white;
+}
+
+/* Animasi untuk modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* Media Queries */
+@media (min-width: 992px) {
+    .navbar .branding {
+        flex-grow: 1;
+    }
+
+    .navbar .branding .subtitle {
+        margin-left: auto;
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .content {
+        margin-left: 200px;
+        padding: 15px;
+    }
+
+    .table th,
+    .table td {
+        font-size: 14px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .tabs {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .table {
+        font-size: 12px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        /* Kurangi padding pada layar kecil */
+    }
+
+    .action-buttons .btn {
+        padding: 4px 8px;
+        /* Sesuaikan ukuran tombol */
+    }
+}

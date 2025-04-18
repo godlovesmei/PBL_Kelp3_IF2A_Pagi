@@ -1,0 +1,95 @@
+/* Import Google Fonts and Font Awesome */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Belleza&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* Warna Utama */
+:root {
+    --primary-color: #2c3e50; /* Biru Navy */
+    --secondary-color: #34495e; /* Biru Abu-Abu Tua */
+    --accent-color: #ecf0f1; /* Abu-Abu Muda */
+    --highlight-color: #e74c3c; /* Merah Lembut */
+    --text-color: #34495e; /* Abu-Abu Tua */
+    --bg-light-color: #f7f9fb; /* Latar Belakang Putih Lembut */
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--bg-light-color);
+    border-bottom: 1px solid #ddd;
+    color: var(--text-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.navbar .branding .title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 28px;
+    color: var(--primary-color);
+}
+
+.navbar .branding .subtitle {
+    font-family: 'Belleza', sans-serif;
+    font-size: 16px;
+    color: #7f8c8d;
+}
+
+.navbar .icon .btn {
+    background-color: var(--highlight-color);
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar .icon .btn:hover {
+    background-color: #c0392b;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar a {
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 15px;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Main Content */
+.content {
+    margin-left: 260px;
+    padding: 20px;
+    background-color: var(--bg-light-color);
+    min-height: 100vh;
+}
+
+/* Responsivitas */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .content {
+        margin-left: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,659 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    background-color: #fff9f1;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.top-bar {
+    position: sticky;
+    top: 0; /* Pastikan tetap di atas */
+    z-index: 1300; /* Menjaga agar tetap di atas elemen lainnya */
+    background-color: #fff9f1;
+    padding: 10px 30px; /* Penyesuaian padding */
+}
+
+.top-bar-wrapper {
+    overflow: visible;
+    position: relative; /* Untuk menghindari gangguan sticky */
+}
+
+.site-name {
+    font-family: "Great Vibes", cursive;
+    font-size: 2.5rem;
+    text-align: left;
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+.tagline {
+    font-family: "Belleza", sans-serif;
+    font-size: 1.75rem;
+    margin-top: 20px;
+    margin-bottom: -5px;
+    position: relative;
+    left: -85px;
+}
+
+/*Navbar*/
+.navbar {
+    background-color: #fff9f1;
+    margin-left: 30px;
+    margin-right: 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+}
+
+.nav-link {
+    color: rgb(0, 0, 0) !important;
+    margin: 0 30px;
+    position: relative;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: rgb(0, 0, 0) !important;
+}
+
+.nav-link:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px; 
+    background: black; 
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    transform: scaleX(0); 
+    transition: transform 0.3s ease; 
+}
+
+.nav-link:hover:after,
+.nav-link.active:after {
+    transform: scaleX(1); 
+}
+
+ul.nav {
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+}
+
+.me-4 {
+    color: black;
+    text-decoration: none;
+}
+
+.me-4:hover{
+    color: black;
+    text-decoration: none;
+}
+
+.bi-bag{
+    color: black;
+    text-decoration: none;
+    margin-right: 20px;
+    font-size: 1.2rem;
+}
+
+.bi-bag:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-toggler {
+    top: 15px;
+    right: 20px;
+    z-index: 1050;
+    border: none; /* Hilangkan border */
+    background: none; /* Hilangkan background */
+    margin-left: auto;
+    padding-left: 10px;
+}
+
+.navbar .d-flex {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Style untuk menu dropdown */
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.user-icon {
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    display: none;
+    z-index: 10;
+}
+
+.dropdown-menu li {
+    padding: 10px 20px;
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    font-size: 14px;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f1f1f1;
+}
+
+/* Menampilkan dropdown saat user-icon dihover */
+.user-menu:hover .dropdown-menu {
+    display: block;
+}
+
+
+/*Search bar*/
+.d-flex {
+    position: relative; 
+}
+
+.bi-search {
+    font-size: 1.2rem;
+    color: black;
+    margin-right: 10px;
+}
+
+.search-container {
+    flex-grow: 1;
+    max-width: 350px; /* agar search bar tidak terlalu lebar */
+    padding: 5px 35px; /* jarak samping atas */
+}
+
+/* Aturan untuk input */
+.form-control {
+    border: none; 
+    background-color: #fff9f1; 
+    outline: none; 
+    padding-left: 10px; 
+    padding-bottom: 5px; 
+    transition: border-bottom 0.3s ease; 
+    color: black; 
+    border-bottom: 2px solid transparent; 
+}
+
+.form-control::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+        margin-left: 0;
+    }
+
+    .site-name, .tagline {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .tagline {
+        left: 0;
+    }
+
+    .navbar {
+        max-width: 710px; /* Ukuran lebih kecil pada layar kecil */
+    }
+
+    .navbar-toggler {
+        position: absolute;
+        top: 10px; /* Jarak dari atas */
+        right: 10px; /* Jarak dari kanan */
+        z-index: 1050;
+        color: black;
+        text-decoration: none;
+    }
+
+    /* Menjaga jarak antara tombol toggler dan ikon cart */
+    .navbar .d-flex {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .navbar-collapse {
+        position: relative;
+    }
+
+    /* Ikon keranjang tetap di posisi semula jika navbar tidak collapse */
+    .navbar-collapse.show .cart-icon {
+        position: relative;
+        margin-right: 0;
+    }
+
+    /* Jaga jarak antar elemen pada navbar */
+    .navbar .d-flex a, .navbar .d-flex i {
+        margin-right: 15px; /* Jarak antar elemen di sebelah kanan */
+    }
+
+}
+
+/* Aturan untuk layar kecil */
+@media (max-width: 1000px) {
+    .search-container {
+        display: flex; /* Gunakan flexbox */
+        flex-direction: column; /* Elemen ditumpuk secara vertikal */
+        align-items: center; /* Pusatkan secara horizontal */
+        justify-content: flex-start; /* Posisi tetap di atas */
+        margin: -5px auto; /* Jarak atas dan posisi di tengah horizontal */
+        width: 100%; /* Lebar penuh container */
+        max-width: 600px; /* Maksimal lebar container */
+    }
+
+    .search-container input {
+        width: 100%; /* Input meluas sepenuhnya */
+        max-width: 500px; /* Batas lebar maksimal input */
+    }
+
+    .search-container button {
+        width: auto; /* Tombol tetap auto */
+        margin-top: 1px; /* Tambahkan jarak vertikal dengan input */
+    }
+}
+
+
+
+
+
+
+/* SHOP */
+/* Container Utama */
+.shop-container {
+    display: flex;
+    flex-wrap: nowrap; /* Elemen tidak akan berpindah ke baris baru */
+    background-color: #fff9f1;
+    width: 100%; /* Pastikan container mengambil seluruh lebar */
+    align-items: flex-start; /* Agar konten sejajar ke atas */
+}
+
+/* Sidebar Kategori */
+.sidebar {
+    position: relative; /* Tidak lagi fixed */
+    width: 25%; /* Sidebar mengambil 75% lebar layar */
+    height: 100%; /* Tinggi penuh untuk sidebar */
+    background: #fff9f1;
+    z-index: 1; /* Pastikan tidak menutupi elemen lain */
+    padding: 20px; /* Jarak di dalam sidebar */
+    overflow-y: auto; /* Gulir jika konten terlalu panjang */
+    display: none; /* Sembunyikan sidebar awalnya */
+    margin-left: 25px
+}
+
+.sidebar.shown {
+    display: block; /* Tampilkan sidebar ketika ikon filter diklik */
+}
+
+.sidebar h4 {
+    font-family: "Belleza", sans-serif;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: left;
+    margin-top: 0px; /* Jarak di bawah ikon filter */
+    margin-bottom: 10px;
+    white-space: nowrap; /* Mencegah teks terpecah ke baris berikutnya */
+    margin: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    display: block; /* Memastikan klik area pada seluruh elemen */
+    padding: 5px 0;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: underline;
+    color: #73644f;
+}
+
+/* Grid Produk */
+.product-grid {
+    flex: 0.8; /* Produk grid mengambil 80% dari lebar container */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adaptasi ukuran produk */
+    gap: 20px; /* Spasi antar produk */
+    padding-left: 10px;
+}
+
+/* Produk Item */
+.product-item {
+    padding: 20px;
+    background: #fff9f1;
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Konten diatur secara vertikal */
+    justify-content: space-between; /* Spasi antar elemen internal */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animasi hover */
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1; /* Memastikan proporsional */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.product-item h5 {
+    font-family: "Belleza", sans-serif;
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+    margin: 10px 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-item p {
+    font-family: "Belleza", sans-serif;
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Kontrol Kuantitas */
+.quantity-control {
+    display: flex; /* Menggunakan Flexbox untuk pengaturan */
+    align-items: center; /* Menyelaraskan tombol secara vertikal */
+    border: 1px solid #73644f; /* Border di luar */
+    border-radius: 5px; /* Sudut membulat */
+    width: 100%; /* Menggunakan 100% lebar dari .product-item */
+}
+
+.btn-quantity {
+    background-color: #fff9f1; /* Warna latar belakang tombol */
+    border: none; /* Menghilangkan border pada tombol */
+    color: #333; /* Warna teks */
+    font-size: 1rem; /* Ukuran font untuk tombol */
+    padding: 0; /* Menghilangkan padding untuk mengatur posisi teks */
+    cursor: pointer; /* Pointer saat hover */
+    flex: 1; /* Membuat tombol menyesuaikan lebar */
+    height: 28px; /* Atur tinggi tombol sesuai kebutuhan Anda */
+    line-height: 28px;
+    font-family: "Belleza", sans-serif;
+}
+
+/* Tampilan angka */
+.quantity {
+    font-size: 1.2rem; /* Ukuran font untuk angka */
+    padding: 0 10px; /* Ruang di kiri dan kanan */
+}
+
+/* Tombol "Add to Cart" */
+.btn-add-to-cart {
+    background-color: #fff9f1; /* Warna latar belakang tombol */
+    border: 1px solid #73644f; /* Border di luar */
+    color: #333; /* Warna teks */
+    border-radius: 5px; /* Sudut membulat */
+    padding: 0; /* Menghilangkan padding untuk mengatur posisi teks */
+    font-size: 1.2rem; /* Ukuran font */
+    width: 100%; /* Menggunakan 100% lebar dari .product-item */
+    margin-top: 10px; /* Jarak atas dari kontrol kuantitas */
+    text-align: center; /* Rata tengah teks */
+    cursor: pointer; /* Pointer saat hover */
+    height: 30px; /* Atur tinggi tombol sesuai kebutuhan Anda */
+    line-height: 30px;
+    font-family: "Belleza", sans-serif;
+}
+
+.btn-add-to-cart:hover,
+.btn-quantity:hover {
+    background-color: #f0f0f0; /* Warna saat hover */
+}
+
+/* Tombol Filter */
+.filter-button {
+    position: relative; /* Sesuaikan posisinya */
+    margin-bottom: 10px; /* Jarak di bawah ikon filter */
+    top: -25px; /* Sesuaikan dengan tinggi navbar sticky */
+    left: 10px; /* Tempatkan di sisi kiri */
+    z-index: 1050; /* Pastikan berada di atas elemen lain */
+    background-color: #fff9f1; /* Warna latar belakang (opsional) */
+    border-radius: 50%; /* Tambahkan bentuk lingkaran */
+    padding: 10px; /* Jarak dalam */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambahkan bayangan */
+    font-size: 1.5rem; /* Ukuran ikon */
+    cursor: pointer; /* Menunjukkan elemen bisa diklik */
+}
+
+
+
+.filter-button:hover {
+    color: #73644f;
+}
+
+#sidebar {
+    transition: transform 0.3s ease-in-out; /* Animasi transisi */
+}
+
+.hidden {
+    transform: translateX(-100%); /* Sembunyikan sidebar */
+}
+
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 75%;
+        height: 100%;
+        background: #fff9f1;
+        z-index: 1000;
+        transform: translateX(-100%);
+        margin-top: 130px; /* Beri jarak dari atas untuk berada di bawah ikon filter */
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+
+    }
+
+    .shop-container {
+        flex-wrap: wrap;
+        margin-top: -30px;
+    }
+
+    .sidebar.shown {
+        transform: translateX(0); /* Tampilkan sidebar */
+    }
+
+    .filter-button {
+        display: block; /* Pastikan tombol filter terlihat */
+    }
+}
+
+/* Tampilkan sidebar di layar besar */
+@media (min-width: 768px) {
+    .sidebar {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: auto; /* Gunakan ukuran normal */
+        height: auto;
+        transform: none; /* Tidak ada animasi */
+    }
+
+    .sidebar.shown {
+        transform: none; /* Tampilkan langsung tanpa animasi */
+    }
+
+    .filter-button {
+        display: none; /* Sembunyikan tombol filter */
+    }
+}
+
+
+/* FOOTER */
+footer {
+    background-color: #d5e6db;
+    padding: 40px 0;
+    font-family: "Belleza", sans-serif;
+    margin-top: auto;
+}
+
+/* Footer Container */
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+    gap: 10px;
+}
+
+/* Footer Left */
+.footer-left {
+    flex: 1;
+    text-align: left;
+    padding-right: 10px;
+    padding-left: 30px
+}
+
+.footer-left h2 {
+    font-size: 40px;
+    margin-bottom: 5px;
+}
+
+.footer-left p {
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+.footer-left .copyright {
+    color: #6c6969;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Footer Middle */
+.footer-middle {
+    flex: 0.9;
+    border-left: 1px solid black;
+    padding-left: 40px;
+    padding-right: 10px;
+}
+
+.footer-middle ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-middle ul li {
+    margin: 5px 0;
+}
+
+.footer-middle ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.footer-middle ul li a:hover {
+    text-decoration: underline;
+    padding-left: 5px;
+}
+
+/* Footer Right */
+.footer-right {
+    flex: 0.6;
+    padding-right: 10px;
+}
+
+.footer-right ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-right ul li {
+    margin: 2px 0;
+}
+
+.footer-right ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.footer-right ul li a:hover {
+    text-decoration: underline;
+    padding-left: 5px;
+}
+
+/* Query untuk Footer agar tetap responsif */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-left,
+    .footer-middle,
+    .footer-right {
+        padding: 0;
+        margin-bottom: 20px;
+        border-left: none;
+    }
+}
