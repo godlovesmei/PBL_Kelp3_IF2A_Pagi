@@ -15,7 +15,7 @@
 
 <!-- Header -->
 <div class="w-full">
-  <img src="{{ asset('images/navbar.jpg') }}" alt="PT Honda Prospect Motor" class="w-full h-auto object-cover" />
+  <img src="{{ asset('images/navbar.jpg') }}" alt="PT Honda Prospect Mobil" class="w-full h-auto object-cover" />
 </div>
 
 <header class="py-24 px-6 bg-gradient-to-r from-white via-white to-rose-100 text-center" data-aos="fade-down">
