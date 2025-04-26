@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller; // <- ini wajib
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('customer.home');
+        $user = Auth::guard('customer')->user(); // bisa null kalau belum login
+        return view('customer.home', compact('user'));
     }
 }

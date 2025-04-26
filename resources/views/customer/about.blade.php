@@ -14,7 +14,7 @@
 @section('content')
 
 <!-- Header -->
-<div class="w-full">
+<div class="min-h-screen flex flex-col pt-[80px]">
   <img src="{{ asset('images/navbar.jpg') }}" alt="PT Honda Prospect Motor" class="w-full h-auto object-cover" />
 </div>
 

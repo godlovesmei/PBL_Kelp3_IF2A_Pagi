@@ -31,7 +31,7 @@ class CustomerAuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('customer.dashboard')->with('success', 'Registration successful!');
+        return redirect()->route('customer.login')->with('success', 'Registration successful!');
     }
 
     public function showLoginForm()
@@ -40,24 +40,27 @@ class CustomerAuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string|min:6',
+    ]);
 
-        if (Auth::guard('customer')->attempt($credentials)) {
-            return redirect()->route('customer.dashboard');
-        }
-
-        return back()->with('error', 'Invalid email or password');
+    if (Auth::guard('customer')->attempt($credentials)) {
+        $request->session()->regenerate();
+        return redirect()->route('customer.home'); // atau 'customer.home' kalau mau ke /home
     }
 
-    public function logout()
-    {
-        Auth::guard('customer')->logout();
-        return redirect()->route('customer.login');
-    }
+    return back()->with('error', 'Invalid email or password');
+}
+
+public function logout(Request $request)
+{
+    Auth::guard('customer')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect()->route('customer.login');
+}
 
     public function showForgotPasswordForm()
     {

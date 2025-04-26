@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Car;
 
 class ShopController extends Controller
 {
     public function index()
     {
-        return view('customer.shop');
+        $cars = Car::with('colors')->get(); // Ambil semua mobil beserta warnanya
+
+        return view('customer.shop', compact('cars'));
     }
 }
+

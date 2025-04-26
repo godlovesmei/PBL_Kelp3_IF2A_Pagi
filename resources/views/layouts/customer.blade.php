@@ -11,12 +11,12 @@
     @stack('styles') <!-- Tambahkan ini untuk memuat CSS khusus per halaman -->
 </head>
 
-<body class="bg-[#f2f2f2] text-gray-900 flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen bg-white text-gray-900">
     {{-- Navbar --}}
     @include('partials.navbar')
 
     {{-- Main content --}}
-    <main class="min-h-screen">
+    <main class="flex-1">
         @yield('content')
     </main>
 
@@ -24,5 +24,4 @@
     @include('partials.footer')
     @stack('scripts') <!-- Tambahkan ini untuk memuat JS khusus per halaman -->
 </body>
-
 </html>

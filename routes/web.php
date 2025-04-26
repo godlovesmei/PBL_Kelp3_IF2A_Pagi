@@ -7,12 +7,18 @@ use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\ShopController;
 use App\Http\Controllers\Customer\AboutController;
 use App\Http\Controllers\Customer\ContactController;
+use App\Http\Controllers\Customer\ProfileController;
+use App\Http\Controllers\Customer\WishlistController;
+use App\Http\Middleware\AuthenticateCustomer;
 
-
+// ✅ Halaman publik (tanpa login pun bisa akses)
 Route::get('/home', [HomeController::class, 'index'])->name('customer.home');
 Route::get('/shop', [ShopController::class, 'index'])->name('customer.shop');
 Route::get('/about', [AboutController::class, 'index'])->name('customer.about');
 Route::get('/contact', [ContactController::class, 'index'])->name('customer.contact');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist');
+
+
 
 // Memanggil route tambahan
 require __DIR__.'/customer.php';
