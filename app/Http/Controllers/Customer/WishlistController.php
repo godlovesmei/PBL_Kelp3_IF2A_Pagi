@@ -10,27 +10,26 @@ use App\Models\Car;
 
 class WishlistController extends Controller
 {
-    // Halaman wishlist
+    // Tampilkan halaman wishlist
     public function index()
     {
-        if (Auth::guard('customer')->check()) {
-            $user = Auth::guard('customer')->user();
-            $wishlists = Wishlist::where('customer_id', $user->id)->with('car')->get();
+        $user = Auth::guard('customer')->user();
 
-            return view('customer.wishlist', [
-                'wishlists' => $wishlists, // Gunakan nama variabel plural untuk konsistensi
-                'showModal' => false, // Tidak perlu munculkan modal
-            ]);
+        if ($user) {
+            $wishlists = Wishlist::where('customer_id', $user->id)
+                ->with('car')
+                ->get();
+            
+            $showModal = false;
+        } else {
+            $wishlists = collect(); // Selalu Collection, bukan array kosong
+            $showModal = true;
         }
 
-        // Belum login
-        return view('customer.wishlist', [
-            'wishlists' => [], // Variabel kosong saat belum login
-            'showModal' => true, // Munculkan modal login dari Blade
-        ]);
+        return view('customer.wishlist', compact('wishlists', 'showModal'));
     }
 
-    // Tambah item ke wishlist
+    // Tambahkan item ke wishlist
     public function store(Request $request)
     {
         $customer = Auth::guard('customer')->user();
@@ -39,39 +38,35 @@ class WishlistController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'You need to log in to add items to your wishlist.',
-            ], 401); // Jika belum login, return 401
+            ], 401);
         }
 
-        // Validasi input
         $request->validate([
             'car_id' => 'required|exists:cars,id',
         ]);
 
         $carId = $request->car_id;
 
-        // Cek apakah mobil sudah ada di wishlist
         $exists = Wishlist::where('customer_id', $customer->id)
             ->where('car_id', $carId)
             ->exists();
 
-        if (!$exists) {
-            // Jika belum ada, tambahkan ke wishlist
-            Wishlist::create([
-                'customer_id' => $customer->id,
-                'car_id' => $carId,
-            ]);
-
+        if ($exists) {
             return response()->json([
-                'success' => true,
-                'message' => 'Car successfully added to your wishlist.',
-            ]);
+                'success' => false,
+                'message' => 'This car is already in your wishlist.',
+            ], 400);
         }
 
-        // Jika mobil sudah ada di wishlist
+        Wishlist::create([
+            'customer_id' => $customer->id,
+            'car_id' => $carId,
+        ]);
+
         return response()->json([
-            'success' => false,
-            'message' => 'This car is already in your wishlist.',
-        ], 400);
+            'success' => true,
+            'message' => 'Car successfully added to your wishlist.',
+        ]);
     }
 
     // Hapus item dari wishlist
@@ -80,19 +75,18 @@ class WishlistController extends Controller
         $customer = Auth::guard('customer')->user();
 
         if (!$customer) {
-            return redirect()->route('customer.login'); // Arahkan ke login jika belum login
+            return redirect()->route('customer.login');
         }
 
-        // Cari wishlist berdasarkan customer_id dan car_id
         $wishlist = Wishlist::where('customer_id', $customer->id)
             ->where('car_id', $id)
             ->first();
 
         if ($wishlist) {
-            $wishlist->delete(); // Hapus item wishlist
-            return redirect()->back()->with('success', 'Item removed from wishlist.');
+            $wishlist->delete();
+            return redirect()->back()->with('success', 'Item successfully removed from wishlist.');
         }
 
-        return redirect()->back()->with('error', 'The car you are trying to remove is not in your wishlist.');
+        return redirect()->back()->with('error', 'The car you are trying to remove is not found in your wishlist.');
     }
-}
+} 

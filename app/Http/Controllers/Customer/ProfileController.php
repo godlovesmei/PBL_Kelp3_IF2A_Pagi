@@ -13,22 +13,23 @@ class ProfileController extends Controller
     public function show()
     {
         // Ambil data customer yang sedang login
-        $customer = Auth::guard('customer')->user(); // Menggunakan guard 'customer'
-        return view('customer.profile', compact('customer')); // Pastikan file Blade ada di `resources/views/customer/profile.blade.php`
+        $customer = Auth::user(); // Menggunakan guard default 'web'
+
+        return view('customer.profile', compact('customer'));
     }
 
     // Memperbarui data profil
     public function update(Request $request)
     {
         // Ambil data customer yang sedang login
-        $customer = Auth::guard('customer')->user();
+        $customer = Auth::user();
 
         // Validasi input
         $request->validate([
             'name' => 'required|string|max:100',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
-            'photo' => 'nullable|image|max:2048', // Maksimal ukuran foto 2MB
+            'photo' => 'nullable|image|max:2048',
         ]);
 
         // Update foto jika diupload

@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Constants\RoleConstant;
 
 class AuthenticateCustomer
 {
@@ -15,20 +15,22 @@ class AuthenticateCustomer
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
-    {
-        // Periksa apakah user sudah login menggunakan guard 'customer'
-        if (!Auth::guard('customer')->check()) {
-            // Jika request ekspektasi JSON (misalnya dari API), return JSON error
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'Unauthorized'], 401);
-            }
-
-            // Jika bukan JSON, redirect ke halaman login
-            return redirect()->route('customer.login');
+    public function handle($request, Closure $next)
+{
+    if (Auth::check()) {
+        if (Auth::user()->role_id == RoleConstant::CUSTOMER) {
+            return $next($request);
         }
 
-        // Lanjutkan request jika user sudah login
-        return $next($request);
+        \Log::info('User does not have customer role.', [
+            'user_id' => Auth::user()->id,
+            'role_id' => Auth::user()->role_id,
+        ]);
+    } else {
+        \Log::info('User is not authenticated.');
     }
+
+    // Redirect jika pengguna bukan customer
+    return redirect()->route('login')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+}
 }

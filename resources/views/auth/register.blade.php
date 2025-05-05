@@ -1,49 +1,52 @@
-<!DOCTYPE html>
-<html lang="id">
+<x-guest-layout>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/regist.css') }}">
-    <title>Sign Up | VenusCars</title>
-</head>
+        <!-- Name -->
+        <div>
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
 
-<body>
-    <div class="form-container">
-        <h1><img src="{{ asset('/images/venuscars1.png') }}" alt="Venus Cars Logo"></h1>
-        @if ($role === 'customer')
-    <p>Sign up now & find your dream car!</p> 
-    @endif
-                <p style="display: none;">Register as a {{ ucfirst($role) }}</p>
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
 
-        
-                <form action="{{ $role === 'customer' ? route('customer.register.process') : route('dealer.register.process') }}" method="POST">
-                    @csrf
-                    <div>
-                        <input type="email" name="email" placeholder="Email" required>
-                    </div>
-                    <div>
-                        <input type="text" name="name" placeholder="Name" required>
-                    </div>
-                    <div>
-                        <input type="password" name="password" placeholder="Password" required>
-                    </div>
-                    <div>
-                        <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
-                    </div>
-        
-                    <button type="submit">Sign Up</button>
-                </form>
-        
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
 
-        <div class="success-message" id="successMessage" style="display: none;">Welcome to VenusCars</div>
-        <br>
-        <br>
-        <p>Have an account? 
-            <a href="{{ $role == 'dealer' ? route('dealer.login') : route('customer.login') }}">Log in</a>
-        </p>               
-    </div>
-</body>
-</html>
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                            type="password"
+                            name="password_confirmation" required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
+                {{ __('Already registered?') }}
+            </a>
+
+            <x-primary-button class="ms-4">
+                {{ __('Register') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>

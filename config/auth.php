@@ -6,21 +6,19 @@ return [
         'guard' => env('AUTH_GUARD', 'web'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
-
-    'guards' => [
+'guards' => [
     'web' => [
         'driver' => 'session',
         'provider' => 'users',
     ],
+    'customer' => [
+        'driver' => 'session',
+        'provider' => 'customers',
+    ],
     'dealer' => [
         'driver' => 'session',
-        'provider' => 'dealers', // Pastikan provider ini sesuai dengan model Dealer
+        'provider' => 'dealers',
     ],
-
-    'customer' => [
-        'driver' => 'session', 
-        'provider' => 'customers', 
-    ], 
 ],
 
 'providers' => [
@@ -28,13 +26,13 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\User::class,
     ],
+    'customers' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Customer::class,
+    ],
     'dealers' => [
         'driver' => 'eloquent',
         'model' => App\Models\Dealer::class,
-    ],
-    'customers' => [
-        'driver' => 'eloquent', 
-        'model' => App\Models\Customer::class, 
     ],
 ],
 
@@ -61,4 +59,5 @@ return [
     ],
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
 ];

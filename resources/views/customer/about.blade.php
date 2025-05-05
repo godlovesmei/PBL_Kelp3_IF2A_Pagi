@@ -14,11 +14,8 @@
 @section('content')
 
 <!-- Header -->
-<div class="min-h-screen flex flex-col pt-[80px]">
+<div class="min-h-screen flex flex-col pt-[63px]">
   <img src="{{ asset('images/navbar.jpg') }}" alt="PT Honda Prospect Motor" class="w-full h-auto object-cover" />
-<div class="w-full">
-  <img src="{{ asset('images/navbar.jpg') }}" alt="PT Honda Prospect Mobil" class="w-full h-auto object-cover" />
-</div>
 
 <header class="py-24 px-6 bg-gradient-to-r from-white via-white to-rose-100 text-center" data-aos="fade-down">
   <div class="max-w-3xl mx-auto" data-aos="zoom-in" data-aos-delay="200">

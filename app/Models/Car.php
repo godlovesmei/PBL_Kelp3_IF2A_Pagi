@@ -11,30 +11,30 @@ class Car extends Model
 
     protected $fillable = [
         'brand', 'model', 'year', 'image', 'category', 
-        'specifications', 'price', 'stock', 'car_code'
+        'specifications', 'price', 'stock', 'car_code', 
+        'dealer_id', 'slug',
     ];
-    
 
-    // Relasi ke tabel car_colors
     public function colors()
     {
         return $this->hasMany(CarColor::class);
     }
 
-    // Event saat membuat data baru
+    public function dealer()
+    {
+        return $this->belongsTo(Dealer::class);
+    }
+
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($car) {
-            $brand = strtoupper(substr($car->brand, 0, 3)); // 3 huruf pertama brand
-            $year = substr($car->year, -2); // 2 digit terakhir tahun
-            $category = strtoupper(substr($car->category, 0, 3)); // 3 huruf pertama kategori
-
-            // Ambil jumlah mobil yang ada untuk ID (dengan padding 3 digit)
+            $brand = strtoupper(substr($car->brand, 0, 3));
+            $year = substr($car->year, -2);
+            $category = strtoupper(substr($car->category, 0, 3));
             $count = Car::count() + 1;
             $id_padded = str_pad($count, 3, '0', STR_PAD_LEFT);
-
             $car->car_code = "{$brand}-{$year}-{$category}-{$id_padded}";
         });
     }
