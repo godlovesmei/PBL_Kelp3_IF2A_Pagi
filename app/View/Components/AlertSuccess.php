@@ -23,4 +23,6 @@ class AlertSuccess extends Component
     {
         return view('components.alert-success');
     }
+    
 }
+
