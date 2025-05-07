@@ -10,7 +10,7 @@ class Wishlist extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id',
+        'cust_id',
         'car_id',
     ];
 
@@ -24,6 +24,5 @@ class Wishlist extends Model
     public function car()
     {
         return $this->belongsTo(Car::class);
-    }
+    }
 }
-
