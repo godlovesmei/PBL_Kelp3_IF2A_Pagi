@@ -15,14 +15,21 @@
 
     <!-- Main Layout -->
     <div class="flex min-h-screen">
-        
+
         <!-- Include Sidebar -->
         @include('partials.side-deal')
 
-        <!-- Main Content -->
-        <main class="flex-1 pt-20 px-6 pb-10">
-            @yield('content')
-        </main>
+        <!-- Right Section: Navbar + Content -->
+        <div class="flex-1 flex flex-col">
+
+            <!-- Include Navbar -->
+            @include('partials.nav-deal')
+
+            <!-- Main Content -->
+            <main class="flex-1 px-6 pb-10">
+                @yield('content')
+            </main>
+        </div>
     </div>
 
     <!-- JS for Sidebar Toggle -->
