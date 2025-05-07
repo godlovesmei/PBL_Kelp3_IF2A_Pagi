@@ -26,7 +26,7 @@ class WishlistController extends Controller
             $showModal = true;
         }
 
-        return view('customer.wishlist', compact('wishlists', 'showModal'));
+        return view('pages.wishlist', compact('wishlists', 'showModal'));
     }
 
     // Tambahkan item ke wishlist
@@ -88,5 +88,5 @@ class WishlistController extends Controller
         }
 
         return redirect()->back()->with('error', 'The car you are trying to remove is not found in your wishlist.');
-    }
-} 
+    }
+}
