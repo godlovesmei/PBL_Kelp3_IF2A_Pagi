@@ -1,46 +1,23 @@
 @extends('layouts.dealer')
 
 @section('content')
-<div class="container mt-4">
-    <h1 class="mb-4 fw-bold">Dashboard Dealer</h1>
-
-    <div class="row g-4">
-        {{-- Card Mobil --}}
-        <div class="col-md-4">
-            <div class="card text-white bg-primary h-100 shadow rounded-4">
-                <div class="card-body">
-                    <h5 class="card-title d-flex align-items-center">
-                        <i class="fas fa-car me-2"></i> Mobil
-                    </h5>
-                    <p class="card-text small mt-2">Total mobil yang kamu jual:</p>
-                    <p class="display-6 fw-bold">{{ $totalMobil }}</p>
-                </div>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pt-12">
+    <!-- Card Produk -->
+    <a href="#" class="border border-gray-400 rounded-lg p-6 hover:shadow-lg transition bg-white">
+        <div class="flex items-center mb-4">
+            <i class="fas fa-boxes text-2xl mr-3"></i>
+            <h2 class="text-2xl font-semibold">Produk</h2>
         </div>
+        <p class="text-lg">Total: {{ $totalMobil }}</p>
+    </a>
 
-        {{-- Card Pesanan --}}
-        <div class="col-md-4">
-            <div class="card text-white bg-warning h-100 shadow rounded-4">
-                <div class="card-body">
-                    <h5 class="card-title d-flex align-items-center">
-                        <i class="fas fa-list me-2"></i> Pesanan
-                    </h5>
-                    <p class="card-text small mt-2">Total pesanan masuk:</p>
-                    <p class="display-6 fw-bold">0</p> {{-- Nanti diganti dynamic --}}
-                </div>
-            </div>
+    <!-- Card Pesanan -->
+    <a href="#" class="border border-gray-400 rounded-lg p-6 hover:shadow-lg transition bg-white">
+        <div class="flex items-center mb-4">
+            <i class="fas fa-list text-2xl mr-3"></i>
+            <h2 class="text-2xl font-semibold">Pesanan</h2>
         </div>
-    </div>
-
-    {{-- Bagian Layout x-app-layout --}}
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
+        <p class="text-lg">Total: 0</p> {{-- Ganti jadi dynamic nanti --}}
+    </a>
 </div>
 @endsection
