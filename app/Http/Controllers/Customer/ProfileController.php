@@ -15,7 +15,7 @@ class ProfileController extends Controller
         // Ambil data customer yang sedang login
         $customer = Auth::user(); // Menggunakan guard default 'web'
 
-        return view('customer.profile', compact('customer'));
+        return view('pages.customer.profile', compact('customer'));
     }
 
     // Memperbarui data profil

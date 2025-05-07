@@ -19,3 +19,12 @@ export default {
 
     plugins: [forms],
 };
+
+module.exports = {
+    darkMode: 'class', // Bisa juga 'media' untuk mengikuti preferensi OS
+    content: ['./resources/**/*.blade.php', './resources/**/*.js', './resources/**/*.vue'], // Sesuaikan dengan struktur proyek Anda
+    theme: {
+      extend: {},
+    },
+    plugins: [],
+  };

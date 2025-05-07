@@ -16,6 +16,6 @@ class CarController extends Controller
         // Ambil warna default (warna pertama dalam daftar)
         $defaultColor = $car->colors->first();
 
-        return view('customer.car-details', compact('car', 'defaultColor'));
+        return view('pages.car-details', compact('car', 'defaultColor'));
     }
 }

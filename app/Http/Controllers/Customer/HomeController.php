@@ -13,6 +13,6 @@ class HomeController extends Controller
         $user = Auth::guard('customer')->user(); // bisa null kalau belum login
         $popularCars = Car::where('model', 'like', '%Civic%')->get();
     
-        return view('customer.home', compact('user', 'popularCars'));
+        return view('pages.home', compact('user', 'popularCars'));
     }
 }

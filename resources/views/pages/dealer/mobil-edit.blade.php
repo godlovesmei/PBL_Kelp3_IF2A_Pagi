@@ -1,8 +1,13 @@
 @extends('layouts.dealer')
 
 @section('content')
-<div class="content">
-    <h2 class="mt-5 mb-4 fw-bold text-primary" style="font-size: 2.5rem;">Edit Mobil</h2>
+<div class="content mt-7">
+    <!-- Tambahkan margin bawah pada header -->
+    <h2 class="mb-4 text-uppercase fw-bold" style="color: #1d3557; font-size: 2rem;">
+        <i class="fas fa-car me-2" style="color: #457b9d;"></i>Edit Mobil
+    </h2>
+    <hr class="mb-4" style="border-top: 3px solid #457b9d;">
+
     <form action="{{ route('dealer.mobil.update', $car->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-4 shadow-sm rounded">
         @csrf
         @method('PUT')
@@ -77,5 +82,40 @@
             <button type="submit" class="btn btn-primary">Update</button>
         </div>
     </form>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const imageInput = document.querySelector('input[name="image"]');
+
+            form.addEventListener('submit', function (e) {
+                const file = imageInput.files[0];
+                if (file) {
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                    if (!allowedTypes.includes(file.type)) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Format tidak didukung',
+                            text: 'Silakan unggah file gambar JPEG, JPG, atau PNG.'
+                        });
+                        return;
+                    }
+
+                    if (file.size > 2 * 1024 * 1024) { // 2MB
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Ukuran terlalu besar',
+                            text: 'Ukuran file maksimal 2MB.'
+                        });
+                        return;
+                    }
+                }
+            });
+        });
+    </script>
 </div>
 @endsection

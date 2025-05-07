@@ -36,13 +36,13 @@ class VerifyEmailController extends Controller
     protected function redirectBasedOnRole($user): RedirectResponse
     {
         // Redirect based on role
-        if ($user->hasRole('admin')) {
-            return redirect()->intended(route('admin.dashboard').'?verified=1');
+        if ($user->hasRole('dealer')) {
+            return redirect()->intended(route('pages.dealer.dashboard').'?verified=1');
         } elseif ($user->hasRole('customer')) {
-            return redirect()->intended(route('customer.home').'?verified=1');
+            return redirect()->intended(route('pages.home').'?verified=1');
         }
 
         // Default redirect if no specific role is matched
-        return redirect()->intended(route('dashboard').'?verified=1');
+        return redirect()->intended(route('pages.home').'?verified=1');
     }
 }

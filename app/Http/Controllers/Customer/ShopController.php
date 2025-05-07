@@ -14,14 +14,14 @@ class ShopController extends Controller
         $cars = $this->applyFilters($request)->paginate(12); // Pagination: 12 mobil per halaman
         $categories = Car::select('category')->distinct()->pluck('category'); // Kategori unik
 
-        return view('customer.shop', compact('cars', 'categories'));
+        return view('pages.shop', compact('cars', 'categories'));
     }
 
     // Fungsi untuk menampilkan detail mobil berdasarkan ID
     public function show($id)
     {
         $car = Car::with('colors')->findOrFail($id);
-        return view('customer.car-details', compact('car'));
+        return view('pages.car-details', compact('car'));
     }
 
     // Fungsi private untuk menyaring mobil berdasarkan filter

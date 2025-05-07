@@ -26,7 +26,7 @@ class WishlistController extends Controller
             $showModal = true;
         }
 
-        return view('customer.wishlist', compact('wishlists', 'showModal'));
+        return view('pages.wishlist', compact('wishlists', 'showModal'));
     }
 
     // Tambahkan item ke wishlist
