@@ -23,4 +23,5 @@ class AlertError extends Component
     {
         return view('components.alert-error');
     }
+    
 }

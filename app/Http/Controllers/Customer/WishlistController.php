@@ -88,5 +88,5 @@ class WishlistController extends Controller
         }
 
         return redirect()->back()->with('error', 'The car you are trying to remove is not found in your wishlist.');
-    }
-} 
+    }
+}

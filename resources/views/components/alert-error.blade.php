@@ -16,4 +16,5 @@
     setTimeout(function() {
         document.querySelector('.alert-error').style.display = 'none';
     }, 5000); // 5 seconds
+    
 </script>
