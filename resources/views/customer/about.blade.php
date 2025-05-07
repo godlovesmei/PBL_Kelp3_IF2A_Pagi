@@ -15,8 +15,6 @@
 
 <!-- Header -->
 <div class="min-h-screen flex flex-col pt-[63px]">
-  <img src="{{ asset('images/navbar.jpg') }}" alt="PT Honda Prospect Motor" class="w-full h-auto object-cover" />
-
 <header class="py-24 px-6 bg-gradient-to-r from-white via-white to-rose-100 text-center" data-aos="fade-down">
   <div class="max-w-3xl mx-auto" data-aos="zoom-in" data-aos-delay="200">
     <h1 class="text-4xl md:text-5xl font-semibold mb-6">PT Honda Prospect Mobil </h1>
