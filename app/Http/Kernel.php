@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-    // Middleware global
     protected $middleware = [
         \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
@@ -17,7 +16,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
-    // Grup middleware
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -34,13 +32,9 @@ class Kernel extends HttpKernel
         ],
     ];
 
-    // Middleware individual / route
     protected $routeMiddleware = [
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'auth.customer' => \App\Http\Middleware\AuthenticateCustomer::class,
-        'auth.dealer' => \App\Http\Middleware\AuthenticateDealer::class, // Daftarkan middleware dealer
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
@@ -48,6 +42,5 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'session.timeout' => \App\Http\Middleware\SessionTimeout::class,
     ];
 }

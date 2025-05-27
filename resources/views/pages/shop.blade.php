@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+@extends('layouts.user')
 
 @section('title', 'Shop')
 
@@ -19,7 +19,7 @@
                        alt="{{ $car->brand }} {{ $car->model }}" 
                        class="h-full object-contain transition-transform duration-300 hover:scale-105">
                </div>
-               <span class="absolute top-2 right-2 bg-black text-white text-xs px-2 py-1 rounded">
+               <span class="absolute top-2 right-2 bg-gray-400 text-white text-xs px-2 py-1 rounded">
                   {{ $car->year }}
                </span>
             </div>
@@ -33,25 +33,37 @@
                <!-- Car Colors -->
                @if($car->colors->count())
                <div class="mt-3">
-                  <span class="text-sm font-medium text-gray-700">Available Colors:</span>
+                  <span class="text-sm font-medium text-gray-700">Colors:</span>
                   <ul class="flex flex-wrap gap-2 mt-2">
                      @foreach ($car->colors as $color)
-                     <li class="w-5 h-5 rounded-full border border-gray-300" style="background-color: {{ $color->hex_code }};"></li>
+                     <li class="px-2 py-1 text-xs rounded bg-gray-200">{{ $color->color_name }}</li>                     
                      @endforeach
                   </ul>
                </div>
                @endif
 
-               <!-- Wishlist & Detail Button -->
+               <!-- Add to Wishlist & Detail Button -->
                <div class="mt-4 flex justify-between items-center">
-                  <a href="{{ route('pages.cars.show', $car->id) }}"
+                  <a href="{{ route('pages.cars.show', $car->id) }} "
                      class="border-2 border-black rounded-full px-4 py-2 text-sm font-medium text-gray-800 hover:bg-black hover:text-white transition">
                      Details
                   </a>
-                  <button class="addToWishlistBtn border-2 border-red-500 text-red-500 rounded-full px-4 py-2 text-sm font-medium hover:bg-red-500 hover:text-white transition"
-                          data-car-id="{{ $car->id }}" data-car-model="{{ $car->model }}">
-                     Add To Wishlist
-                  </button>
+                 @auth
+    <button class="addToWishlistBtn group border border-pink-300 text-pink-400 rounded-full p-2 hover:bg-pink-100 hover:text-pink-600 transition-all duration-300 ease-in-out shadow-sm hover:shadow-md transform hover:scale-105"
+            data-car-id="{{ $car->id }}"
+            title="Add to Wishlist"
+            aria-label="Add to Wishlist">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
+             class="w-5 h-5 transition-colors duration-300 ease-in-out">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M12.001 4.529c2.349-2.294 6.148-2.294 8.497 0 2.325 2.272 2.364 5.95.108 8.278l-7.915 8.095a.75.75 0 0 1-1.08 0l-7.916-8.095C1.137 10.479 1.175 6.8 3.5 4.529c2.349-2.294 6.148-2.294 8.501 0z" />
+        </svg>
+    </button>
+@else
+                   <a href="{{ route('login') }}" class="border-2 border-gray-500 text-gray-500 rounded-full px-4 py-2 text-sm font-medium hover:bg-gray-500 hover:text-white transition">
+        Login to Add to Wishlist
+    </a>
+                  @endauth
                </div>
             </div>
          </div>
@@ -64,28 +76,46 @@
       </div>
    </div>
 </div>
-<x-floating-menu />
+@include('components.floating-menu')
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
    document.querySelectorAll('.addToWishlistBtn').forEach(button => {
       button.addEventListener('click', function (e) {
          e.preventDefault();
 
          const carId = this.getAttribute('data-car-id');
-         const carModel = this.getAttribute('data-car-model');
 
-         // Optional: Add AJAX functionality for adding to wishlist
-         alert(`Added ${carModel} to your wishlist!`);
+         // Change button state to loading
+         this.disabled = true;
+         this.innerHTML = 'Processing...';
+
+         // Send POST request to add to wishlist
+         axios.post('{{ route('pages.wishlist.store') }}', {
+            car_id: carId
+         }, {
+            headers: {
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+         })
+         .then(response => {
+            alert(response.data.message);
+         })
+         .catch(error => {
+            if (error.response) {
+               alert(error.response.data.message || 'An unexpected error occurred.');
+               if (error.response.status === 401) {
+                  window.location.href = '{{ route("login") }}';
+               }
+            }
+         })
+         .finally(() => {
+            this.disabled = false;
+            this.innerHTML = 'Add to Wishlist';
+         });
       });
-   });
-</script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-   AOS.init({
-      duration: 1000, // Duration for animation
-      once: false // Animation triggers every time it appears in the viewport
    });
 </script>
 @endpush

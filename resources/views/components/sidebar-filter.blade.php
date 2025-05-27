@@ -1,53 +1,75 @@
-<form action="{{ route('pages.shop') }}" method="GET" class="w-full lg:w-1/5 bg-white shadow-lg rounded-xl p-4 max-h-[85vh] overflow-y-auto border border-gray-200" id="filter-form">
-    <!-- CATEGORY Section -->
-    <div class="mb-6">
-        <h3 class="font-semibold text-base sm:text-lg mb-3 text-gray-900 border-b border-gray-300 pb-2">Filter by Category</h3>
-        <ul class="space-y-2">
+<form action="{{ route('pages.shop') }}" method="GET"
+      class="w-full lg:w-1/5 bg-white shadow-xl rounded-2xl p-5 max-h-[90vh] overflow-y-auto border border-gray-200 space-y-6 text-sm"
+      id="filter-form">
+
+    <!-- Section Title -->
+    <h2 class="text-xl font-semibold text-gray-800 mb-2">Filters</h2>
+
+    <!-- CATEGORY -->
+    <div>
+        <h3 class="text-gray-700 font-medium flex items-center gap-2 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            Category
+        </h3>
+        <div class="flex flex-wrap gap-3">
             @foreach ($categories as $category)
-            <li class="flex items-center">
-                <input id="category-{{ $category }}" type="checkbox" name="category[]" value="{{ $category }}"
-                       class="mr-2 accent-blue-500 focus:ring focus:ring-blue-300 h-4 w-4"
-                       {{ in_array($category, request()->get('category', [])) ? 'checked' : '' }}
-                       onchange="document.getElementById('filter-form').submit();">
-                <label for="category-{{ $category }}" class="text-sm font-medium text-gray-700 hover:text-blue-500 cursor-pointer">
-                    {{ $category }}
+                <label for="category-{{ $category }}"
+                       class="flex items-center gap-2 border px-3 py-1.5 rounded-full cursor-pointer transition hover:border-indigo-500 hover:bg-indigo-50">
+                    <input id="category-{{ $category }}" type="checkbox" name="category[]" value="{{ $category }}"
+                           class="accent-indigo-500 focus:ring-0 rounded"
+                           {{ in_array($category, request()->get('category', [])) ? 'checked' : '' }}
+                           onchange="document.getElementById('filter-form').submit();">
+                    <span class="text-gray-600 capitalize">{{ $category }}</span>
                 </label>
-            </li>
             @endforeach
-        </ul>
+        </div>
     </div>
 
-    <!-- PRICE Section -->
+    <!-- PRICE -->
     <div>
-        <h3 class="font-semibold text-base sm:text-lg mb-3 text-gray-900 border-b border-gray-300 pb-2">Filter by Price</h3>
-        <ul class="space-y-2">
-            <li class="flex items-center">
-                <input id="price-below-300" type="checkbox" name="price[]" value="<300"
-                       class="mr-2 accent-green-500 focus:ring focus:ring-green-300 h-4 w-4"
-                       {{ in_array('<300', request()->get('price', [])) ? 'checked' : '' }}
-                       onchange="document.getElementById('filter-form').submit();">
-                <label for="price-below-300" class="text-sm font-medium text-gray-700 hover:text-green-500 cursor-pointer">
-                    Below 300 Million
+        <h3 class="text-gray-700 font-medium flex items-center gap-2 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+            Price
+        </h3>
+        <div class="flex flex-wrap gap-3">
+            @php
+                $priceOptions = [
+                    '<300' => '≤300M',
+                    '>300' => '>300M',
+                    '>900' => '>900M'
+                ];
+            @endphp
+
+            @foreach ($priceOptions as $value => $label)
+                <label for="price-{{ $value }}"
+                       class="flex items-center gap-2 border px-3 py-1.5 rounded-full cursor-pointer transition hover:border-green-500 hover:bg-green-50">
+                    <input id="price-{{ $value }}" type="checkbox" name="price[]" value="{{ $value }}"
+                           class="accent-green-500 focus:ring-0 rounded"
+                           {{ in_array($value, request()->get('price', [])) ? 'checked' : '' }}
+                           onchange="document.getElementById('filter-form').submit();">
+                    <span class="text-gray-600">{{ $label }}</span>
                 </label>
-            </li>
-            <li class="flex items-center">
-                <input id="price-above-300" type="checkbox" name="price[]" value=">300"
-                       class="mr-2 accent-green-500 focus:ring focus:ring-green-300 h-4 w-4"
-                       {{ in_array('>300', request()->get('price', [])) ? 'checked' : '' }}
-                       onchange="document.getElementById('filter-form').submit();">
-                <label for="price-above-300" class="text-sm font-medium text-gray-700 hover:text-green-500 cursor-pointer">
-                    Above 300 Million
-                </label>
-            </li>
-            <li class="flex items-center">
-                <input id="price-above-900" type="checkbox" name="price[]" value=">900"
-                       class="mr-2 accent-green-500 focus:ring focus:ring-green-300 h-4 w-4"
-                       {{ in_array('>900', request()->get('price', [])) ? 'checked' : '' }}
-                       onchange="document.getElementById('filter-form').submit();">
-                <label for="price-above-900" class="text-sm font-medium text-gray-700 hover:text-green-500 cursor-pointer">
-                    Above 900 Million
-                </label>
-            </li>
-        </ul>
+            @endforeach
+        </div>
     </div>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const noCarsMessage = document.querySelector('#noCarsMessage');
+        if (noCarsMessage) {
+            alert('No cars match your search criteria. All filters will be reset.');
+            const filterForm = document.getElementById('filter-form');
+            if (filterForm) {
+                filterForm.reset();
+                filterForm.submit();
+            }
+        }
+    });
+</script>

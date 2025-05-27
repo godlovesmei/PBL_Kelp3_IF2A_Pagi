@@ -3,33 +3,47 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use App\Notifications\CustomerResetPasswordNotification;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model implements AuthenticatableContract, CanResetPasswordContract
+class Customer extends Model
 {
-    use HasFactory, Notifiable, AuthenticatableTrait, CanResetPassword;
+    use HasFactory;
 
+    /**
+     * Table name.
+     */
     protected $table = 'customers';
 
+    /**
+     * Primary key adalah cust_id.
+     */
+    protected $primaryKey = 'cust_id';
+
+    /**
+     * Tidak menggunakan auto increment karena cust_id berasal dari user_id.
+     */
+    public $incrementing = false;
+
+    /**
+     * The attributes that are mass assignable.
+     */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'cust_id',
+        'salary_doc',
+        'ktp_doc',
+        'npwp_doc',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    public function sendPasswordResetNotification($token)
+    /**
+     * Relasi ke tabel users.
+     */
+    public function user()
     {
-        $this->notify(new CustomerResetPasswordNotification($token));
+        return $this->belongsTo(User::class, 'cust_id', 'user_id');
     }
+
+    public function wishlists()
+{
+    return $this->hasMany(Wishlist::class, 'cust_id', 'cust_id');
+}
 }

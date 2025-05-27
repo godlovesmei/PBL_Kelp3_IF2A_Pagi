@@ -6,17 +6,17 @@
         <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M4 4h16v2H4zm0 7h16v2H4zm0 7h16v2H4z" />
         </svg>
-        Daftar Pesanan - Konfirmasi
+        Order List - Confirm
     </h2>
     <div class="border-b border-black mb-6"></div>
 
     <!-- Filter Buttons -->
     <div class="flex space-x-2 mb-4">
-        <a href="/daftar-pesanan" class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">Semua</a>
-        <a href="/konfirmasi" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Konfirmasi</a>
-        <a href="/diproses" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Diproses</a>
-        <a href="/dikirim" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Dikirim</a>
-        <a href="/selesai" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Selesai</a>
+        <a href="{{ route('dealer.order') }}" class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">All Orders</a>
+        <a href="{{ route('dealer.confirm') }}" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Confirm</a>
+        <a href="{{ route('dealer.processing') }}" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Processing</a>
+        <a href="{{ route('dealer.shipped') }}" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Shipped</a>
+        <a href="{{ route('dealer.completed') }}" class="bg-gray-400 text-black px-4 py-2 rounded hover:bg-gray-500">Completed</a>
     </div>
 
     <!-- Table -->
@@ -25,10 +25,10 @@
             <thead>
                 <tr class="bg-gray-100">
                     <th class="px-4 py-2 border">No</th>
-                    <th class="px-4 py-2 border">Produk</th>
-                    <th class="px-4 py-2 border">Total Pesanan</th>
+                    <th class="px-4 py-2 border">Product</th>
+                    <th class="px-4 py-2 border">Order Total</th>
                     <th class="px-4 py-2 border">Status</th>
-                    <th class="px-4 py-2 border">Aksi</th>
+                    <th class="px-4 py-2 border">Action</th>
                 </tr>
             </thead>
             <tbody>

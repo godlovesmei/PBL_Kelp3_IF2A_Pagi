@@ -4,19 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Role extends Model
 {
     use HasFactory;
 
-    // Menyatakan kolom yang bisa diisi (mass-assignment)
-    protected $fillable = ['role_name'];  // Kolom 'name' untuk nama role seperti 'admin', 'user', dll
+    /**
+     * Primary key untuk tabel roles
+     */
+    protected $primaryKey = 'role_id';
+
+    /**
+     * Columns yang bisa diisi secara massal
+     */
+    protected $fillable = ['role_name'];
 
     /**
      * Relasi dengan tabel users
      */
     public function users()
     {
-        return $this->hasMany(User::class, 'role_id', 'role_id');  // Relasi satu ke banyak (1 ke banyak)
+        return $this->hasMany(User::class, 'role_id', 'role_id');
     }
 }

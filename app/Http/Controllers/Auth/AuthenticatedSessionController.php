@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Constants\RoleConstant;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -23,33 +24,49 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-{
-    $request->authenticate();
+    {
+        // Authenticate the user using the custom LoginRequest
+        $request->authenticate();
 
-    $request->session()->regenerate();
+        // Regenerate the session to prevent session fixation attacks
+        $request->session()->regenerate();
 
-    // Redirect berdasarkan role pengguna
-    $role = Auth::user()->role;
-    if ($role === 'dealer') {
-        return redirect()->route('pages.dealer.dashboard');
-    } elseif ($role === 'customer') {
-        return redirect()->route('pages.home');
+        // Get the role_id of the authenticated user
+        $roleId = Auth::user()->role_id;
+
+        // Redirect based on role_id
+        switch ($roleId) {
+            case RoleConstant::DEALER:
+                session()->flash('status', 'Welcome, Dealer!'); // Flash success message
+                return redirect()->route('pages.dealer.dashboard');
+
+            case RoleConstant::CUSTOMER:
+                session()->flash('status', 'You have successfully logged in.'); // Flash success message
+                return redirect()->route('pages.home');
+
+            default:
+                // Logout the user and redirect to login with an error message
+                Auth::logout();
+                session()->flash('error', 'Unauthorized access!');
+                return redirect()->route('login');
+        }
     }
-
-    return redirect()->route('pages.home'); // Default redirect
-}
 
     /**
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Logout the user
         Auth::guard('web')->logout();
 
+        // Invalidate the session to clear all session data
         $request->session()->invalidate();
 
+        // Regenerate the CSRF token to ensure security
         $request->session()->regenerateToken();
 
-        return redirect('login');
+        // Redirect to the login page
+        return redirect()->route('login');
     }
 }

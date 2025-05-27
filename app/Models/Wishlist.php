@@ -9,20 +9,27 @@ class Wishlist extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     */
     protected $fillable = [
         'cust_id',
         'car_id',
     ];
 
-    // Relasi ke customer
+    /**
+     * Relasi ke model Customer.
+     */
     public function customer()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class, 'cust_id', 'cust_id');
     }
 
-    // Relasi ke mobil (car)
+    /**
+     * Relasi ke model Car.
+     */
     public function car()
     {
-        return $this->belongsTo(Car::class);
-    }
+        return $this->belongsTo(Car::class, 'car_id', 'id');
+    }
 }

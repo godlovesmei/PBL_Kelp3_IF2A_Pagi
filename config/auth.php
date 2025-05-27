@@ -6,36 +6,36 @@ return [
         'guard' => env('AUTH_GUARD', 'web'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
-'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
-    'customer' => [
-        'driver' => 'session',
-        'provider' => 'customers',
-    ],
-    'dealer' => [
-        'driver' => 'session',
-        'provider' => 'dealers',
-    ],
-],
 
-'providers' => [
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\User::class,
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'customer' => [
+            'driver' => 'session',
+            'provider' => 'customers',
+        ],
+        'dealer' => [
+            'driver' => 'session',
+            'provider' => 'dealers',
+        ],
     ],
-    'customers' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Customer::class,
-    ],
-    'dealers' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Dealer::class,
-    ],
-],
 
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Customer::class,
+        ],
+        'dealers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Dealer::class,
+        ],
+    ],
 
     'passwords' => [
         'users' => [

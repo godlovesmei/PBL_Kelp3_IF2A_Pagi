@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Constants\RoleConstant;  // Import class RoleConstant
+use App\Models\Customer;
+use App\Models\Dealer;
+use App\Constants\RoleConstant;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,39 +32,55 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validasi input dari request
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Menentukan role_id berdasarkan email menggunakan RoleConstant
+        // Menentukan role_id berdasarkan email
         $roleId = $this->getRoleIdByEmail($request->email);
 
-        // Membuat user baru dan menyertakan role_id
+        // Membuat user baru dengan role_id
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => $roleId,  // Menambahkan role_id yang ditentukan
+            'role_id' => $roleId,
         ]);
 
+        // Menambahkan data ke tabel customers atau dealers berdasarkan role_id
+        if ($roleId === RoleConstant::CUSTOMER) {
+            Customer::create([
+                'cust_id' => $user->user_id,
+            ]);
+        } elseif ($roleId === RoleConstant::DEALER) {
+            Dealer::create([
+                'dealer_id' => $user->user_id,
+            ]);
+        }
+
+        // Memicu event Registered
         event(new Registered($user));
 
+        // Login user baru
         Auth::login($user);
 
-        return redirect(route('pages.home', absolute: false));
+        // Redirect ke halaman home
+        return redirect(route('pages.home'));
     }
 
     /**
-     * Menentukan role_id berdasarkan email
+     * Menentukan role_id berdasarkan email.
      */
-    private function getRoleIdByEmail($email)
+    private function getRoleIdByEmail(string $email): int
     {
-        // Logika penentuan role berdasarkan adanya kata "dealer" dalam email
+        // Logika penentuan role berdasarkan kata "dealer" dalam email
         if (strpos($email, 'dealer') !== false) {
-            return RoleConstant::DEALER;  // Gunakan RoleConstant untuk DEALER jika ada kata "dealer"
+            return RoleConstant::DEALER;
         }
-        return RoleConstant::CUSTOMER;  // Gunakan RoleConstant untuk CUSTOMER jika tidak ada kata "dealer"
+
+        return RoleConstant::CUSTOMER;
     }
 }

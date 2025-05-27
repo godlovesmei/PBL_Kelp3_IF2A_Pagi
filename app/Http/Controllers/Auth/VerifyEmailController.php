@@ -37,12 +37,12 @@ class VerifyEmailController extends Controller
     {
         // Redirect based on role
         if ($user->hasRole('dealer')) {
-            return redirect()->intended(route('pages.dealer.dashboard').'?verified=1');
+            return redirect()->intended(route('pages.dealer.dashboard') . '?verified=1');
         } elseif ($user->hasRole('customer')) {
-            return redirect()->intended(route('pages.home').'?verified=1');
+            return redirect()->intended(route('pages.home') . '?verified=1');
         }
 
         // Default redirect if no specific role is matched
-        return redirect()->intended(route('pages.home').'?verified=1');
+        return redirect()->intended(route('pages.home') . '?verified=1');
     }
 }

@@ -1,9 +1,10 @@
-@extends('layouts.customer')
+@extends('layouts.user')
 
 @section('title', 'Home')
 
 @section('content')
 <!-- BANNER -->
+
 <div class="relative min-h-screen flex flex-col pt-[63px]">
     <img src="{{ asset('images/accord3color.jpg') }}" alt="Banner" class="w-full shadow-md object-cover" />
     <div class="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30">
@@ -98,7 +99,7 @@
         </div>
     </div>
 </section>
-<x-floating-menu />
+@include('components.floating-menu')
 @endsection
 
 @push('styles')

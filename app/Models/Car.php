@@ -12,7 +12,7 @@ class Car extends Model
     protected $fillable = [
         'brand', 'model', 'year', 'image', 'category', 
         'specifications', 'price', 'stock', 'car_code', 
-        'dealer_id', 'slug',
+        'dealer_id',
     ];
 
     public function colors()
@@ -38,4 +38,9 @@ class Car extends Model
             $car->car_code = "{$brand}-{$year}-{$category}-{$id_padded}";
         });
     }
+
+    public function wishlists()
+{
+    return $this->hasMany(Wishlist::class, 'car_id', 'car_id');
+}
 }
