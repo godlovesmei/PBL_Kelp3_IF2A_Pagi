@@ -17,9 +17,10 @@ class CreateOrdersTable extends Migration
             $table->id('order_id'); // Primary key
             $table->unsignedBigInteger('car_id'); // Foreign key ke tabel cars
             $table->unsignedBigInteger('cust_id'); // Foreign key ke tabel customers
-            $table->decimal('total_price', 10, 2); // Total harga
-            $table->string('payment_method'); // Metode pembayaran
-            $table->string('payment_status'); // Status pembayaran
+            $table->decimal('total_price', 15, 2); // Total harga mobil
+            $table->enum('payment_method', ['cash', 'credit'])->default('cash'); // Metode pembayaran
+            $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid'); // Status pembayaran
+            $table->enum('order_status', ['pending', 'approved', 'processing', 'shipped', 'completed'])->default('pending'); // Status pesanan
             $table->timestamps(); // created_at dan updated_at
 
             // Foreign key constraints

@@ -32,14 +32,16 @@ Route::get('/transactions', [TransactionController::class, 'index'])->name('page
 Route::get('simulate-price/{car}', [SimulatePriceController::class, 'simulate']);
 
 
-// Routes untuk wishlist (hanya bisa diakses jika login)
+// Routes yang memerlukan autentikasi (hanya bisa diakses oleh pengguna yang sudah login)
 Route::middleware(['auth'])->group(function () {
-    // Tambahkan item ke wishlist
-    Route::post('/wishlist', [WishlistController::class, 'store'])->name('pages.wishlist.store');
-
-    Route::post('/order', [OrderController::class, 'store'])->name('order.store');
-    Route::post('/purchase/submit', [PurchaseController::class, 'submit'])->name('purchase.submit');
+    // Menampilkan form pembelian untuk mobil tertentu
     Route::get('/purchase/{carId}', [PurchaseController::class, 'showOrderForm'])->name('purchase.form');
+
+    // Menangani submission form pembelian
+    Route::post('/purchase', [PurchaseController::class, 'submit'])->name('purchase.submit');
+
+    // Tambah item ke wishlist
+    Route::post('/wishlist', [WishlistController::class, 'store'])->name('pages.wishlist.store');
 
     // Hapus item dari wishlist
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('pages.wishlist.destroy');
@@ -54,8 +56,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
-
 // Group routes protected by authentication for dealers
 Route::middleware(['auth'])->group(function () {
     
@@ -63,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DealerCarController::class, 'dashboard'])->name('pages.dealer.dashboard');
 
     // CRUD routes for cars using Route::resource
-    Route::resource('cars', DealerCarController::class)->names([
+    Route::resource('products', DealerCarController::class)->names([
         'index' => 'pages.dealer.index',
         'create' => 'pages.dealer.create',
         'store' => 'pages.dealer.store',

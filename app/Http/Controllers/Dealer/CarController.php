@@ -10,12 +10,32 @@ use App\Models\CarColor;
 class CarController extends Controller
 {
     // Display car list
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::all();
-        $totalCars = $cars->count();
+    $query = Car::query();
 
-        return view('pages.dealer.index', compact('cars', 'totalCars'));
+    if ($request->has('category') && $request->category != '') {
+        $query->where('category', $request->category);
+    }
+
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('brand', 'like', "%$search%")
+              ->orWhere('model', 'like', "%$search%");
+        });
+    }
+
+    $sort = $request->input('sort', 'desc');
+    $query->orderBy('created_at', $sort);
+
+    // Hitung total sebelum paginate
+    $totalCars = $query->count();
+
+    // Pagination
+    $cars = $query->paginate(12);
+
+    return view('pages.dealer.index', compact('cars', 'totalCars'));
     }
 
     // Display dashboard

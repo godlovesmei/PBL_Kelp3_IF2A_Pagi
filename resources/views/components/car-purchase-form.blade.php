@@ -1,5 +1,19 @@
 @props(['car', 'carPrice'])
 
+@if(session('success'))
+<div x-data="{ show: true }" x-show="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-md text-center shadow-lg">
+        <p class="mb-4 text-lg font-semibold">{{ session('success') }}</p>
+        <button 
+            @click="show = false; window.location.href='{{ session('redirectTo') }}'" 
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+            OK
+        </button>
+    </div>
+</div>
+@endif
+
 <div class="flex justify-center items-center min-h-screen bg-gray-50">
     <div class="bg-gray-100 rounded-xl p-6 w-full max-w-xl shadow-lg mt-10 mx-2">
         <h2 class="text-center text-xl font-semibold mb-6">Submit Purchase Request</h2>
@@ -9,18 +23,18 @@
 
             <!-- Full Name -->
             <div>
-                <x-input-label for="fullname" :value="('Full Name')" />
+                <x-input-label for="name" :value="('Name')" />
                 <x-text-input 
-                    id="fullname" 
-                    name="fullname" 
+                    id="name" 
+                    name="name" 
                     type="text" 
                     class="mt-1 block w-full" 
                     placeholder="Enter your full name" 
-                    value="{{ old('fullname') }}"
+                    value="{{ old('name') }}"
                     required 
                     autofocus
                 />
-                <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
+                <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
 
             <!-- Address -->
@@ -30,19 +44,20 @@
                 <x-input-error :messages="$errors->get('address')" class="mt-2" />
             </div>
 
-            <!-- WhatsApp Number -->
+            <!-- Phone -->
             <div class="mt-4">
-                <x-input-label for="wa_number" :value="('WhatsApp Number')" />
+                <x-input-label for="phone" :value="('Phone')" />
                 <x-text-input 
-                    id="wa_number" 
-                    name="wa_number" 
+                    id="phone" 
+                    name="phone" 
                     type="text" 
                     class="mt-1 block w-full" 
-                    placeholder="Enter WhatsApp number" 
-                    value="{{ old('wa_number') }}"
+                    placeholder="Enter Phone Number" 
+                    value="{{ old('phone') }}" 
                     required
                 />
-                <x-input-error :messages="$errors->get('wa_number')" class="mt-2" />
+
+                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
 
             <!-- Email -->

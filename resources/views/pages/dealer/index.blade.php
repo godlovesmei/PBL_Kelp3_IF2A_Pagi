@@ -20,13 +20,27 @@
             Add new product
         </a>
 
-        <div class="w-full sm:w-72">
+        <!-- Filter Form -->
+        <form method="GET" class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <input 
                 type="text" 
-                placeholder="Search cars..." 
-                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Search brand/model..." 
+                class="w-full sm:w-60 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-        </div>
+            <select 
+                name="category" 
+                onchange="this.form.submit()" 
+                class="w-full sm:w-40 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                <option value="">All Categories</option>
+                <option value="SUV" {{ request('category') == 'SUV' ? 'selected' : '' }}>SUV</option>
+                <option value="Sedan" {{ request('category') == 'Sedan' ? 'selected' : '' }}>Sedan</option>
+                <option value="MPV" {{ request('category') == 'MPV' ? 'selected' : '' }}>MPV</option>
+                <!-- Tambahkan kategori lain sesuai kebutuhan -->
+            </select>
+        </form>
     </div>
 
     @if(session('success'))
@@ -60,7 +74,7 @@
                 </tr>
             </thead>
             <tbody class="text-sm text-gray-700">
-                @foreach($cars as $car)
+                @forelse($cars as $car)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-3 border text-center whitespace-nowrap">{{ $loop->iteration }}</td>
                     <td class="px-4 py-3 border text-center whitespace-nowrap">
@@ -90,14 +104,18 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
-                @if($cars->isEmpty())
+                @empty
                 <tr>
                     <td colspan="9" class="text-center py-6 text-gray-500">No cars found.</td>
                 </tr>
-                @endif
+                @endforelse
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-4">
+        {{ $cars->appends(request()->query())->links() }}
     </div>
 </div>
 
