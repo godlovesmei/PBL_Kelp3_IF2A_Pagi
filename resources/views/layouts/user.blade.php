@@ -8,13 +8,14 @@
     <meta name="keywords" content="Cars, Modern Cars, Luxury Cars, Venus Cars" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <title>Venus Cars | @yield('title')</title>
+    <title>@yield('title') / Venus Cars </title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="images/favicon.ico" />
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
@@ -31,10 +32,6 @@
 </head>
 <body class="flex flex-col min-h-screen bg-white text-gray-900">
 
-    <!-- Flash Messages -->
-    @if(session('status'))
-        <x-alert type="success" :message="session('status')" />
-    @endif
 
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />

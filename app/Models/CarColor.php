@@ -9,7 +9,7 @@ class CarColor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['car_id', 'color_name', 'image_path']; // Sesuaikan dengan kolom tabel car_colors
+    protected $fillable = ['car_id', 'color_name', 'hex', 'alt_hex', 'image_path']; // Sesuaikan dengan kolom tabel car_colors
 
     // Relasi banyak ke satu dengan mobil
     public function car()

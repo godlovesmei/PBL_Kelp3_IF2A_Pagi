@@ -5,26 +5,31 @@
 @section('content')
 
 <div x-data="{
-    colors: {{ $car->colors->map(fn($color) => ['id' => $color->id, 'name' => $color->color_name, 'hex' => $color->hex ?? 'FFFFFF', 'image' => asset('images/' . $color->image_path)])->toJson() }},
+    colors: {{ $car->colors->map(fn($color) => [
+        'id' => $color->id,
+        'name' => $color->color_name,
+        'hex' => $color->hex ?? '#FFFFFF',
+        'image' => asset('images/' . $color->image_path)
+    ])->toJson() }},
     selectedColor: null,
     init() {
-        this.selectedColor = this.colors[0] ?? { hex: 'FFFFFF', name: 'Default', image: '{{ asset('images/default-car.jpg') }}' }; // Default color if none available
+        this.selectedColor = this.colors[0] ?? { hex: '#FFFFFF', name: 'Default', image: '{{ asset('images/default-car.jpg') }}' };
     }
 }">
     <!-- Car Section with Dynamic Background -->
     <div class="relative flex flex-col justify-between pt-[130px] pb-10">
         <!-- Dynamic Background -->
-        <div :style="`background: linear-gradient(to bottom, #${selectedColor.hex}, #ffffff 80%);`" 
+        <div :style="`background: linear-gradient(to bottom, ${selectedColor.hex.startsWith('#') ? selectedColor.hex : '#' + selectedColor.hex}, #ffffff 80%)`"
              class="absolute inset-0 -z-10 transition-colors duration-500"></div>
 
         <!-- Car Content Section -->
         <div class="text-center max-w-xl mx-auto">
-            <h1 class="text-2xl font-bold mb-10">{{ $car->model }}</h1>
+            <h1 class="text-2xl font-bold mb-10">{{ $car->brand }} {{ $car->model }}</h1>
 
             <!-- Car Image -->
             <div class="relative overflow-hidden w-full">
-                <img :src="selectedColor.image" 
-                     :alt="selectedColor.name" 
+                <img :src="selectedColor.image"
+                     :alt="selectedColor.name"
                      class="mx-auto w-full max-w-md rounded-lg shadow-lg">
             </div>
 
@@ -86,4 +91,6 @@
 
     setInterval(autoSlide, 4000);
 </script>
+@include('components.floating-menu')
 @endsection
+

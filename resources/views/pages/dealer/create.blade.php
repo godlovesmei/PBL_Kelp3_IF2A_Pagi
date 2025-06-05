@@ -50,9 +50,24 @@
     </div>
 
     <div>
-      <label for="color" class="block text-sm font-semibold text-gray-700 mb-1">Colors <span class="text-gray-400">(separate with commas)</span></label>
-      <input type="text" id="color" name="color" required placeholder="Example: Red, Blue, Black"
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Colors</label>
+
+      <div id="colors-wrapper" class="space-y-4">
+        <div class="flex space-x-3 items-center">
+          <input type="text" name="colors[0][color_name]" placeholder="Color name" required
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="text" name="colors[0][hex]" placeholder="#hexcode" pattern="^#([A-Fa-f0-9]{6})$" required
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="text" name="colors[0][alt_hex]" placeholder="#alt_hex" pattern="^#([A-Fa-f0-9]{6})$" required
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button type="button" onclick="removeColor(this)" class="text-red-600 font-bold text-xl px-2">&times;</button>
+        </div>
+      </div>
+
+      <button type="button" onclick="addColor()"
+        class="mt-3 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition">
+        + Add color
+      </button>
     </div>
 
     <div>
@@ -68,13 +83,41 @@
     </div>
 
     <div class="flex justify-end">
-      <button type="submit" 
+      <button type="submit"
         class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-md shadow-md transition-colors duration-300">
         Save
       </button>
     </div>
   </form>
 </div>
+
+<script>
+  let colorIndex = 1;
+
+  function addColor() {
+    const wrapper = document.getElementById('colors-wrapper');
+    const div = document.createElement('div');
+    div.className = 'flex space-x-3 items-center mt-2';
+
+    div.innerHTML = `
+      <input type="text" name="colors[${colorIndex}][color_name]" placeholder="Color name" required
+        class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" name="colors[${colorIndex}][hex]" placeholder="#hexcode" pattern="^#([A-Fa-f0-9]{6})$" required
+        class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" name="colors[${colorIndex}][alt_hex]" placeholder="#alt_hex" pattern="^#([A-Fa-f0-9]{6})$" required
+        class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button type="button" onclick="removeColor(this)" class="text-red-600 font-bold text-xl px-2">&times;</button>
+    `;
+
+    wrapper.appendChild(div);
+    colorIndex++;
+  }
+
+  function removeColor(button) {
+    const div = button.parentElement;
+    div.remove();
+  }
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @if(session('success'))

@@ -46,4 +46,13 @@ class Customer extends Model
 {
     return $this->hasMany(Wishlist::class, 'cust_id', 'cust_id');
 }
+public function getDocumentPathsAttribute()
+{
+    return [
+        'ktp' => $this->ktp_doc,
+        'npwp' => $this->npwp_doc,
+        'salary_slip' => $this->salary_doc,
+    ];
+}
+
 }

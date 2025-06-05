@@ -9,39 +9,56 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'order_id'; // Menetapkan primary key untuk tabel orders
+    protected $primaryKey = 'order_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
-        'car_id',
-        'cust_id',
-        'total_price',
-        'payment_method',
-        'payment_status',
-        'order_status',
+         'car_id',
+         'cust_id',
+         'total_price',
+         'down_payment',
+         'tenor',
+         'amount_financed',
+         'monthly_installment',
+         'payment_method',
+         'payment_status',
+         'order_status',
     ];
 
-    // Relasi dengan Installment
+    protected $casts = [
+    'total_price' => 'float',
+    'down_payment' => 'float',
+    'amount_financed' => 'float',
+    'monthly_installment' => 'float',
+    'tenor' => 'integer',
+    ];
+
+
+
+    public function getRouteKeyName()
+    {
+        return 'order_id';
+    }
+
     public function installments()
     {
-        return $this->hasMany(Installment::class, 'order_id');
+        return $this->hasMany(Installment::class, 'order_id', 'order_id');
     }
 
-    // Relasi dengan Payment
     public function payments()
     {
-        return $this->hasMany(Payment::class, 'order_id');
+        return $this->hasMany(Payment::class, 'order_id', 'order_id');
     }
 
-    // Relasi dengan Car (menghubungkan dengan tabel cars)
     public function car()
     {
-        return $this->belongsTo(Car::class, 'car_id');
+        return $this->belongsTo(Car::class, 'car_id', 'id');
     }
 
-    // Relasi dengan Customer (menghubungkan dengan tabel customers)
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'cust_id');
+        return $this->belongsTo(Customer::class, 'cust_id', 'cust_id');
     }
+
 }
-// This model represents an Order in the system, including relationships with Installments, Payments, Car, and Customer models.

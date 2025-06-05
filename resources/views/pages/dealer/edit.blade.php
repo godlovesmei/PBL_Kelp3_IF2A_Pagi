@@ -65,16 +65,43 @@
         class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
     </div>
 
-    <!-- Colors -->
-    <div>
-      <label for="color" class="block text-sm font-semibold text-gray-700 mb-1">Colors <span class="text-gray-400">(separate with commas)</span></label>
-      @php
-          $combinedColors = $car->colors->pluck('color_name')->implode(', ');
-      @endphp
-      <input type="text" id="color" name="color" value="{{ $combinedColors }}" required placeholder="Example: Red, Blue, Black"
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    </div>
+<!-- Colors -->
+<div>
+  <label class="block text-sm font-semibold text-gray-700 mb-1">Colors</label>
+  @foreach ($car->colors as $index => $color)
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
+    <!-- color_name -->
+    <input
+      type="text"
+      name="colors[{{ $index }}][color_name]"
+      value="{{ $color->color_name }}"
+      placeholder="Color Name"
+      required
+      class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
 
+    <!-- hex -->
+    <input
+      type="color"
+      name="colors[{{ $index }}][hex]"
+      value="{{ $color->hex ?? '#000000' }}"
+      class="w-full rounded-md border border-gray-300 px-4 py-2 cursor-pointer"
+      title="Main Hex Color"
+      required
+    />
+
+    <!-- alt_hex -->
+    <input
+      type="color"
+      name="colors[{{ $index }}][alt_hex]"
+      value="{{ $color->alt_hex ?? '#000000' }}"
+      class="w-full rounded-md border border-gray-300 px-4 py-2 cursor-pointer"
+      title="Alternate Hex Color"
+      required
+    />
+  </div>
+  @endforeach
+</div>
     <!-- Price -->
     <div>
       <label for="price" class="block text-sm font-semibold text-gray-700 mb-1">Price</label>
@@ -91,7 +118,7 @@
 
     <!-- Submit Button -->
     <div class="flex justify-end">
-      <button type="submit" 
+      <button type="submit"
         class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-md shadow-md transition-colors duration-300">
         Update
       </button>

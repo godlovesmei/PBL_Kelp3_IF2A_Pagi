@@ -1,7 +1,7 @@
 <a
-    href="https://example.com/brochure.pdf"
+    href="{{ route('pages.brochure.index') }}"
     target="_blank"
-    class="flex items-center justify-center w-12 h-12 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition"
+    class="flex items-center justify-center w-12 h-12 bg-red-500 text-gray-50 rounded-full shadow-lg hover:bg-red-600 transition"
     aria-label="Download Brochure"
 >
     <!-- Download Brochure Icon -->

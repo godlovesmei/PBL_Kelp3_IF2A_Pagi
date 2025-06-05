@@ -5,36 +5,38 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 use App\Constants\RoleConstant;
 
 class RoleMiddleware
 {
     /**
      * Handle an incoming request.
+     *
+     * Usage: middleware(RoleMiddleware::class . ':dealer')
      */
-    public function handle($request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, string $role): Response
     {
-        // Eager load role untuk menghindari N+1 query
-        $user = Auth::user()->load('role');
+        $user = Auth::user();
 
-        // Validasi apakah user memiliki role yang valid berdasarkan RoleConstant
-        if ($user && $user->role) {
-            // Menangani role dengan ID yang sesuai dengan yang didefinisikan di RoleConstant
-            switch (strtoupper($role)) {
-                case 'DEALER':
-                    $roleId = RoleConstant::DEALER;
-                    break;
-                case 'CUSTOMER':
-                    $roleId = RoleConstant::CUSTOMER;
-                    break;
-                default:
-                    $roleId = null;
-            }
+        if (!$user) {
+            abort(403, 'Unauthorized action.');
+        }
 
-            // Periksa apakah role user cocok dengan role yang diminta
-            if ($user->role->id === $roleId) {
-                return $next($request);
-            }
+        // Cek berdasarkan method hasRole() di model User
+        if (method_exists($user, 'hasRole') && $user->hasRole($role)) {
+            return $next($request);
+        }
+
+        // Fallback: cek berdasarkan role_id dari RoleConstant
+        $roleId = match (strtolower($role)) {
+            'dealer' => RoleConstant::DEALER,
+            'customer' => RoleConstant::CUSTOMER,
+            default => null,
+        };
+
+        if ($roleId && $user->role_id == $roleId) {
+            return $next($request);
         }
 
         abort(403, 'Unauthorized action.');

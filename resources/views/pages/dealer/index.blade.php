@@ -12,7 +12,7 @@
 
     <!-- Actions -->
     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-        <a href="{{ route('pages.dealer.create') }}" 
+        <a href="{{ route('pages.dealer.create') }}"
            class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded flex items-center justify-center sm:justify-start w-full sm:w-auto">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -22,22 +22,23 @@
 
         <!-- Filter Form -->
         <form method="GET" class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <input 
-                type="text" 
+            <input
+                type="text"
                 name="search"
                 value="{{ request('search') }}"
-                placeholder="Search brand/model..." 
+                placeholder="Search brand/model..."
                 class="w-full sm:w-60 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-            <select 
-                name="category" 
-                onchange="this.form.submit()" 
+            <select
+                name="category"
+                onchange="this.form.submit()"
                 class="w-full sm:w-40 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
                 <option value="">All Categories</option>
                 <option value="SUV" {{ request('category') == 'SUV' ? 'selected' : '' }}>SUV</option>
                 <option value="Sedan" {{ request('category') == 'Sedan' ? 'selected' : '' }}>Sedan</option>
                 <option value="MPV" {{ request('category') == 'MPV' ? 'selected' : '' }}>MPV</option>
+                <option value="Sports" {{ request('category') == 'Sports' ? 'selected' : '' }}>Sports</option>
                 <!-- Tambahkan kategori lain sesuai kebutuhan -->
             </select>
         </form>
@@ -78,9 +79,9 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-3 border text-center whitespace-nowrap">{{ $loop->iteration }}</td>
                     <td class="px-4 py-3 border text-center whitespace-nowrap">
-                        <img 
-                            src="{{ asset('images/' . $car->image) }}" 
-                            alt="{{ $car->brand }} {{ $car->model }}" 
+                        <img
+                            src="{{ asset('images/' . $car->image) }}"
+                            alt="{{ $car->brand }} {{ $car->model }}"
                             class="inline-block max-w-[80px] max-h-[56px] object-contain rounded"
                         >
                     </td>
@@ -91,7 +92,7 @@
                     <td class="px-4 py-3 border text-right whitespace-nowrap">Rp {{ number_format($car->price, 0, ',', '.') }}</td>
                     <td class="px-4 py-3 border text-center whitespace-nowrap">{{ $car->stock }}</td>
                     <td class="px-4 py-3 border text-center whitespace-nowrap space-x-1">
-                        <a href="{{ route('pages.dealer.edit', $car->id) }}" 
+                        <a href="{{ route('pages.dealer.edit', $car->id) }}"
                            class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-xs inline-block">
                             Edit
                         </a>

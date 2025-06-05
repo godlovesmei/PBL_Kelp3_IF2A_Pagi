@@ -1,116 +1,170 @@
 @props(['carPrice'])
 
-<div id="simulationBox" class="hidden opacity-0 transition-opacity duration-500 ease-in-out mt-6">
-  <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Credit Simulation</h2>
+<div
+    class="mt-8"
+    x-data="creditForm(@json($carPrice))"
+    x-init="init()"
+    x-show="paymentMethod === 'credit'"
+    x-cloak
+>
+    <div class="border rounded-xl p-6 bg-gray-50 space-y-8">
 
-    <div class="overflow-x-auto">
-      <table class="min-w-full table-auto text-sm text-center border-collapse">
-        <thead>
-          <tr class="bg-green-600 text-white">
-            <th class="p-3 text-left">Item</th>
-            <th class="p-3">1 Yr</th>
-            <th class="p-3">2 Yrs</th>
-            <th class="p-3">3 Yrs</th>
-            <th class="p-3">4 Yrs</th>
-            <th class="p-3">5 Yrs</th>
-          </tr>
-        </thead>
-        <tbody class="text-gray-700">
-          <tr class="border-t">
-            <td class="font-medium py-2 text-left">Down Payment</td>
-            <td colspan="5" id="dpAmount" class="py-2 text-center">Rp0</td>
-          </tr>
-          <tr class="border-t bg-gray-50">
-            <td class="font-medium py-2 text-left">Installments / Month</td>
-            <td id="installment1" class="py-2">Rp0</td>
-            <td id="installment2" class="py-2">Rp0</td>
-            <td id="installment3" class="py-2">Rp0</td>
-            <td id="installment4" class="py-2">Rp0</td>
-            <td id="installment5" class="py-2">Rp0</td>
-          </tr>
-          <tr class="border-t">
-            <td class="font-medium py-2 text-left">Admin Fee</td>
-            <td id="admin1" class="py-2">Rp0</td>
-            <td id="admin2" class="py-2">Rp0</td>
-            <td id="admin3" class="py-2">Rp0</td>
-            <td id="admin4" class="py-2">Rp0</td>
-            <td id="admin5" class="py-2">Rp0</td>
-          </tr>
-          <tr class="border-t bg-gray-50">
-            <td class="font-medium py-2 text-left">Insurance</td>
-            <td colspan="5" id="insurance" class="py-2 text-center">Rp0</td>
-          </tr>
-          <tr class="border-t border-b bg-gray-100">
-            <td class="font-semibold py-3 text-left text-gray-900">Total Payment</td>
-            <td id="total1" class="font-semibold text-gray-900">Rp0</td>
-            <td id="total2" class="font-semibold text-gray-900">Rp0</td>
-            <td id="total3" class="font-semibold text-gray-900">Rp0</td>
-            <td id="total4" class="font-semibold text-gray-900">Rp0</td>
-            <td id="total5" class="font-semibold text-gray-900">Rp0</td>
-          </tr>
-        </tbody>
-      </table>
+        <!-- Tenor & Down Payment Options -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Installment Period -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Installment Period
+                </label>
+                <div class="flex flex-wrap gap-2">
+                    <template x-for="option in tenorOptions" :key="option">
+                        <button
+                            type="button"
+                            @click="tenor = option; updateSimulation()"
+                            :class="tenor === option
+                                ? 'bg-gray-500 text-white'
+                                : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'"
+                            class="px-3 py-2 rounded-lg font-medium text-sm focus:outline-none transition"
+                            x-text="option + ' months'"
+                        ></button>
+                    </template>
+                    <input type="hidden" name="tenor" :value="tenor">
+                </div>
+            </div>
+
+            <!-- Down Payment Selection -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Down Payment
+                </label>
+                <div class="flex flex-wrap gap-3">
+                    <template x-for="item in dpPresetOptions" :key="item">
+                        <label class="inline-flex items-center space-x-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                class="form-radio accent-black"
+                                name="dp_preset"
+                                :value="item"
+                                x-model="dpPreset"
+                                @change="updateDP()"
+                            >
+                            <span class="text-sm" x-text="item + '%'"></span>
+                        </label>
+                    </template>
+                </div>
+
+                <template x-if="dpError">
+                    <p class="text-red-500 text-sm mt-2" x-text="dpError"></p>
+                </template>
+
+                <input type="hidden" name="down_payment_percent" :value="dpPreset">
+                <input type="hidden" name="down_payment" :value="dpNominal">
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="bg-white rounded-xl p-5 shadow-inner text-xs md:text-base">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-gray-700">
+                <div class="space-y-2">
+                    <div class="grid grid-cols-2">
+                        <span>Car Price</span>
+                        <span class="text-right font-semibold text-gray-900 text-sm" x-text="formatRupiah(carPrice)"></span>
+                    </div>
+                    <div class="grid grid-cols-2">
+                        <span>Down Payment</span>
+                        <span class="text-right font-semibold text-gray-900 text-sm" x-text="formatRupiah(dpNominal) + ' (' + dpPercent + '%)'"></span>
+                    </div>
+                    <div class="grid grid-cols-2">
+                        <span>Amount Financed</span>
+                        <span class="text-right font-semibold text-gray-900 text-sm" x-text="formatRupiah(financedAmount)"></span>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="grid grid-cols-2">
+                        <span>Estimated Monthly Installment</span>
+                        <span class="text-right font-bold text-green-600 text-sm" x-text="formatRupiah(monthlyInstallment) + ' x ' + tenor + ' mo'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Note -->
+        <div class="flex items-start gap-3 text-gray-500 text-sm bg-white rounded-lg shadow-inner p-4">
+            <svg class="w-5 h-5 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" fill="#FDE68A" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0-4h.01" />
+            </svg>
+            <span>
+                <strong>Note:</strong> Minimum down payment is 30% of the car price.
+            </span>
+        </div>
     </div>
-  </div>
 </div>
 
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    window.validateDP = function(input) {
-        let value = input.value;
-        if (value < 30) input.value = 30;
-        if (value > 50) input.value = 50;
-    };
+function creditForm(carPrice) {
+    return {
+        // State
+        paymentMethod: '{{ old('payment_method', 'credit') }}',
+        tenorOptions: [12, 24, 36, 48, 60],
+        tenor: {{ old('tenor', 36) }},
+        dpPresetOptions: [30, 40, 50],
+        dpPreset: '{{ old('down_payment_percent', 30) }}',
 
-    window.showSimulation = function() {
-        const dpInput = document.getElementById('dpInput');
-        if (!dpInput) return;
+        // Calculated Values
+        carPrice,
+        dpNominal: 0,
+        dpPercent: 0,
+        financedAmount: 0,
+        monthlyInstallment: 0,
 
-        const dpValue = parseFloat(dpInput.value);
-        if (isNaN(dpValue) || dpValue < 30 || dpValue > 50) {
-            alert('Please enter a valid down payment percentage between 30% and 50%');
-            return;
-        }
+        // Error
+        dpError: '',
 
-        const carPrice = @json($carPrice);
-        const dpAmount = (dpValue / 100) * carPrice;
-        const dpAmountElem = document.getElementById('dpAmount');
-        if (dpAmountElem) dpAmountElem.innerText = `Rp${dpAmount.toLocaleString()}`;
+        // Methods
+        updateDP() {
+            this.dpError = '';
+            this.dpPercent = parseFloat(this.dpPreset);
+            this.dpNominal = Math.round(this.carPrice * this.dpPercent / 100);
 
-        // Example installment values, replace with your logic if needed
-        const installments = [23504404, 12407596, 8718386, 6960195, 6013016];
-        installments.forEach((amount, index) => {
-            const instElem = document.getElementById(`installment${index + 1}`);
-            if (instElem) instElem.innerText = `Rp${(amount - (dpAmount / 60)).toLocaleString()}`;
-            const adminElem = document.getElementById(`admin${index + 1}`);
-            if (adminElem) adminElem.innerText = `Rp${(1246000 + (index * 50000)).toLocaleString()}`;
-            const totalElem = document.getElementById(`total${index + 1}`);
-            if (totalElem) totalElem.innerText = `Rp${(amount + (1246000 + (index * 50000)) + 11336400).toLocaleString()}`;
-        });
-
-        // Example insurance value
-        const insuranceElem = document.getElementById('insurance');
-        if (insuranceElem) insuranceElem.innerText = `Rp${(dpAmount * 0.02).toLocaleString()}`;
-
-        const simulationBox = document.getElementById('simulationBox');
-        if (simulationBox) {
-            simulationBox.classList.remove('hidden', 'opacity-0');
-            simulationBox.classList.add('opacity-100');
-        }
-    };
-
-    const dpInput = document.getElementById('dpInput');
-    if (dpInput) {
-        dpInput.addEventListener('input', function() {
-            const value = parseFloat(this.value);
-            if (value < 30 || value > 50) {
-                this.setCustomValidity('Please enter a number between 30 and 50.');
-            } else {
-                this.setCustomValidity('');
+            if (this.dpPercent < 30) {
+                this.dpError = 'Down payment must be at least 30%.';
+                this.dpNominal = 0;
+                this.dpPercent = 0;
             }
-        });
+
+            this.updateSimulation();
+        },
+
+        updateSimulation() {
+            if (this.dpError || this.dpNominal === 0 || this.dpNominal >= this.carPrice) {
+                this.financedAmount = 0;
+                this.monthlyInstallment = 0;
+                return;
+            }
+
+            this.financedAmount = this.carPrice - this.dpNominal;
+
+            const interestRatePerMonth = 0.005; // 0.5% flat monthly interest
+            const totalInterest = this.financedAmount * interestRatePerMonth * this.tenor;
+            const totalLoan = this.financedAmount + totalInterest;
+
+            this.monthlyInstallment = Math.round(totalLoan / this.tenor);
+        },
+
+        formatRupiah(val) {
+            const number = this.toNumber(val);
+            return 'Rp ' + number.toLocaleString('id-ID');
+        },
+
+        toNumber(val) {
+            return parseInt(String(val).replace(/[^\d]/g, '')) || 0;
+        },
+
+        init() {
+            this.updateDP();
+        }
     }
-});
+}
 </script>

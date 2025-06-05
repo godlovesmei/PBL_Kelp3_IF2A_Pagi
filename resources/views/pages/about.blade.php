@@ -1,6 +1,8 @@
 @extends('layouts.user')
 
 @section('title', 'About Us')
+@section('description', 'Learn about PT Honda Prospect Motor, the sole agent for Honda in Indonesia, established in 1999. Discover our commitment to innovation and quality.')
+@section('keywords', 'Honda, PT Honda Prospect Motor, About Us, Company Principles, Management Vision')
 
 @push('styles')
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -62,26 +64,26 @@
     <!-- Branding -->
     <section class="py-20 px-6 bg-white" data-aos="fade-up">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-center items-center md:gap-10 gap-6">
-          
+
           <!-- Left -->
           <div class="text-center md:text-right md:w-1/2 space-y-2">
-            <div class="text-4xl font-bold text-[#0b305c]">Venus Cars</div>
+            <div class="text-4xl font-bold text-[#428b97]">Venus Cars</div>
             <div class="text-lg font-medium tracking-wide text-gray-500">The Power of Dreams</div>
           </div>
-      
+
           <!-- Right -->
           <div class="text-center md:text-left md:w-1/2 space-y-2">
             <h1 class="text-3xl md:text-4xl font-bold text-black">How we move you.</h1>
             <div class="text-base font-semibold tracking-wider text-[#756b65]">CREATE ▸ TRANSCEND, AUGMENT</div>
           </div>
-      
+
         </div>
       </section>
 
 <!-- Dreams Chain -->
 <section class="py-16 bg-white" data-aos="fade-up">
   <div class="flex flex-wrap justify-center items-start gap-10 px-4 max-w-6xl mx-auto">
-    
+
     <!-- Dreams -->
     <div class="w-48 text-center" data-aos="fade-up" data-aos-delay="100">
       <h2 class="text-3xl font-semibold">Dreams</h2>
@@ -112,48 +114,48 @@
     </div>
 
   </div>
-  
+
   <section class="max-w-4xl mx-auto px-4 py-8 relative">
     <div class="relative overflow-hidden rounded-3xl shadow-lg group">
       <img src="{{ asset('images/created.png') }}" alt="Honda Design" class="w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-  
+
       <span class="absolute top-4 left-4 bg-white/90 text-[#1a1a1a] text-2xl font-extrabold px-6 py-3 rounded-full shadow-lg tracking-widest
       opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700">
         CREATE
       </span>
-  
+
       <p class="absolute bottom-4 right-4 bg-white/90 text-black text-lg px-4 py-2 rounded-lg shadow-md max-w-md text-right leading-snug
       opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-200">
         Honda continues to innovate without limits, creating solutions that inspire the future of mobility.
       </p>
     </div>
   </section>
-  
+
   <section class="max-w-4xl mx-auto px-4 py-8 relative">
     <div class="relative overflow-hidden rounded-3xl shadow-lg group">
       <img src="{{ asset('images/transced.jpg') }}" alt="Honda Design" class="w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-  
+
       <span class="absolute top-4 left-4 bg-white/90 text-[#1a1a1a] text-2xl font-extrabold px-6 py-3 rounded-full shadow-lg tracking-widest
       opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700">
         TRANSCEND
       </span>
-  
+
       <p class="absolute bottom-4 right-4 bg-white/90 text-black text-lg px-4 py-2 rounded-lg shadow-md max-w-md text-right leading-snug
       opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-200">
         Surpassing boundaries, exploring further because every journey is the beginning of new possibilities.
       </p>
     </div>
   </section>
-  
+
   <section class="max-w-4xl mx-auto px-4 py-8 relative">
     <div class="relative overflow-hidden rounded-3xl shadow-lg group">
       <img src="{{ asset('images/augment.jpg') }}" alt="Honda Design" class="w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-  
+
       <span class="absolute top-4 left-4 bg-white/90 text-[#1a1a1a] text-2xl font-extrabold px-6 py-3 rounded-full shadow-lg tracking-widest
       opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700">
         AUGMENT
       </span>
-  
+
       <p class="absolute bottom-4 right-4 bg-white/90 text-black text-lg px-4 py-2 rounded-lg shadow-md max-w-md text-right leading-snug
       opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-200">
         Transforming visions into reality, bringing technology closer to vivid dreams.
@@ -167,7 +169,7 @@
 <script>
     AOS.init({
   duration: 1000,
-  once: false 
+  once: false
 });
 
   </script>

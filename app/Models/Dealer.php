@@ -48,4 +48,13 @@ class Dealer extends Model
     {
         return $this->hasMany(Car::class, 'dealer_id', 'dealer_id');
     }
+
+       /**
+     * Relasi dengan brochures (satu dealer bisa memiliki banyak brochures).
+     */
+    public function brochures()
+    {
+        return $this->hasMany(Brochure::class, 'dealer_id', 'dealer_id');
+    }
+
 }

@@ -1,45 +1,75 @@
-<footer class="bg-gray-200 dark:bg-gray-800 shadow-sm mt-20">
-    <div class="w-full max-w-screen-xl mx-auto px-6 md:py-8 pb-10 md:pb-12">
-        <!-- Top Section: Info & Navigation -->
-        <div class="sm:flex sm:items-start sm:justify-between gap-x-8">
-            <!-- Brand & Description -->
-            <div class="mb-6 sm:mb-0 max-w-md">
-                <h3 class="text-2xl font-bold font-serif mb-4 text-gray-900 dark:text-white">Venus Cars</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Delivering the best car selections for every journey in life. 
+<footer class="relative bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-20">
+    <div class="max-w-screen-xl mx-auto px-6 py-12 sm:py-16">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+            <!-- Brand Info -->
+            <div>
+                <h3 class="text-2xl font-bold font-serif text-gray-900 dark:text-white mb-4">Venus Cars</h3>
+                <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    Delivering the best car selections for every journey in life.
                     Because every wheel has its own story.
                 </p>
             </div>
 
-            <!-- Navigation Menu -->
+            <!-- Quick Links -->
             <div>
-                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Menu</h4>
-                <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                    <li><a href="#" class="hover:underline">About Us</a></li>
-                    <li><a href="#" class="hover:underline">Services</a></li>
-                    <li><a href="#" class="hover:underline">Showroom</a></li>
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">About Us</a></li>
+                    <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Services</a></li>
+                    <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Showroom</a></li>
+                    <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Contact</a></li>
                 </ul>
             </div>
 
-            <!-- Contact & Social Media -->
+            <!-- Contact & Socials -->
             <div>
-                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Contact Us</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-300">Our team is ready to assist you:</p>
-                <strong class="block mt-2 text-sm text-gray-800 dark:text-gray-200">0-800-14-46632</strong>
-                <div class="flex space-x-5 mt-4 text-xl text-gray-500 dark:text-gray-300">
-                    <a href="#" class="hover:text-pink-500" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="hover:text-sky-400" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="hover:text-blue-600" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="hover:text-red-500" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact Us</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Need help? Reach out to our support team:</p>
+                <p class="mt-2 font-medium text-gray-800 dark:text-gray-200">0-800-14-46632</p>
+
+                <div class="flex space-x-4 mt-5 text-gray-500 dark:text-gray-400 text-xl">
+                    <a href="#" aria-label="Instagram" class="hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter" class="hover:text-sky-400 transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Facebook" class="hover:text-blue-600 transition"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="YouTube" class="hover:text-red-500 transition"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Section: Copyright -->
-    <div class="bg-gray-300 dark:bg-gray-700 text-gray-400 py-4">
-        <p class="text-center text-sm text-gray-700 dark:text-gray-300">
-            © 2025 <span class="font-semibold text-gray-900 dark:text-white">Venus Cars</span>. Drive Your Destiny.
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn"
+        class="hidden sm:flex fixed bottom-6 left-6 z-50 items-center justify-center
+               w-11 h-11 rounded-full bg-[#16274c] hover:bg-blue-700
+               text-white font-semibold shadow-lg transition duration-300"
+        aria-label="Back to top"
+        onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+  </svg>
+</button>
+
+    <!-- Bottom -->
+    <div class="bg-gray-50 dark:bg-gray-800 py-4 border-t border-gray-200 dark:border-gray-700">
+        <p class="text-center text-sm text-gray-600 dark:text-gray-400">
+            © 2025 <span class="font-semibold text-gray-700 dark:text-white">Venus Cars</span>. Drive Your Destiny.
         </p>
     </div>
+
+    <!-- Back to Top Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.remove('hidden');
+                } else {
+                    backToTopBtn.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </footer>
+
+
+

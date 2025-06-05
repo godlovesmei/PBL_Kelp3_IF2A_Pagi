@@ -67,10 +67,11 @@ class User extends Authenticatable
     /**
      * Method untuk memeriksa apakah user memiliki role tertentu
      */
-    public function hasRole($role): bool
-    {
-        return $this->role && strtolower($this->role->role_name) === strtolower($role);
-    }
+    public function hasRole(string $role): bool
+{
+    return strtolower($this->role->name ?? $this->role_name ?? '') === strtolower($role);
+}
+
 
     /**
      * Method untuk memeriksa apakah user adalah dealer
@@ -89,9 +90,14 @@ class User extends Authenticatable
     }
 
     public function customer()
-{
-    return $this->hasOne(Customer::class, 'cust_id', 'user_id');
-}
+    {
+        return $this->hasOne(Customer::class, 'cust_id', 'user_id');
+    }
+
+    public function dealer()
+    {
+        return $this->hasOne(Dealer::class, 'dealer_id', 'user_id');
+    }
 
     /**
      * Kirim notifikasi reset password
