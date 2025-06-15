@@ -65,7 +65,7 @@
         </div>
     </div>
 </div>
-@include('components.floating-menu')
+
 @endsection
 
 @push('scripts')

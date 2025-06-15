@@ -19,7 +19,7 @@
 </div>
 @endif
 
-<div class="min-h-screen flex flex-col pt-[65px]">
+<div class="min-h-screen flex flex-col pt-[55px]">
     <!-- Header -->
     <div class="bg-gray-200 flex items-center justify-center py-10 md:py-14 px-4 text-center">
         <h2 class="text-3xl md:text-5xl font-bold text-black">My Wishlist</h2>

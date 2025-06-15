@@ -21,7 +21,7 @@
 </style>
 
 <!-- Hero Section -->
-<div class="relative bg-cover bg-center py-20 mt-16" style="background-image: url('{{ asset('images/brochure.jpg') }}');">
+<div class="relative bg-cover bg-center py-20 pt-[120px]" style="background-image: url('{{ asset('images/brochure.jpg') }}');">
     <div class="absolute inset-0 bg-gray-200 bg-opacity-60"></div>
     <div class="relative container mx-auto px-4 text-center">
         <h1 class="text-4xl font-bold text-[#585858] mb-2">Venus Cars Brochures</h1>

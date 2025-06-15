@@ -7,30 +7,31 @@
 <style>
     html, body {
         scroll-behavior: smooth;
+        box-sizing: border-box;
+        width: 100%;
+        overflow-x: hidden;
     }
-
+    *, *::before, *::after {
+        box-sizing: inherit;
+    }
     .reveal {
         opacity: 0;
         transform: translateY(40px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-
     .reveal.active {
         opacity: 1;
         transform: translateY(0px);
     }
-
     .reveal-left {
         opacity: 0;
         transform: translateX(-50px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-
     .reveal-left.active {
         opacity: 1;
         transform: translateX(0px);
     }
-
     @keyframes spin-forever {
         from {
             transform: rotate(0deg);
@@ -39,11 +40,9 @@
             transform: rotate(360deg);
         }
     }
-
     #rotating-image img {
         animation: spin-forever 20s linear infinite;
     }
-
     .half-cover-bottom {
         position: absolute;
         bottom: 0;
@@ -55,16 +54,17 @@
         border-bottom-right-radius: 1000px;
         z-index: 10;
         padding-bottom: 60px;
+        overflow: hidden;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="pt-[65px] w-full">
+<div class="pt-[55px] w-full">
     <!-- Hero Image -->
-    <img src="{{ asset('images/hero_cars.jpg') }}" alt="Hero Cars" class="w-full object-cover max-h-[500px]">
+    <img src="{{ asset('images/hero_cars.jpg') }}" alt="Hero Cars" class="w-full object-cover max-h-[300px] md:max-h-[500px]">
 
-    <div class="my-16 md:my-32 px-4 sm:px-6 md:px-12 mb-20">
+    <div class="my-10 md:my-32 px-4 sm:px-6 md:px-12 mb-20">
         <!-- Judul Section -->
         <div class="text-center reveal max-w-screen-lg mx-auto">
             <h1 class="text-3xl md:text-4xl font-bold text-black">Contact Us</h1>
@@ -74,13 +74,13 @@
         </div>
 
         <!-- Kontak Info -->
-        <div class="my-16 md:my-32 text-center reveal max-w-screen-lg mx-auto">
+        <div class="my-10 md:my-32 text-center reveal max-w-screen-lg mx-auto">
             <h1 class="text-3xl md:text-4xl font-bold text-black">Need Further Assistance?</h1>
             <p class="text-gray-600 mt-6 text-base md:text-lg max-w-2xl mx-auto">
                 Our team is ready to support you. Feel free to reach out through the contact methods below.
             </p>
 
-            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-y-12 gap-x-10 text-left px-2 md:px-10">
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-y-8 gap-x-4 md:gap-x-10 text-left px-0 md:px-10">
                 <div class="border-b md:border-b-0 md:border-r border-gray-300 pb-6 md:pb-0 md:pr-6 reveal-left">
                     <h2 class="text-xl font-semibold text-black mb-3">Phone + Email</h2>
                     <p class="text-gray-700 break-words">Phone: 0813-7853-5706</p>
@@ -123,7 +123,7 @@
         </div>
 
         <!-- Rotating Image -->
-        <div class="w-full max-w-[90%] md:max-w-[1100px] mx-auto relative mt-16" id="rotating-image">
+        <div class="w-full max-w-xl sm:max-w-2xl md:max-w-[1100px] mx-auto relative mt-16 overflow-hidden" id="rotating-image">
             <img src="{{ asset('images/image.png') }}" alt="Support Image" class="rounded-full w-full h-auto object-cover">
 
             <!-- Text Overlay -->
@@ -166,4 +166,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 @endpush
-

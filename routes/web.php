@@ -19,6 +19,7 @@ use App\Http\Controllers\Dealer\OrderTrackingController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Dealer\BrochureController as DealerBrochureController;
 use App\Http\Controllers\User\BrochureController;
+use App\Http\Controllers\NotificationController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -50,12 +51,19 @@ Route::middleware(['auth', RoleMiddleware::class . ':customer'])->group(function
     Route::post('/wishlist', [WishlistController::class, 'store'])->name('pages.wishlist.store');
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('pages.wishlist.destroy');
 
-    // Order routes — note naming konsisten 'user.orders'
-    Route::prefix('my-orders')->name('user.orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-    });
+// Order routes — note naming konsisten 'user.orders'
+Route::prefix('my-orders')->name('user.orders.')->group(function () {
+    Route::get('/', [OrderController::class, 'index'])->name('index');
+    Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+
+    // Upload bukti pembayaran
+    Route::post('/upload-cash', [OrderController::class, 'uploadCash'])->name('uploadCash');
+    Route::post('/upload-dp', [OrderController::class, 'uploadDP'])->name('uploadDP');
+    Route::post('/upload-installment', [OrderController::class, 'uploadInstallment'])->name('uploadInstallment');
+    Route::get('/{order_id}/invoice', [OrderController::class, 'downloadInvoice'])->name('downloadInvoice');
 });
+});
+
 
 
 // ✅ Rute untuk user yang sudah login
@@ -64,14 +72,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('pages.profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('pages.profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('pages.profile.destroy');
+
+    // Rute untuk notifikasi
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::get('/notifications/read-and-redirect/{id}', [NotificationController::class, 'readAndRedirect'])->name('notifications.readAndRedirect');
 });
 
 
 // Group routes protected by authentication for dealers
-Route::middleware(['auth',  RoleMiddleware::class . ':dealer'])->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':dealer'])->group(function () {
     // Dashboard dealer
-    Route::get('/dashboard', [DealerCarController::class, 'dashboard'])
-        ->name('pages.dealer.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('pages.dealer.dashboard');
 
     // CRUD mobil untuk dealer
     Route::resource('car', DealerCarController::class)->names([
@@ -83,7 +95,7 @@ Route::middleware(['auth',  RoleMiddleware::class . ':dealer'])->group(function 
         'destroy' => 'pages.dealer.destroy',
     ]);
 
-    // Halaman brosur dealer
+    // Brosur dealer
     Route::resource('brochure', DealerBrochureController::class)->names([
         'index'   => 'pages.dealer.brochure.index',
         'create'  => 'pages.dealer.brochure.create',

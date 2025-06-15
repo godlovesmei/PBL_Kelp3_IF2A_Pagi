@@ -10,8 +10,8 @@ class Car extends Model
     use HasFactory;
 
     protected $fillable = [
-        'brand', 'model', 'year', 'image', 'category', 
-        'specifications', 'price', 'stock', 'car_code', 
+        'brand', 'model', 'year', 'image', 'category',
+        'specifications', 'price', 'stock', 'car_code',
         'dealer_id',
     ];
 
@@ -20,9 +20,9 @@ class Car extends Model
         return $this->hasMany(CarColor::class);
     }
 
-    public function dealer()
+   public function dealer()
     {
-        return $this->belongsTo(Dealer::class);
+        return $this->belongsTo(Dealer::class, 'dealer_id', 'dealer_id');
     }
 
     protected static function boot()
