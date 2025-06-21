@@ -20,6 +20,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Dealer\BrochureController as DealerBrochureController;
 use App\Http\Controllers\User\BrochureController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Dealer\AnalyticsController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -75,15 +76,16 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute untuk notifikasi
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read.all');
     Route::get('/notifications/read-and-redirect/{id}', [NotificationController::class, 'readAndRedirect'])->name('notifications.readAndRedirect');
 });
-
 
 // Group routes protected by authentication for dealers
 Route::middleware(['auth', RoleMiddleware::class . ':dealer'])->group(function () {
     // Dashboard dealer
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('pages.dealer.dashboard');
+    // Analytics dealer
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('pages.dealer.analytics');
 
     // CRUD mobil untuk dealer
     Route::resource('car', DealerCarController::class)->names([

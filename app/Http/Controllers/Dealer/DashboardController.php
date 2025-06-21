@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Dealer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use App\Models\Car;
 use App\Models\Order;
 use App\Models\Payment;
@@ -21,7 +20,6 @@ class DashboardController extends Controller
         $dateFrom = $request->input('date_from'); // format: Y-m-d
         $dateTo = $request->input('date_to');     // format: Y-m-d
         $paymentMethod = $request->input('payment_method'); // cash|dp|installment
-        $customerId = $request->input('customer_id');
         $carId = $request->input('car_id');
 
         // Query dasar Payment
@@ -44,13 +42,6 @@ class DashboardController extends Controller
             $paymentsQuery->where('payment_method', $paymentMethod);
         }
 
-        // Filter customer
-        if ($customerId) {
-            $paymentsQuery->whereHas('order', function($q) use ($customerId) {
-                $q->where('cust_id', $customerId);
-            });
-        }
-
         // Total produk
         $totalCars = Car::where('dealer_id', $dealerId)->count();
 
@@ -58,8 +49,6 @@ class DashboardController extends Controller
         $totalOrders = Order::whereHas('car', function($q) use ($dealerId, $carId) {
             $q->where('dealer_id', $dealerId);
             if ($carId) $q->where('id', $carId);
-        })->when($customerId, function($q) use ($customerId) {
-            $q->where('cust_id', $customerId);
         })->count();
 
         // Total unique customers
@@ -83,16 +72,16 @@ class DashboardController extends Controller
         // Recent Payments (7 terakhir, sudah terfilter)
         $recentPayments = (clone $paymentsQuery)->latest()->take(7)->get();
 
-        $recentPaymentActivities = $recentPayments->map(function($pay) {
-            return [
-                'type' => 'payment',
-                'description' => 'Pembayaran ' . ucfirst($pay->payment_method) .
-                    ' untuk order #' . ($pay->order->order_id ?? '-') .
-                    ' oleh ' . ($pay->order->customer->user->name ?? 'Customer'),
-                'amount' => $pay->amount,
-                'time' => $pay->created_at ? Carbon::parse($pay->created_at)->timezone('Asia/Jakarta')->diffForHumans() : '-',
-                'created_at' => $pay->created_at ? Carbon::parse($pay->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') : '-',
-            ];
+       $recentPaymentActivities = $recentPayments->map(function($pay) {
+        return [
+            'type' => 'payment',
+            'description' => 'Payment ' . ucfirst($pay->payment_method) .
+            ' for order #' . ($pay->order->order_id ?? '-') .
+            ' by ' . ($pay->order->customer->user->name ?? 'Customer'),
+            'amount' => $pay->amount,
+            'time' => $pay->created_at ? Carbon::parse($pay->created_at)->timezone('Asia/Jakarta')->diffForHumans() : '-',
+            'created_at' => $pay->created_at ? Carbon::parse($pay->created_at)->timezone('Asia/Jakarta')->format('d M Y H:i') : '-',
+    ];
         })->toArray();
 
         // Monthly paid (grafik pembayaran masuk)
@@ -110,10 +99,10 @@ class DashboardController extends Controller
             ];
         }
 
-        // Untuk kebutuhan filter di UI (dropdown)
-        $allCustomers = Order::whereHas('car', function($q) use ($dealerId) {
-            $q->where('dealer_id', $dealerId);
-        })->with('customer.user')->get()->pluck('customer.user.name', 'cust_id')->unique();
+        $dealerUser = Auth::user(); // atau Auth::id() kalau pakai relasi user
+        $notifications = $dealerUser->notifications()->latest()->take(10)->get(); // ambil 10 notifikasi terbaru
+        $unreadCount = $dealerUser->unreadNotifications()->count();
+
 
         $allCars = Car::where('dealer_id', $dealerId)->pluck('car_code', 'id');
 
@@ -127,16 +116,16 @@ class DashboardController extends Controller
             'totalInstallment' => $totalInstallment,
             'recentPaymentActivities' => $recentPaymentActivities,
             'monthlyPaid'      => $monthlyPaid,
-            // Untuk kebutuhan filter di UI
-            'allCustomers'     => $allCustomers,
             'allCars'          => $allCars,
             'filter'           => [
-                'date_from' => $dateFrom,
-                'date_to' => $dateTo,
-                'payment_method' => $paymentMethod,
-                'customer_id' => $customerId,
-                'car_id' => $carId,
-            ],
-        ]);
-    }
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo,
+            'payment_method' => $paymentMethod,
+            'car_id' => $carId,
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount,
+
+        ],
+    ]);
+}
 }

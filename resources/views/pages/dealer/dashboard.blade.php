@@ -1,166 +1,107 @@
 @extends('layouts.dealer')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 transition-all duration-300 ease-in-out p-4 md:p-6">
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">Ready for work today, {{ Auth::user()->name }}?</h1>
-        <p class="mb-4 text-gray-500 text-sm md:text-base">Your dealership summary and recent activities at a glance.</p>
-
-        <!-- FILTER SECTION -->
-        <form method="GET" class="mb-6 bg-white p-4 md:p-6 rounded-xl shadow flex flex-col md:flex-row md:items-end gap-3 md:gap-4">
+<div class="min-h-screen bg-gray-100 transition-all duration-300 ease-in-out p-2 sm:p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <div>
-                <label class="block text-xs text-gray-500 mb-1" for="date_from">From</label>
-                <input type="date" id="date_from" name="date_from" value="{{ $filter['date_from'] ?? '' }}" class="rounded border-gray-300 px-2 py-1 text-sm w-full">
+                <h1 class="text-3xl font-extrabold text-gray-800 mb-1 leading-tight tracking-tight">Welcome, {{ Auth::user()->name }}!</h1>
+                <p class="mb-2 text-gray-500 text-base font-medium">Track your sales, customers and earnings.</p>
             </div>
-            <div>
-                <label class="block text-xs text-gray-500 mb-1" for="date_to">To</label>
-                <input type="date" id="date_to" name="date_to" value="{{ $filter['date_to'] ?? '' }}" class="rounded border-gray-300 px-2 py-1 text-sm w-full">
+            <div class="flex gap-2 mt-2 md:mt-0">
+                <a href="{{ route('pages.dealer.index') }}" class="inline-flex items-center bg-sky-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition font-semibold">
+                    <i class="fas fa-box mr-2"></i>Manage Products
+                </a>
+                <a href="{{ route('pages.dealer.order-index') }}" class="inline-flex items-center bg-pink-500 text-white px-4 py-2 rounded-lg shadow hover:bg-pink-600 transition font-semibold">
+                    <i class="fas fa-clipboard-check mr-2"></i>Manage Orders
+                </a>
             </div>
-            <div>
-                <label class="block text-xs text-gray-500 mb-1" for="payment_method">Payment</label>
-                <select id="payment_method" name="payment_method" class="rounded border-gray-300 px-2 py-1 text-sm w-full">
-                    <option value="">All</option>
-                    <option value="cash" {{ $filter['payment_method'] == 'cash' ? 'selected' : '' }}>Cash</option>
-                    <option value="dp" {{ $filter['payment_method'] == 'dp' ? 'selected' : '' }}>DP</option>
-                    <option value="installment" {{ $filter['payment_method'] == 'installment' ? 'selected' : '' }}>Installment</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs text-gray-500 mb-1" for="customer_id">Customer</label>
-                <select id="customer_id" name="customer_id" class="rounded border-gray-300 px-2 py-1 text-sm w-full">
-                    <option value="">All</option>
-                    @foreach ($allCustomers as $cid => $cname)
-                        <option value="{{ $cid }}" {{ $filter['customer_id'] == $cid ? 'selected' : '' }}>{{ $cname }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs text-gray-500 mb-1" for="car_id">Product</label>
-                <select id="car_id" name="car_id" class="rounded border-gray-300 px-2 py-1 text-sm w-full">
-                    <option value="">All</option>
-                    @foreach ($allCars as $id => $name)
-                        <option value="{{ $id }}" {{ $filter['car_id'] == $id ? 'selected' : '' }}>{{ $name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <button type="submit" class="inline-flex items-center px-4 py-1.5 rounded bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-500 transition">
-                    <i class="fas fa-filter mr-2"></i>Filter
-                </button>
-            </div>
-        </form>
+        </div>
 
         <!-- Statistic Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 mb-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-4 mb-8">
             @php
                 $stats = [
-                    ['label' => 'Products', 'value' => $totalCars, 'icon' => 'fa-car', 'bg' => 'bg-blue-100', 'text' => 'text-blue-600'],
-                    ['label' => 'Orders', 'value' => $totalOrders, 'icon' => 'fa-clipboard-list', 'bg' => 'bg-purple-100', 'text' => 'text-purple-600'],
-                    ['label' => 'Customers', 'value' => $totalCustomers, 'icon' => 'fa-users', 'bg' => 'bg-yellow-100', 'text' => 'text-yellow-600'],
+                    ['label' => 'Products', 'value' => $totalCars, 'icon' => 'fa-car', 'bg' => 'bg-sky-100', 'text' => 'text-sky-600'],
+                    ['label' => 'Orders', 'value' => $totalOrders, 'icon' => 'fa-clipboard-list', 'bg' => 'bg-indigo-100', 'text' => 'text-indigo-600'],
+                    ['label' => 'Customers', 'value' => $totalCustomers, 'icon' => 'fa-users', 'bg' => 'bg-orange-100', 'text' => 'text-orange-500'],
                     ['label' => 'Total Paid', 'value' => 'Rp' . number_format($totalPaid, 0, ',', '.'), 'icon' => 'fa-wallet', 'bg' => 'bg-green-100', 'text' => 'text-green-600'],
                 ];
             @endphp
             @foreach ($stats as $stat)
-                <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex items-center hover:shadow-lg transition">
-                    <div class="{{ $stat['bg'] }} p-2 rounded-full mr-3 flex items-center justify-center">
-                        <i class="fas {{ $stat['icon'] }} {{ $stat['text'] }} text-lg"></i>
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-xl p-4 flex flex-col items-start hover:shadow-2xl transition min-w-0 group">
+                    <div class="{{ $stat['bg'] }} p-3 rounded-full mb-3 flex items-center justify-center min-w-10 shadow group-hover:scale-110 group-hover:rotate-6 transition">
+                        <i class="fas {{ $stat['icon'] }} {{ $stat['text'] }} text-xl"></i>
                     </div>
                     <div>
-                        <div class="text-[11px] text-gray-500 uppercase">{{ $stat['label'] }}</div>
-                        <div class="text-lg font-bold text-gray-800">{{ $stat['value'] }}</div>
+                        <div class="text-xs text-gray-500 font-medium uppercase tracking-wide">{{ $stat['label'] }}</div>
+                        <div class="text-xl font-extrabold text-gray-800">{{ $stat['value'] }}</div>
                     </div>
                 </div>
             @endforeach
         </div>
 
-        <!-- Payment Breakdown Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-5 mb-8">
-            <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex items-center hover:shadow-md transition">
-                <div class="bg-green-50 p-2 rounded-full mr-3 flex items-center justify-center">
-                    <i class="fas fa-money-bill-wave text-green-500 text-lg"></i>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Monthly Payment Income Chart -->
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-gray-800">Monthly Payment Income</h2>
+                    <span class="inline-block bg-blue-50 text-gray-700 text-xs px-3 py-1 rounded-full font-semibold">Analytics</span>
                 </div>
-                <div>
-                    <div class="text-xs text-gray-500 uppercase">Cash</div>
-                    <div class="text-base font-bold text-gray-800">Rp{{ number_format($totalCash, 0, ',', '.') }}</div>
-                </div>
+                <canvas id="monthlyPaidChart" height="60"></canvas>
             </div>
-            <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex items-center hover:shadow-md transition">
-                <div class="bg-yellow-50 p-2 rounded-full mr-3 flex items-center justify-center">
-                    <i class="fas fa-coins text-yellow-500 text-lg"></i>
+            <!-- Orders & Customers Pie Chart -->
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-orange-600">Customers vs Orders</h2>
+                    <span class="inline-block bg-orange-50 text-orange-700 text-xs px-3 py-1 rounded-full font-semibold">Demographics</span>
                 </div>
-                <div>
-                    <div class="text-xs text-gray-500 uppercase">DP</div>
-                    <div class="text-base font-bold text-gray-800">Rp{{ number_format($totalDP, 0, ',', '.') }}</div>
-                </div>
-            </div>
-            <div class="bg-white border border-gray-200 rounded-xl shadow p-4 flex items-center hover:shadow-md transition">
-                <div class="bg-blue-50 p-2 rounded-full mr-3 flex items-center justify-center">
-                    <i class="fas fa-calendar-alt text-blue-500 text-lg"></i>
-                </div>
-                <div>
-                    <div class="text-xs text-gray-500 uppercase">Installment</div>
-                    <div class="text-base font-bold text-gray-800">Rp{{ number_format($totalInstallment, 0, ',', '.') }}</div>
+                <canvas id="customersOrdersPie" height="60"></canvas>
+                <div class="flex gap-3 mt-4">
+                    <span class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-orange-400 mr-1"></span>Customers</span>
+                    <span class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-indigo-400 mr-1"></span>Orders</span>
                 </div>
             </div>
         </div>
 
-        <!-- Monthly Paid Chart -->
-        <div class="bg-white rounded-xl shadow p-4 mb-8">
-            <h2 class="text-base font-semibold mb-3 text-gray-700">Monthly Payment Income</h2>
-            <div class="w-full">
-                <canvas id="monthlyPaidChart" height="38"></canvas>
+        <!-- Table: Recent Orders -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Orders</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
+                            <th class="py-2 px-3">Order ID</th>
+                            <th class="py-2 px-3">Customer</th>
+                            <th class="py-2 px-3">Product</th>
+                            <th class="py-2 px-3">Total</th>
+                            <th class="py-2 px-3">Status</th>
+                            <th class="py-2 px-3">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($recentOrders ?? [] as $order)
+                        <tr class="border-b last:border-0 hover:bg-gray-50">
+                            <td class="py-2 px-3 font-mono text-indigo-600">#{{ $order->id }}</td>
+                            <td class="py-2 px-3">{{ $order->customer->name ?? '-' }}</td>
+                            <td class="py-2 px-3">{{ $order->product->name ?? '-' }}</td>
+                            <td class="py-2 px-3">Rp{{ number_format($order->total, 0, ',', '.') }}</td>
+                            <td class="py-2 px-3">
+                                <span class="inline-block px-2 py-1 text-xs rounded
+                                    {{ $order->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                                    {{ ucfirst($order->status) }}
+                                </span>
+                            </td>
+                            <td class="py-2 px-3 text-gray-500">{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-3 text-gray-400">No recent orders.</td>
+                        </tr>
+                    @endforelse
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <!-- Recent Payment Activities -->
-        <div class="bg-white rounded-xl shadow p-4 mb-8">
-            <h2 class="text-base font-semibold mb-3 text-gray-700">Recent Payment Activities</h2>
-            <ul class="divide-y divide-gray-100 max-h-52 overflow-y-auto">
-                @forelse($recentPaymentActivities as $activity)
-                    <li class="py-2 flex items-start group hover:bg-gray-50 rounded px-1 transition">
-                        <div class="flex-shrink-0 mt-1">
-                            @php
-                                $iconMap = [
-                                    'Cash' => ['fa-money-bill-wave', 'text-green-500'],
-                                    'Dp' => ['fa-coins', 'text-yellow-500'],
-                                    'Installment' => ['fa-calendar-alt', 'text-blue-500'],
-                                ];
-                                $method = ucfirst(Str::before(Str::after($activity['description'], 'Pembayaran '), ' untuk'));
-                                $icon = $iconMap[$method][0] ?? 'fa-receipt';
-                                $iconColor = $iconMap[$method][1] ?? 'text-blue-500';
-                            @endphp
-                            <i class="fas {{ $icon }} text-xs {{ $iconColor }}"></i>
-                        </div>
-                        <div class="ml-2">
-                            <p class="text-xs text-gray-700">
-                                {{ $activity['description'] }}
-                                <span class="text-indigo-600 font-semibold">(Rp {{ number_format($activity['amount'], 0, ',', '.') }})</span>
-                            </p>
-                            <p class="text-[10px] text-gray-400">{{ $activity['time'] }} <span class="ml-2 text-gray-300">|</span> <span class="text-gray-500">{{ $activity['created_at'] }}</span></p>
-                        </div>
-                    </li>
-                @empty
-                    <li class="py-2 text-gray-400 italic text-xs">No recent payment activities.</li>
-                @endforelse
-            </ul>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
-            <a href="{{ route('pages.dealer.index') }}" class="border border-gray-200 rounded-xl p-4 bg-white hover:shadow-md transition flex items-center">
-                <i class="fas fa-box mr-3 text-lg text-indigo-500"></i>
-                <div>
-                    <h3 class="text-base font-semibold text-gray-800">Manage Products</h3>
-                    <p class="text-xs text-gray-600">Add, edit, or delete your car listings.</p>
-                </div>
-            </a>
-            <a href="{{ route('pages.dealer.order-index') }}" class="border border-gray-200 rounded-xl p-4 bg-white hover:shadow-md transition flex items-center">
-                <i class="fas fa-clipboard-check mr-3 text-lg text-pink-500"></i>
-                <div>
-                    <h3 class="text-base font-semibold text-gray-800">Manage Orders</h3>
-                    <p class="text-xs text-gray-600">View and process customer orders.</p>
-                </div>
-            </a>
         </div>
     </div>
 </div>
@@ -168,15 +109,16 @@
 {{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Monthly Paid Area Chart
     const ctx = document.getElementById('monthlyPaidChart').getContext('2d');
     const monthlyPaidData = @json($monthlyPaid ?? []);
     const labels = monthlyPaidData.map(item => item.label);
     const totals = monthlyPaidData.map(item => item.total);
 
     function getGradient(ctx) {
-        const gradient = ctx.createLinearGradient(0, 0, 0, 120);
-        gradient.addColorStop(0, 'rgba(99,102,241,0.10)');
-        gradient.addColorStop(1, 'rgba(99,102,241,0.01)');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(20,184,166,0.18)');
+        gradient.addColorStop(1, 'rgba(20,184,166,0.18)');
         return gradient;
     }
     new Chart(ctx, {
@@ -186,12 +128,13 @@
             datasets: [{
                 label: 'Total Paid (Rp)',
                 data: totals,
-                borderColor: '#6366f1',
+                borderColor: '#14B8A6',
                 backgroundColor: getGradient(ctx),
                 fill: true,
-                tension: 0.3,
-                pointRadius: 3,
-                pointBackgroundColor: '#6366f1'
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#14B8A6',
+                borderWidth: 2
             }]
         },
         options: {
@@ -205,7 +148,33 @@
                 }
             },
             scales: {
-                y: { beginAtZero: true }
+                y: { beginAtZero: true, ticks: { color: "#808080" } },
+                x: { ticks: { color: "#808080" } }
+            }
+        }
+    });
+
+    // Customers vs Orders Pie Chart
+    const pieCtx = document.getElementById('customersOrdersPie').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Customers', 'Orders'],
+            datasets: [{
+                data: [{{ $totalCustomers }}, {{ $totalOrders }}],
+                backgroundColor: ['#fb923c', '#6366f1'],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            cutout: '65%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => `${context.label}: ${context.parsed}`
+                    }
+                }
             }
         }
     });

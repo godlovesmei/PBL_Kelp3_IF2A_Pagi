@@ -31,7 +31,7 @@ class PurchaseController extends Controller
             'car_id' => 'required|exists:cars,id',
             'payment_method' => 'required|string|in:credit,cash',
             'tenor' => 'nullable|integer|in:12,24,36,48,60',
-            'down_payment_percent' => 'nullable|numeric|min:30|max:50',
+            'down_payment_percent' => 'nullable|numeric|min:30|max:70',
             'down_payment' => 'nullable|numeric|min:1',
         ]);
 
@@ -48,7 +48,7 @@ class PurchaseController extends Controller
             if ($validated['payment_method'] === 'credit') {
                 $request->validate([
                     'tenor' => 'required|integer|in:12,24,36,48,60',
-                    'down_payment_percent' => 'required|numeric|min:30|max:50',
+                    'down_payment_percent' => 'required|numeric|min:30|max:70',
                     'down_payment' => 'required|numeric|min:1',
                 ]);
 
@@ -123,15 +123,16 @@ class PurchaseController extends Controller
                     ]);
                 }
             }
-
-            // Notifikasi ke dealer
-            $dealerUser = optional(optional($car->dealer)->user);
-            if ($dealerUser && method_exists($dealerUser, 'isDealer') && $dealerUser->isDealer()) {
-                $dealerUser->notify(new NewOrderForDealer($order));
+            // Kirim notifikasi ke dealer
+            $dealer = $car->dealer;
+            if ($dealer && method_exists($dealer, 'notify')) {
+                $dealer->notify(new NewOrderForDealer($order));
             }
 
-            // Notifikasi ke customer
-            $user->notify(new OrderSubmitted($order));
+    // Kirim notifikasi ke customer
+    if (method_exists($user, 'notify')) {
+        $user->notify(new OrderSubmitted($order));
+    }
 
             return redirect()->back()->with('success', true);
         } catch (\Exception $e) {

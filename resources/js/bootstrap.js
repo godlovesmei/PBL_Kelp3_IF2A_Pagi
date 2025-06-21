@@ -1,6 +1,6 @@
 import axios from 'axios';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+// import Echo from 'laravel-echo';
+// import Pusher from 'pusher-js';
 
 // Setup axios
 window.axios = axios;
@@ -13,12 +13,12 @@ if (token) {
     console.error('CSRF token not found');
 }
 
-// Setup Pusher and Laravel Echo
-window.Pusher = Pusher;
+// Hapus setup Echo dan Pusher kalau tidak digunakan
+// window.Pusher = Pusher;
 
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: import.meta.env.VITE_PUSHER_APP_KEY,
-    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-    forceTLS: true,
-});
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: import.meta.env.VITE_PUSHER_APP_KEY,
+//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+//     forceTLS: true,
+// });

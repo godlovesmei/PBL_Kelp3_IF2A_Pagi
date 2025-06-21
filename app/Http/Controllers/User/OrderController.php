@@ -87,7 +87,7 @@ class OrderController extends Controller
             'order_status' => 'processing',
         ]);
 
-        return back()->with('success', 'Bukti pembayaran cash berhasil diupload.');
+        return back()->with('success', 'Cash payment proof uploaded successfully.');
     }
 
     /**
@@ -114,12 +114,12 @@ class OrderController extends Controller
             'payment_proof' => $path,
         ]);
 
-        // Update status order ke shipped/sudah DP
+        // Update status order ke processing
         $order->update([
-            'order_status' => 'shipped',
+            'order_status' => 'processing',
         ]);
 
-        return back()->with('success', 'Bukti DP berhasil diupload.');
+        return back()->with('success', 'Down payment proof uploaded successfully.');
     }
 
     /**
@@ -164,7 +164,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Bukti cicilan berhasil diupload.');
+        return back()->with('success', 'Installment payment proof uploaded successfully.');
     }
     public function downloadInvoice(Request $request, $order_id)
 {

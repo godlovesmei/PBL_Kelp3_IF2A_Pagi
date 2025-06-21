@@ -1,25 +1,28 @@
-@props(['carPrice'])
+@props([
+    'value' => old('down_payment_percent', 30),
+    'min' => 30,
+    'max' => 70,
+])
 
-<div class="mt-6">
-    <x-input-label for="dpInput" :value="('Down Payment (%)')" />
-    <div class="flex items-center gap-2 mt-1">
-        <x-text-input 
-            id="dpInput" 
-            name="down_payment" 
-            type="number" 
-            value="30" 
-            min="30" 
-            max="50" 
-            placeholder="30-50%" 
-            class="w-28"
-            oninput="validateDP(this)"
+<div class="space-y-2">
+    <label for="down_payment_percent" class="block text-sm font-medium text-gray-700">
+        Down Payment (%)
+    </label>
+    <div class="flex items-center gap-2">
+        <input
+            type="number"
+            id="down_payment_percent"
+            name="down_payment_percent"
+            class="form-input border border-gray-300 rounded-md px-3 py-2 w-24"
+            min="{{ $min }}"
+            max="{{ $max }}"
+            step="1"
+            value="{{ $value }}"
             required
-        />
+        >
         <span class="text-sm">%</span>
-        <button type="button" onclick="showSimulation()"
-            class="bg-red-600 text-white px-4 py-1.5 rounded-md text-sm hover:bg-red-700 transition">
-            Simulate
-        </button>
     </div>
-    <p class="text-xs text-gray-500 mt-1">*Enter a number between 30% and 50%</p>
+    @error('down_payment_percent')
+        <p class="text-sm text-red-600">{{ $message }}</p>
+    @enderror
 </div>

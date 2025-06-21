@@ -43,16 +43,22 @@ class Customer extends Model
     }
 
     public function wishlists()
-{
-    return $this->hasMany(Wishlist::class, 'cust_id', 'cust_id');
-}
-public function getDocumentPathsAttribute()
-{
-    return [
-        'ktp' => $this->ktp_doc,
-        'npwp' => $this->npwp_doc,
-        'salary_slip' => $this->salary_doc,
-    ];
-}
+    {
+        return $this->hasMany(Wishlist::class, 'cust_id', 'cust_id');
+    }
+    public function wishlistCars()
+    {
+        // Asumsikan tabel 'wishlists' ada kolom 'cust_id' dan 'car_id'
+        return $this->belongsToMany(Car::class, 'wishlists', 'cust_id', 'car_id');
+    }
+
+    public function getDocumentPathsAttribute()
+    {
+        return [
+            'ktp' => $this->ktp_doc,
+            'npwp' => $this->npwp_doc,
+            'salary_slip' => $this->salary_doc,
+        ];
+    }
 
 }

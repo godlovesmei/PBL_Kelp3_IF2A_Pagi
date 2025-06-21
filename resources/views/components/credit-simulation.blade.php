@@ -11,7 +11,6 @@
 
         <!-- Tenor & Down Payment Options -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
             <!-- Installment Period -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -33,12 +32,12 @@
                 </div>
             </div>
 
-            <!-- Down Payment Selection -->
+            <!-- Down Payment Selection (Preset & Manual) -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     Down Payment
                 </label>
-                <div class="flex flex-wrap gap-3">
+                <div class="flex flex-wrap gap-3 mb-2">
                     <template x-for="item in dpPresetOptions" :key="item">
                         <label class="inline-flex items-center space-x-2 cursor-pointer">
                             <input
@@ -47,18 +46,33 @@
                                 name="dp_preset"
                                 :value="item"
                                 x-model="dpPreset"
-                                @change="updateDP()"
+                                @change="dpManual = ''; updateDP()"
                             >
                             <span class="text-sm" x-text="item + '%'"></span>
                         </label>
                     </template>
                 </div>
 
+                <div class="flex items-center gap-2">
+                    <input
+                        type="number"
+                        class="form-input border border-gray-300 rounded-md px-3 py-2 w-24"
+                        min="30"
+                        max="70"
+                        step="1"
+                        placeholder="Custom %"
+                        x-model="dpManual"
+                        @input="dpPreset = ''; updateDP()"
+                    >
+                    <span class="text-sm">%</span>
+                    <span class="text-xs text-gray-400 ml-2">(30–70% allowed)</span>
+                </div>
+
                 <template x-if="dpError">
                     <p class="text-red-500 text-sm mt-2" x-text="dpError"></p>
                 </template>
 
-                <input type="hidden" name="down_payment_percent" :value="dpPreset">
+                <input type="hidden" name="down_payment_percent" :value="dpPercent">
                 <input type="hidden" name="down_payment" :value="dpNominal">
             </div>
         </div>
@@ -96,7 +110,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0-4h.01" />
             </svg>
             <span>
-                <strong>Note:</strong> Minimum down payment is 30% of the car price.
+                <strong>Note:</strong> Down payment must be between 30% and 70% of the car price.
             </span>
         </div>
     </div>
@@ -111,6 +125,7 @@ function creditForm(carPrice) {
         tenor: {{ old('tenor', 36) }},
         dpPresetOptions: [30, 40, 50],
         dpPreset: '{{ old('down_payment_percent', 30) }}',
+        dpManual: '',
 
         // Calculated Values
         carPrice,
@@ -125,15 +140,30 @@ function creditForm(carPrice) {
         // Methods
         updateDP() {
             this.dpError = '';
-            this.dpPercent = parseFloat(this.dpPreset);
-            this.dpNominal = Math.round(this.carPrice * this.dpPercent / 100);
-
-            if (this.dpPercent < 30) {
-                this.dpError = 'Down payment must be at least 30%.';
-                this.dpNominal = 0;
+            // If manual is filled, use manual
+            if (this.dpManual !== '' && this.dpManual !== null) {
+                this.dpPercent = parseFloat(this.dpManual);
+            } else if(this.dpPreset !== '' && this.dpPreset !== null) {
+                this.dpPercent = parseFloat(this.dpPreset);
+            } else {
                 this.dpPercent = 0;
             }
 
+            if (isNaN(this.dpPercent) || this.dpPercent === 0) {
+                this.dpError = 'Please set a valid down payment percent.';
+                this.dpNominal = 0;
+                this.updateSimulation();
+                return;
+            }
+
+            if (this.dpPercent < 30 || this.dpPercent > 70) {
+                this.dpError = 'Down payment must be between 30% and 70%.';
+                this.dpNominal = 0;
+                this.updateSimulation();
+                return;
+            }
+
+            this.dpNominal = Math.round(this.carPrice * this.dpPercent / 100);
             this.updateSimulation();
         },
 
@@ -146,7 +176,7 @@ function creditForm(carPrice) {
 
             this.financedAmount = this.carPrice - this.dpNominal;
 
-            const interestRatePerMonth = 0.005; // 0.5% flat monthly interest
+            const interestRatePerMonth = 0.005; // 0.5% flat per month
             const totalInterest = this.financedAmount * interestRatePerMonth * this.tenor;
             const totalLoan = this.financedAmount + totalInterest;
 

@@ -22,6 +22,9 @@
     <style>[x-cloak] { display: none !important; }</style>
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" />
+
+    {{-- 🟢 Styles stack for per-page CSS --}}
+    @stack('styles')
 </head>
 <body
     class="bg-gray-100 font-sans antialiased"
@@ -33,24 +36,41 @@
         $watch('$store.sidebar.open', value => localStorage.setItem('sidebarOpen', value));
     "
 >
- @include('partials.side-deal')
-    <div class="flex min-h-screen">
+    {{-- 🔔 Alert (Success & Error) --}}
+    @if(session('error'))
+        <x-alert type="error" :message="session('error')" />
+    @endif
+    @if(session('success'))
+        <x-alert type="success" :message="session('success')" />
+    @endif
 
+    {{-- Sidebar --}}
+    @include('partials.side-deal')
 
+    <div class="flex-1 flex flex-col transition-all duration-300 ease-in-out"
+        :class="{
+                'ml-0': true,
+                'md:ml-60': $store.sidebar.open,
+                'md:ml-20': !$store.sidebar.open
+        }">
 
-        <div class="flex-1 flex flex-col transition-all duration-300 ease-in-out"
-            :class="$store.sidebar.open ? 'ml-60' : 'ml-20'">
+        {{-- Navbar --}}
+        @include('partials.nav-deal')
 
-            @include('partials.nav-deal')
+        <main class="flex-1 sm:px-6 px-3 pb-10 overflow-auto">
+            @yield('content')
+        </main>
 
-            <main class="flex-1 px-6 pb-10 overflow-auto">
-                @yield('content')
-            </main>
-
-            <footer class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-center py-4 text-sm text-gray-500 dark:text-gray-400">
-                &copy; {{ date('Y') }} Venus Cars. All rights reserved.
-            </footer>
-        </div>
+        <footer class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+            &copy; {{ date('Y') }} Venus Cars. All rights reserved.
+        </footer>
     </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
+    {{-- 🟢 Scripts stack for per-page JS --}}
+    @stack('scripts')
 </body>
 </html>

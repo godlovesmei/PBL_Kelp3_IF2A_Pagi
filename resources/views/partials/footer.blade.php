@@ -1,4 +1,4 @@
-<footer class="relative bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-20">
+<footer class="relative bg-gray-50 dark:bg-gray-900 border-t border-[#d2e3ea] dark:border-gray-700 mt-20">
     <div class="max-w-screen-xl mx-auto px-6 py-12 sm:py-16">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 gap-y-8">
             <!-- Brand Info -->

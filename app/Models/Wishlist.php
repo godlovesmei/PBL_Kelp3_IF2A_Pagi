@@ -32,4 +32,5 @@ class Wishlist extends Model
     {
         return $this->belongsTo(Car::class, 'car_id', 'id');
     }
+
 }

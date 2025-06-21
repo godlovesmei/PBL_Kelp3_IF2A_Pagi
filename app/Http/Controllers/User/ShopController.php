@@ -8,46 +8,84 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    // Fungsi untuk menampilkan daftar mobil berdasarkan filter
+    // Daftar mobil dengan filter dan sort
     public function index(Request $request)
     {
-        $cars = $this->applyFilters($request)->paginate(12); // Pagination: 12 mobil per halaman
-        $categories = Car::select('category')->distinct()->pluck('category'); // Kategori unik
+        $cars = $this->applyFilters($request)
+            ->orderBy(...$this->sortColumn($request))
+            ->paginate(12)
+            ->withQueryString();
 
-        return view('pages.shop', compact('cars', 'categories'));
-    }
+        $categories = Car::select('category')->distinct()->pluck('category')->sort();
 
-    // Fungsi untuk menampilkan detail mobil berdasarkan ID
-    public function show($id)
-{
-    $car = Car::with('colors')->findOrFail($id);
-    $carPrice = $car->price; // <-- TAMBAH BARIS INI
-    return view('pages.car-details', compact('car', 'carPrice')); // <-- TAMBAHKAN $carPrice
+        // Tambahkan logic wishlist: ambil id mobil yang sudah di-wishlist user
+        $wishlistedCarIds = [];
+if (auth()->check() && auth()->user()->customer) {
+    $wishlistedCarIds = auth()->user()->customer->wishlistCars()->pluck('car_id')->toArray();
 }
 
-    // Fungsi private untuk menyaring mobil berdasarkan filter
+        return view('pages.shop', compact('cars', 'categories', 'wishlistedCarIds'));
+    }
+
+    // Detail mobil
+    public function show($id)
+    {
+        $car = Car::with('colors')->findOrFail($id);
+        $carPrice = $car->price;
+        return view('pages.car-details', compact('car', 'carPrice'));
+    }
+
+    // Filtering mobil
     private function applyFilters(Request $request)
     {
-        return Car::with('colors')
-            ->when($request->input('category'), function ($query, $categories) {
-                $query->whereIn('category', $categories); // Filter kategori
-            })
-            ->when($request->input('price'), function ($query, $prices) {
-                $query->where(function ($q) use ($prices) {
-                    foreach ($prices as $price) {
-                        if ($price == '<300') {
-                            $q->orWhere('price', '<', 300000000);
-                        } elseif ($price == '>300') {
-                            $q->orWhere('price', '>=', 300000000);
-                        } elseif ($price == '>900') {
-                            $q->orWhere('price', '>=', 900000000);
-                        }
+        $query = Car::with('colors');
+
+        // Category filter (array)
+        if ($request->filled('category')) {
+            $query->whereIn('category', (array) $request->input('category'));
+        }
+
+        // Price filter (array)
+        if ($request->filled('price')) {
+            $query->where(function ($q) use ($request) {
+                foreach ((array) $request->input('price') as $price) {
+                    if ($price == '<300') {
+                        $q->orWhere('price', '<', 300_000_000);
+                    } elseif ($price == '>300') {
+                        $q->orWhere('price', '>=', 300_000_000);
+                    } elseif ($price == '>900') {
+                        $q->orWhere('price', '>=', 900_000_000);
                     }
-                });
-            })
-            ->when($request->input('search'), function ($query, $search) {
-                $query->where('model', 'like', '%' . $search . '%')
-                      ->orWhere('brand', 'like', '%' . $search . '%');
+                }
             });
+        }
+
+        // Search filter (model OR brand)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('model', 'like', "%{$search}%")
+                  ->orWhere('brand', 'like', "%{$search}%");
+            });
+        }
+
+        // Tambahkan filter lain di sini (misal: tahun, warna, dsb)
+
+        return $query;
+    }
+
+    // Sorting logic
+    private function sortColumn(Request $request)
+    {
+        $sort = $request->input('sort');
+        switch ($sort) {
+            case 'price_asc':
+                return ['price', 'asc'];
+            case 'price_desc':
+                return ['price', 'desc'];
+            case 'newest':
+            default:
+                return ['created_at', 'desc'];
+        }
     }
 }

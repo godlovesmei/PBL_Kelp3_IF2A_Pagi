@@ -44,7 +44,7 @@
         <form method="POST" action="{{ route('notifications.read', $notification->id) }}">
           @csrf
           @method('PATCH')
-          <input type="hidden" name="redirect" value="/orders/{{ $notification->data['order_id'] ?? '' }}">
+          <input type="hidden" name="redirect" value="{{ $notification->data['url'] ?? '#' }}">
           <button type="submit"
             class="block w-full text-left px-4 py-2 transition
               {{ is_null($notification->read_at)
