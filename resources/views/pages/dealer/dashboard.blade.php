@@ -5,7 +5,7 @@
     <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <div>
-                <h1 class="text-3xl font-extrabold text-gray-800 mb-1 leading-tight tracking-tight">Welcome, {{ Auth::user()->name }}!</h1>
+                <h1 class="text-3xl font-extrabold text-zinc-800 mb-1 leading-tight tracking-tight">Welcome, {{ Auth::user()->name }}!</h1>
                 <p class="mb-2 text-gray-500 text-base font-medium">Track your sales, customers and earnings.</p>
             </div>
             <div class="flex gap-2 mt-2 md:mt-0">
@@ -17,6 +17,25 @@
                 </a>
             </div>
         </div>
+        <form method="GET" class="mb-6 flex flex-wrap gap-4 items-end">
+    <div>
+        <label class="block text-sm font-medium text-gray-700">From</label>
+        <input type="date" name="date_from" value="{{ request('date_from') }}"
+            class="border-gray-300 rounded-md shadow-sm focus:ring-sky-500 focus:border-sky-500">
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-gray-700">To</label>
+        <input type="date" name="date_to" value="{{ request('date_to') }}"
+            class="border-gray-300 rounded-md shadow-sm focus:ring-sky-500 focus:border-sky-500">
+    </div>
+    <div>
+        <button type="submit"
+            class="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-4 py-2 rounded-md shadow">
+            Apply Filter
+        </button>
+    </div>
+</form>
+
 
         <!-- Statistic Cards -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-4 mb-8">
@@ -42,25 +61,65 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <!-- Monthly Payment Income Chart -->
-            <div class="bg-white rounded-2xl shadow-xl p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold text-gray-800">Monthly Payment Income</h2>
-                    <span class="inline-block bg-blue-50 text-gray-700 text-xs px-3 py-1 rounded-full font-semibold">Analytics</span>
-                </div>
-                <canvas id="monthlyPaidChart" height="60"></canvas>
+          <!-- Monthly Payment Income Chart -->
+                <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 lg:p-12 h-[350px]">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Monthly Payment Income</h2>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">
+                            Analytics
+                        </span>
+                    </div>
+                <div class="h-full">
+                            <canvas id="monthlyPaidChart" class="w-full h-full"></canvas>
             </div>
-            <!-- Orders & Customers Pie Chart -->
+            </div>
+            <!-- Payment Method Distribution Pie Chart -->
             <div class="bg-white rounded-2xl shadow-xl p-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold text-orange-600">Customers vs Orders</h2>
-                    <span class="inline-block bg-orange-50 text-orange-700 text-xs px-3 py-1 rounded-full font-semibold">Demographics</span>
+                    <h2 class="text-lg font-bold text-gray-700">Payment Type Distribution</h2>
+                    <span class="inline-block bg-emerald-50 text-emerald-700 text-xs px-3 py-1 rounded-full font-semibold">Breakdown</span>
                 </div>
-                <canvas id="customersOrdersPie" height="60"></canvas>
+                @php
+                    $pieLabels = array_keys($typeDistribution);
+                    $pieTotals = array_values($typeDistribution);
+                    $pieColors = ['#14b8a6', '#facc15', '#6366f1'];
+                @endphp
+                <canvas id="paymentTypePie" height="60"></canvas>
                 <div class="flex gap-3 mt-4">
-                    <span class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-orange-400 mr-1"></span>Customers</span>
-                    <span class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-indigo-400 mr-1"></span>Orders</span>
+                    @foreach($pieLabels as $i => $lbl)
+                        <span class="flex items-center"><span class="inline-block w-3 h-3 rounded-full mr-1" style="background: {{ $pieColors[$i] }}"></span>{{ $lbl }}</span>
+                    @endforeach
                 </div>
+            </div>
+        </div>
+
+        <!-- Top Products & Top Customers -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Top Products</h2>
+                <ol class="space-y-2">
+                    @forelse($topProducts as $prod)
+                        <li class="flex items-center justify-between px-2 py-2 rounded hover:bg-sky-50">
+                            <span class="truncate">{{ $prod['name'] }}</span>
+                            <span class="font-bold text-sky-700">Rp{{ number_format($prod['total'], 0, ',', '.') }}</span>
+                        </li>
+                    @empty
+                        <li class="text-gray-400 italic py-2">No data.</li>
+                    @endforelse
+                </ol>
+            </div>
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Top Customers</h2>
+                <ol class="space-y-2">
+                    @forelse($topCustomers as $cust)
+                        <li class="flex items-center justify-between px-2 py-2 rounded hover:bg-emerald-50">
+                            <span class="truncate">{{ $cust['name'] }}</span>
+                            <span class="font-bold text-emerald-700">Rp{{ number_format($cust['total'], 0, ',', '.') }}</span>
+                        </li>
+                    @empty
+                        <li class="text-gray-400 italic py-2">No data.</li>
+                    @endforelse
+                </ol>
             </div>
         </div>
 
@@ -82,10 +141,10 @@
                     <tbody>
                     @forelse($recentOrders ?? [] as $order)
                         <tr class="border-b last:border-0 hover:bg-gray-50">
-                            <td class="py-2 px-3 font-mono text-indigo-600">#{{ $order->id }}</td>
-                            <td class="py-2 px-3">{{ $order->customer->name ?? '-' }}</td>
-                            <td class="py-2 px-3">{{ $order->product->name ?? '-' }}</td>
-                            <td class="py-2 px-3">Rp{{ number_format($order->total, 0, ',', '.') }}</td>
+                            <td class="py-2 px-3 font-mono text-indigo-600">#{{ $order->order_id }}</td>
+                            <td class="py-2 px-3">{{ $order->customer->user->name ?? '-' }}</td>
+                            <td class="py-2 px-3">{{ $order->car->model ?? '-' }}</td>
+                            <td class="py-2 px-3">Rp{{ number_format($order->total_price, 0, ',', '.') }}</td>
                             <td class="py-2 px-3">
                                 <span class="inline-block px-2 py-1 text-xs rounded
                                     {{ $order->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
@@ -103,6 +162,24 @@
                 </table>
             </div>
         </div>
+
+        <!-- Recent Activities -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Activities</h2>
+            @if(!empty($recentPaymentActivities))
+                <ul>
+                    @foreach($recentPaymentActivities as $log)
+                        <li class="mb-2 text-sm text-gray-700 flex items-center">
+                            <i class="fas fa-receipt text-emerald-500 mr-2"></i>
+                            <span class="flex-1">{{ $log['description'] }}</span>
+                            <span class="ml-3 text-xs text-gray-400">{{ $log['created_at'] }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <div class="text-gray-400 italic">No recent activities.</div>
+            @endif
+        </div>
     </div>
 </div>
 
@@ -112,15 +189,16 @@
     // Monthly Paid Area Chart
     const ctx = document.getElementById('monthlyPaidChart').getContext('2d');
     const monthlyPaidData = @json($monthlyPaid ?? []);
-    const labels = monthlyPaidData.map(item => item.label);
+    const labels = monthlyPaidData.map(item => item.label); // Sudah include bulan + tahun dari controller
     const totals = monthlyPaidData.map(item => item.total);
 
     function getGradient(ctx) {
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, 'rgba(20,184,166,0.18)');
-        gradient.addColorStop(1, 'rgba(20,184,166,0.18)');
+        gradient.addColorStop(1, 'rgba(20,184,166,0.07)');
         return gradient;
     }
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -139,6 +217,7 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // ✅ ini penting untuk hindari gepeng
             plugins: {
                 legend: { display: false },
                 tooltip: {
@@ -154,15 +233,17 @@
         }
     });
 
-    // Customers vs Orders Pie Chart
-    const pieCtx = document.getElementById('customersOrdersPie').getContext('2d');
-    new Chart(pieCtx, {
+    // Payment Type Pie Chart
+    const pieLabels = @json($pieLabels ?? []);
+    const pieTotals = @json($pieTotals ?? []);
+    const pieColors = @json($pieColors ?? []);
+    new Chart(document.getElementById('paymentTypePie').getContext('2d'), {
         type: 'doughnut',
         data: {
-            labels: ['Customers', 'Orders'],
+            labels: pieLabels,
             datasets: [{
-                data: [{{ $totalCustomers }}, {{ $totalOrders }}],
-                backgroundColor: ['#fb923c', '#6366f1'],
+                data: pieTotals,
+                backgroundColor: pieColors,
                 borderWidth: 0,
             }]
         },
@@ -172,7 +253,7 @@
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: (context) => `${context.label}: ${context.parsed}`
+                        label: (context) => `${context.label}: Rp ${context.parsed.toLocaleString()}`
                     }
                 }
             }

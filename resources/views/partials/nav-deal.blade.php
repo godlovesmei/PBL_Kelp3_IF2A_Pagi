@@ -103,7 +103,7 @@
                             ],
                             [
                                 'label' => 'Sales',
-                                'route' => 'pages.dealer.order-index',
+                                'route' => 'pages.dealer.sales',
                                 'icon' => 'M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0-6C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z',
                             ],
                         ]
@@ -127,12 +127,12 @@
                                     ],
                                     [
                                         'label' => 'Payments',
-                                        'route' => 'pages.dealer.order-index',
+                                        'route' => 'pages.dealer.payments',
                                         'icon' => 'M2 7h20M5 10h14M4 14h4m2 0h10M3 18h18',
                                     ],
                                     [
                                         'label' => 'Installments',
-                                        'route' => 'pages.dealer.order-index',
+                                        'route' => 'pages.dealer.installments',
                                         'icon' => 'M12 6v6l4 2m-4-8a10 10 0 110 20 10 10 0 010-20z',
                                     ],
                                 ]
@@ -142,11 +142,11 @@
                                 'route' => 'pages.dealer.brochure.index',
                                 'icon' => 'M3 4a1 1 0 011-1h11l5 5v11a1 1 0 01-1 1H4a1 1 0 01-1-1V4z',
                             ],
-                            [
-                                'label' => 'Customers',
-                                'route' => 'pages.dealer.order-index',
-                                'icon' => 'M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5s-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 2.08 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z',
-                            ],
+                           // [
+                               // 'label' => 'Customers',
+                               // 'route' => 'pages.dealer.order-index',
+                               // 'icon' => 'M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5s-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 2.08 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z',
+                           // ],
                         ]
                     ]
                 ];

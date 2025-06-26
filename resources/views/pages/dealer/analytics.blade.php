@@ -10,7 +10,7 @@
             </div>
             <!-- Quick Export & Date Range -->
             <div class="flex items-center gap-2 flex-wrap">
-                <button type="button" onclick="window.print()" class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 transition shadow">
+                <button type="button" onclick="window.print()" class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 transition shadow">
                     <i class="fas fa-download mr-2"></i> Export PDF
                 </button>
                 <button type="button" class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
@@ -19,20 +19,19 @@
             </div>
         </div>
 
-<!-- FILTER SECTION -->
 <form method="GET" class="mb-6 bg-white p-2 sm:p-4 md:p-6 rounded-xl shadow flex flex-col sm:flex-row sm:flex-wrap gap-y-3 sm:gap-4">
     <div class="flex flex-col sm:flex-row gap-2 flex-1">
         <div>
             <label class="block text-xs font-semibold text-gray-500 mb-1">Date Start</label>
-            <input type="date" name="date_start" value="{{ request('date_start') }}" class="rounded-lg border-gray-200 focus:ring-indigo-500 text-sm px-3 py-2 w-full sm:w-36">
+            <input type="date" name="date_start" value="{{ request('date_start', $dateStart) }}" class="rounded-lg border-gray-200 focus:ring-indigo-500 text-sm px-3 py-2 w-full sm:w-36">
         </div>
         <div>
             <label class="block text-xs font-semibold text-gray-500 mb-1">Date End</label>
-            <input type="date" name="date_end" value="{{ request('date_end') }}" class="rounded-lg border-gray-200 focus:ring-indigo-500 text-sm px-3 py-2 w-full sm:w-36">
+            <input type="date" name="date_end" value="{{ request('date_end', $dateEnd) }}" class="rounded-lg border-gray-200 focus:ring-indigo-500 text-sm px-3 py-2 w-full sm:w-36">
         </div>
         <div>
             <label class="block text-xs font-semibold text-gray-500 mb-1">Customer</label>
-            <input type="text" name="customer" value="{{ request('customer') }}" placeholder="Customer name..." class="rounded-lg border-gray-200 focus:ring-indigo-500 text-sm px-3 py-2 w-full sm:w-40">
+            <input type="text" name="customer" value="{{ request('customer') }}" placeholder="Customer name..." class="rounded-lg border-gray-200 focus:ring-indigo-500 text-sm px-3 py-2 w-full sm:w-40 placeholder-slate-500 italic">
         </div>
         <div>
             <label class="block text-xs font-semibold text-gray-500 mb-1">Payment Type</label>
@@ -55,7 +54,7 @@
             </select>
         </div>
         <div class="flex items-end">
-            <button type="submit" class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 transition shadow">
+            <button type="submit" class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-semibold bg-slate-500 text-white hover:bg-slate-700 transition shadow">
                 <i class="fas fa-search mr-2"></i> Filter
             </button>
         </div>
@@ -148,7 +147,7 @@
                 <table class="min-w-full text-xs sm:text-sm">
                     <thead>
                         <tr class="bg-gray-50 text-gray-700">
-                            <th class="px-3 py-2 text-left">Activity</th>
+                            <th class="px-3 py-2 text-left">Product</th>
                             <th class="px-3 py-2 text-left">Amount</th>
                             <th class="px-3 py-2 text-left">Payment Type</th>
                             <th class="px-3 py-2 text-left">Customer</th>
@@ -172,17 +171,21 @@
             </div>
         </div>
 
-        <!-- Analytics/Trends Chart -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-            <div class="bg-white rounded-xl shadow p-4 flex flex-col">
-                <h2 class="text-base font-semibold mb-3 text-gray-700">Income Trends</h2>
-                <canvas id="trendsChart" height="40"></canvas>
-            </div>
-            <div class="bg-white rounded-xl shadow p-4 flex flex-col">
-                <h2 class="text-base font-semibold mb-3 text-gray-700">Payment Type Distribution</h2>
-                <canvas id="typePieChart" height="40"></canvas>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col">
+            <h2 class="text-base font-semibold mb-3 text-gray-700">Income Trends</h2>
+            <canvas id="trendsChart" height="150"></canvas>
         </div>
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col">
+            <h2 class="text-base font-semibold mb-3 text-gray-700">Payment Type Distribution</h2>
+            <canvas id="typePieChart" height="150"></canvas>
+            @php
+                $pieLabels = array_keys($typeDistribution);
+                $pieTotals = array_values($typeDistribution);
+                $pieColors = ['#34d399','#fbbf24','#6366f1'];
+            @endphp
+        </div>
+    </div>
 
         <!-- Leaderboard & Best Customers -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
@@ -228,7 +231,6 @@
     </div>
 </div>
 
-{{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Trends Chart
@@ -243,7 +245,7 @@
         gradient.addColorStop(1, 'rgba(99,102,241,0.02)');
         return gradient;
     }
-    new Chart(ctx, {
+    const chartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: trendLabels,
@@ -274,11 +276,18 @@
         }
     });
 
+    // Fix: force resize after short delay and on window resize
+    setTimeout(() => {
+        chartInstance.resize();
+    }, 200);
+    window.addEventListener('resize', () => {
+        chartInstance.resize();
+    });
+
     // Payment Type Pie Chart
-    const typeDistData = @json($typeDistribution ?? []);
-    const typeLabels = typeDistData.map(item => item.label);
-    const typeTotals = typeDistData.map(item => item.total);
-    const pieColors = ['#34d399','#fbbf24','#6366f1','#f87171'];
+    const typeLabels = @json($pieLabels);
+    const typeTotals = @json($pieTotals);
+    const pieColors = @json($pieColors);
 
     new Chart(document.getElementById('typePieChart').getContext('2d'), {
         type: 'doughnut',

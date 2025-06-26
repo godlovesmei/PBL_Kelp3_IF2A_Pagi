@@ -21,6 +21,9 @@ use App\Http\Controllers\Dealer\BrochureController as DealerBrochureController;
 use App\Http\Controllers\User\BrochureController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Dealer\AnalyticsController;
+use App\Http\Controllers\Dealer\SalesController;
+use App\Http\Controllers\Dealer\InstallmentTrackingController;
+use App\Http\Controllers\Dealer\PaymentTrackingController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -86,6 +89,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':dealer'])->group(function (
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('pages.dealer.dashboard');
     // Analytics dealer
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('pages.dealer.analytics');
+    // Rute untuk melacak cicilan
+    Route::get('/installments', [InstallmentTrackingController::class, 'index'])->name('pages.dealer.installments');
+    // Rute untuk melacak pembayaran
+    Route::get('/payments', [PaymentTrackingController::class, 'index'])->name('pages.dealer.payments');
+    // Rute untuk melihat penjualan
+    Route::get('/sales', [SalesController::class, 'index'])->name('pages.dealer.sales');
 
     // CRUD mobil untuk dealer
     Route::resource('car', DealerCarController::class)->names([
@@ -109,6 +118,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':dealer'])->group(function (
 
     // Pesanan dealer
     Route::get('/orders', [OrderTrackingController::class, 'index'])->name('pages.dealer.order-index');
+    Route::get('/orders/{order}', [OrderTrackingController::class, 'show'])->name('pages.dealer.order-show');
     Route::get('/orders/filter/{status}', [OrderTrackingController::class, 'filter'])->name('pages.dealer.order-filter');
     Route::post('/orders/{order}/update', [OrderTrackingController::class, 'updateStatus'])->name('pages.dealer.order-update');
 });

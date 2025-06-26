@@ -6,11 +6,30 @@
 @section('content')
 <div class="pt-[85px] px-4 max-w-screen-xl mx-auto">
     <div class="flex flex-col lg:flex-row gap-8">
+
         <!-- Sidebar Filter -->
-        <x-sidebar-filter :categories="$categories" />
+        <x-sidebar-filter :categories="$categories" :cars="$cars" />
 
         <!-- Car Catalog Content -->
         <div class="pt-[35px] flex-1">
+@if($cars->isEmpty())
+    <div class="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+        <svg class="w-16 h-16 text-cyan-600 dark:text-cyan-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75h.008v.008H9.75V9.75zm4.5 0h.008v.008h-.008V9.75zM21 12a9 9 0 11-18 0 9 9 0 0118 0zM8.25 15s1.125-1.5 3.75-1.5 3.75 1.5 3.75 1.5" />
+        </svg>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+            No results found
+        </h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">
+            We couldn't find any cars matching your search. Try adjusting the filters.
+        </p>
+        <a href="{{ route('pages.shop') }}"
+           class="mt-2 inline-flex items-center px-4 py-2 bg-cyan-700 hover:bg-cyan-900 text-white text-sm font-medium rounded-lg transition focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2">
+            Reset Filters
+        </a>
+    </div>
+@endif
+
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-6">
             @foreach ($cars as $car)
                 @php
@@ -23,7 +42,7 @@
                 >
                     <!-- Car Image -->
                     <div class="relative">
-                        <div class="flex items-center justify-center h-40 w-full bg-gray-100 overflow-hidden rounded-t-lg">
+                        <div class="flex items-center justify-center h-40 w-full bg-white overflow-hidden rounded-t-lg">
                             <img src="{{ asset('images/' . $car->image) }}"
                                  alt="{{ $car->brand }} {{ $car->model }}"
                                  class="h-full object-contain transition-transform duration-300 group-hover:scale-110 group-hover:brightness-110 group-hover:contrast-125"
@@ -55,46 +74,45 @@
                         </div>
                         @endif
 
-                        <!-- Buttons -->
-                        <div class="mt-4 flex flex-wrap gap-3 justify-between items-center">
-                            <a href="{{ route('pages.cars.show', $car->id) }}"
-                                class="border-2 border-black rounded-full px-4 py-2 text-sm font-medium text-gray-800 hover:bg-black hover:text-white transition-all duration-200 hover:scale-105">
-                                Details
-                            </a>
-                            @auth
-                            <button
-                                class="wishlist-toggle-btn group border border-transparent rounded-full p-2 bg-white transition-all duration-300 shadow-sm hover:shadow-md transform relative"
-                                data-car-id="{{ $car->id }}"
-                                aria-pressed="{{ $isWishlisted ? 'true' : 'false' }}"
-                                title="{{ $isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist' }}"
-                            >
-                                <!-- Heart icon: empty (outline) if not wishlisted, full if wishlisted -->
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    class="w-6 h-6 transition-all duration-200
-                                    {{ $isWishlisted ? 'fill-pink-500 stroke-pink-500' : 'fill-none stroke-pink-400' }}"
-                                    stroke-width="2"
-                                    stroke="currentColor"
-                                    >
-                                    <path class="heart-shape"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M16.5 3.75c-1.77 0-3.12 1.04-4.03 2.13C11.57 4.79 10.18 3.75 8.5 3.75A4.75 4.75 0 0 0 3.75 8.5c0 2.88 2.61 5.12 6.55 8.67l.57.5a2 2 0 0 0 2.26 0l.57-.5c3.94-3.55 6.55-5.79 6.55-8.67A4.75 4.75 0 0 0 16.5 3.75z"/>
-                                </svg>
-                                <span class="absolute -top-2 -right-2 animate-pulse hidden" id="wishlist-loader-{{ $car->id }}">
-                                    <svg class="w-4 h-4 text-pink-400" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                                    </svg>
-                                </span>
-                            </button>
-                            @else
-                            <a href="{{ route('login') }}"
-                               class="border-2 border-gray-500 text-gray-500 rounded-full px-4 py-2 text-sm font-medium hover:bg-gray-500 hover:text-white transition-all duration-200 hover:scale-105">
-                                Login to Add to Wishlist
-                            </a>
-                            @endauth
-                        </div>
+<!-- Buttons -->
+<div class="mt-4 flex justify-between items-center">
+    <a href="{{ route('pages.cars.show', $car->id) }}"
+        class="text-sm font-medium text-cyan-700 hover:underline">
+        View Details →
+    </a>
+
+    <!-- Wishlist -->
+    @auth
+    <button
+        class="wishlist-toggle-btn p-2 rounded-full hover:bg-pink-50 transition"
+        data-car-id="{{ $car->id }}"
+        aria-pressed="{{ $isWishlisted ? 'true' : 'false' }}"
+        title="{{ $isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist' }}"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             class="w-5 h-5 transition
+             {{ $isWishlisted ? 'fill-pink-500 stroke-pink-500' : 'fill-none stroke-pink-400' }}"
+             stroke-width="2"
+             stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.5 3.75c-1.77 0-3.12 1.04-4.03 2.13C11.57 4.79 10.18 3.75 8.5 3.75A4.75 4.75 0 0 0 3.75 8.5c0 2.88 2.61 5.12 6.55 8.67l.57.5a2 2 0 0 0 2.26 0l.57-.5c3.94-3.55 6.55-5.79 6.55-8.67A4.75 4.75 0 0 0 16.5 3.75z"/>
+        </svg>
+    </button>
+    @else
+    <a href="{{ route('login') }}" title="Login to wishlist"
+        class="p-2 rounded-full hover:bg-gray-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             class="w-5 h-5 stroke-pink-400"
+             fill="none" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.5 3.75c-1.77 0-3.12 1.04-4.03 2.13C11.57 4.79 10.18 3.75 8.5 3.75A4.75 4.75 0 0 0 3.75 8.5c0 2.88 2.61 5.12 6.55 8.67l.57.5a2 2 0 0 0 2.26 0l.57-.5c3.94-3.55 6.55-5.79 6.55-8.67A4.75 4.75 0 0 0 16.5 3.75z"/>
+        </svg>
+    </a>
+    @endauth
+</div>
+
                     </div>
                 </div>
             @endforeach

@@ -1,8 +1,13 @@
-@props(['categories', 'sortOptions' => [
-    'newest' => 'Newest',
-    'price_asc' => 'Price: Low to High',
-    'price_desc' => 'Price: High to Low',
-]])
+@props([
+    'categories',
+    'cars',
+    'sortOptions' => [
+        'newest' => 'Newest',
+        'price_asc' => 'Price: Low to High',
+        'price_desc' => 'Price: High to Low',
+    ]
+])
+
 
 <!-- Mobile Filter Toggle Button -->
 <button id="filter-toggle"
@@ -25,7 +30,7 @@
 
     <!-- Header Mobile -->
     <div class="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800 lg:hidden">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Filters</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Inventory</h2>
         <button type="button"
             id="filter-close"
             class="p-2 rounded-full text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -37,24 +42,27 @@
     </div>
     <!-- Header Desktop -->
     <div class="hidden lg:block px-5 pt-2 pb-0">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Filters</h2>
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">Inventory</h2>
     </div>
+    <hr class="border-gray-200 dark:border-gray-700">
 
     <div class="px-5 py-4 lg:py-0 space-y-6">
         <!-- SORT BY (Professional touch) -->
-        <div>
-            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                <svg class="inline mb-1 mr-1 w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8h13M3 16h9"/>
-                </svg>
-                Sort by
-            </label>
-            <select name="sort" class="form-select w-full rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500">
+
+        <!-- Sort By Section -->
+        <section>
+            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200 mb-3">Sort by</h3>
+            <select name="sort"
+                class="w-full rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm focus:ring-cyan-500 focus:border-cyan-500 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                onchange="this.form.submit()">
                 @foreach($sortOptions as $val => $label)
-                    <option value="{{ $val }}" @if(request('sort') === $val) selected @endif>{{ $label }}</option>
+                <option value="{{ $val }}" @selected(request('sort') === $val)>{{ $label }}</option>
                 @endforeach
             </select>
-        </div>
+        </section>
+    </form>
+</aside>
+
 
         <hr class="border-gray-200 dark:border-gray-700">
 
@@ -120,13 +128,15 @@
 
         <!-- Add more filter sections here as needed -->
 
-        <!-- Reset button -->
-        <div class="pt-4">
-            <button type="button" id="reset-filters"
-                class="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg py-3 text-base font-semibold shadow transition">
-                Reset Filters
-            </button>
-        </div>
+   <!-- Reset button -->
+<div class="pt-4">
+    <button type="button" id="reset-filters"
+        class="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700
+               text-gray-700 dark:text-gray-200 text-sm font-medium py-2 px-4
+               rounded-md shadow-sm transition">
+        Reset Filters
+    </button>
+</div>
     </div>
 </form>
 

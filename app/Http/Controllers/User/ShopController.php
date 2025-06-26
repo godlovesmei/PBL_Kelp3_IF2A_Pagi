@@ -24,7 +24,13 @@ if (auth()->check() && auth()->user()->customer) {
     $wishlistedCarIds = auth()->user()->customer->wishlistCars()->pluck('car_id')->toArray();
 }
 
-        return view('pages.shop', compact('cars', 'categories', 'wishlistedCarIds'));
+        return view('pages.shop', [
+    'cars' => $cars,
+    'categories' => $categories,
+    'wishlistedCarIds' => $wishlistedCarIds,
+    'isEmpty' => $cars->isEmpty(),
+]);
+
     }
 
     // Detail mobil

@@ -24,15 +24,14 @@
     </div>
 </section>
 
-<!-- VIDEO INTRO -->
-<section class="w-full bg-gray-100 py-12">
-    <div class="max-w-screen-xl mx-auto px-4 sm:px-12">
-        <video autoplay muted loop playsinline controls class="w-full h-auto rounded-xl shadow-lg" data-aos="fade-up">
-            <source src="{{ asset('videos/all-new-honda-civic.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+<!-- VIDEO INTRO FULLSCREEN -->
+<section class="w-full h-screen bg-black">
+    <video autoplay muted loop playsinline class="w-full h-full object-cover" data-aos="fade-up">
+        <source src="{{ asset('videos/all-new-honda-civic.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 </section>
+
 <!-- SECTION 1 -->
 <section class="relative h-screen flex flex-col">
     <img src="{{ asset('images/bumper.jpg') }}" alt="Sporty bumper design with aerodynamic elements and stylish diffuser" class="w-full h-full object-cover absolute inset-0 z-0" />

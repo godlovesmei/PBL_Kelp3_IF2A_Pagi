@@ -13,35 +13,39 @@
         </p>
     </div>
 
-    <!-- Filter & Search -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 mb-6">
-        <form method="GET" class="flex gap-2 w-full sm:w-auto">
+<!-- Filter & Search -->
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-6">
+    <form method="GET" class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+        <!-- Search Input -->
+        <div class="relative w-full sm:w-64">
             <input
                 type="text"
                 name="search"
                 value="{{ request('search') }}"
-                placeholder="Search order, car, code..."
-                class="p-2 border rounded shadow w-full sm:w-64"
+                placeholder="Search order, car, or code"
+                class="w-full pl-10 pr-4 py-2 text-sm rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-300 focus:outline-none bg-white"
             />
-            <select
-                name="status"
-                onchange="this.form.submit()"
-                class="p-2 border rounded shadow"
-            >
-                <option value="">All Status</option>
-                <option value="pending"   {{ request('status')=='pending'?'selected':'' }}>Pending</option>
-                <option value="confirm"   {{ request('status')=='confirm'?'selected':'' }}>Confirmed</option>
-                <option value="processing"{{ request('status')=='processing'?'selected':'' }}>Processing</option>
-                <option value="shipped"   {{ request('status')=='shipped'?'selected':'' }}>Shipped</option>
-                <option value="completed" {{ request('status')=='completed'?'selected':'' }}>Completed</option>
-                <option value="cancelled" {{ request('status')=='cancelled'?'selected':'' }}>Cancelled</option>
+            <span class="absolute left-3 top-2.5 text-gray-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                </svg>
+            </span>
+        </div>
+        <!-- Filter Dropdown -->
+        <div class="relative w-full sm:w-48">
+            <select name="status"
+                    class="w-full py-2 pl-3 pr-10 text-sm rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-300 focus:outline-none bg-white">
+                <option value="">All Statuses</option>
+                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="confirm" {{ request('status') === 'confirm' ? 'selected' : '' }}>Confirmed</option>
+                <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                <option value="processing" {{ request('status') === 'processing'    ? 'selected' : '' }}>Processing</option>
+                <option value="shipped" {{ request('status') === 'shipped' ? 'selected' : '' }}>Shipped</option>
+                <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed</option>
             </select>
-            <button
-                type="submit"
-                class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
-            >Filter</button>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
     <!-- Content -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -53,7 +57,7 @@
                     You have no orders yet.<br>Let's find your dream car!
                 </p>
                 <a href="{{ route('pages.shop') }}"
-                   class="mt-6 px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-md shadow hover:bg-blue-700 transition">
+                   class="mt-6 px-6 py-2.5 bg-blue-700 text-white text-sm font-medium rounded-md shadow hover:bg-blue-900 transition">
                     Shop Now
                 </a>
             </div>
