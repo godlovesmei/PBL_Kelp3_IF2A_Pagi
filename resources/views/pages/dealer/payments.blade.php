@@ -12,13 +12,7 @@
 
     {{-- Filter --}}
     <form action="{{ route('pages.dealer.payments') }}" method="GET" class="mb-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Customer Name</label>
-                <input type="text" name="customer" value="{{ request('customer') }}"
-                       class="w-full border rounded px-3 py-2 text-sm dark:bg-gray-900 dark:text-white dark:border-gray-700 placeholder-slate-500 italic"
-                       placeholder="Search name">
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div>
                 <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Payment Type</label>
                 <select name="method"
@@ -40,69 +34,105 @@
                        class="w-full border rounded px-3 py-2 text-sm dark:bg-gray-900 dark:text-white dark:border-gray-700">
             </div>
         </div>
-
         <div class="mt-4 flex justify-end">
-                <div class="flex gap-2">
-             <button type="submit"
+            <div class="flex gap-2">
+                <button type="submit"
                         class="px-4 py-2 bg-teal-600 text-white text-sm rounded hover:bg-teal-700">
-                     <i class="fas fa-filter mr-1"></i> Filter
-             </button>
-                        <a href="{{ route('pages.dealer.payments') }}"
-                                    class="text-sm text-gray-500 hover:underline flex items-center gap-1">
-                                        <i class="fas fa-redo"></i> Reset
-                                    </a>
-                </div>
+                    <i class="fas fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ route('pages.dealer.payments') }}"
+                   class="text-sm text-gray-500 hover:underline flex items-center gap-1">
+                    <i class="fas fa-redo"></i> Reset
+                </a>
             </div>
+        </div>
     </form>
 
     {{-- Payment Table --}}
-     <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
-            <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-4">All Payments</h4>
-            <div class="overflow-x-auto">
-                <table class="min-w-full table-auto text-sm text-gray-700 dark:text-gray-100">
-                    <thead class="bg-blue-100 dark:bg-gray-800 text-blue-900 dark:text-gray-300">
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+        <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-4">All Payments</h4>
+                   {{-- Sticky search bar --}}
+            <div class="sticky top-0 z-10 bg-white dark:bg-gray-900 py-2 mb-2 shadow-sm rounded">
+                <input type="search" placeholder="Quick search by customer, order, car..." class="w-full border px-3 py-2 rounded-lg text-sm" oninput="filterTable(this)">
+            </div>
+        <div class="overflow-x-auto">
+            <table id="payments-table" class="min-w-full table-auto text-sm text-gray-700 dark:text-gray-100">
+                <thead class="bg-blue-100 dark:bg-gray-800 text-blue-900 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Customer</th>
+                        <th class="px-4 py-2 text-left">Order</th>
+                        <th class="px-4 py-2 text-left">Type</th>
+                        <th class="px-4 py-2 text-left">Amount</th>
+                        <th class="px-4 py-2 text-left">Date</th>
+                        <th class="px-4 py-2 text-left">Proof</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($payments as $payment)
                         <tr>
-                            <th class="px-4 py-2 text-left">Customer</th>
-                            <th class="px-4 py-2 text-left">Order</th>
-                            <th class="px-4 py-2 text-left">Type</th>
-                            <th class="px-4 py-2 text-left">Amount</th>
-                            <th class="px-4 py-2 text-left">Date</th>
-                            <th class="px-4 py-2 text-left">Proof</th>
+                            <td class="px-4 py-2">{{ $payment->order->customer->user->name ?? '-' }}</td>
+                            <td class="px-4 py-2">#{{ $payment->order->order_id }}</td>
+                            <td class="px-4 py-2 capitalize">{{ $payment->payment_method }}</td>
+                            <td class="px-4 py-2 font-medium">Rp{{ number_format($payment->amount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
+                            <td class="px-4 py-2">
+                                @if ($payment->payment_proof)
+                                    <a href="{{ asset('storage/'.$payment->payment_proof) }}"
+                                       target="_blank"
+                                       class="text-blue-500 hover:underline">View</a>
+                                @else
+                                    <span class="text-gray-400 italic">N/A</span>
+                                @endif
+                            </td>
                         </tr>
-                    </thead>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-4 py-6 text-center text-gray-400 italic">
+                                No payments found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-            <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-700 dark:text-gray-300">
-                @forelse ($payments as $payment)
-                    <tr>
-                        <td class="px-4 py-2">{{ $payment->order->customer->user->name ?? '-' }}</td>
-                        <td class="px-4 py-2">#{{ $payment->order->order_id }}</td>
-                        <td class="px-4 py-2 capitalize">{{ $payment->payment_method }}</td>
-                        <td class="px-4 py-2 font-medium">Rp{{ number_format($payment->amount, 0, ',', '.') }}</td>
-                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
-                        <td class="px-4 py-2">
-                            @if ($payment->payment_proof)
-                                <a href="{{ asset('storage/'.$payment->payment_proof) }}"
-                                   target="_blank"
-                                   class="text-blue-500 hover:underline">View</a>
-                            @else
-                                <span class="text-gray-400 italic">N/A</span>
-                            @endif
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="px-4 py-6 text-center text-gray-400 italic">
-                            No payments found.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    {{-- Pagination --}}
-    <div class="mt-6 flex justify-center">
-        {{ $payments->withQueryString()->links() }}
+        {{-- Pagination --}}
+        <div class="mt-6 flex justify-center">
+            {{ $payments->withQueryString()->links() }}
+        </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function filterTable(input) {
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('payments-table');
+    const rows = table.querySelectorAll('tbody tr');
+    let anyVisible = false;
+
+    rows.forEach(row => {
+        // Skip row if it's the empty state
+        const isEmptyRow = row.querySelector('td[colspan]');
+        if (isEmptyRow) {
+            row.style.display = 'none'; // Hide empty state by default, show later if needed
+            return;
+        }
+        const rowText = Array.from(row.querySelectorAll('td')).map(td => td.innerText.toLowerCase()).join(' ');
+        if (rowText.includes(filter)) {
+            row.style.display = '';
+            anyVisible = true;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // Handle empty state row
+    const emptyRow = table.querySelector('tbody tr td[colspan]');
+    if (emptyRow) {
+        emptyRow.parentElement.style.display = anyVisible ? 'none' : '';
+    }
+}
+</script>
+@endpush

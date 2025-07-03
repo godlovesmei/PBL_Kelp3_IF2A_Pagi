@@ -27,7 +27,7 @@ class PurchaseController extends Controller
             'email' => 'required|email|max:255',
             'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'npwp' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'salary_slip' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'salary' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'car_id' => 'required|exists:cars,id',
             'payment_method' => 'required|string|in:credit,cash',
             'tenor' => 'nullable|integer|in:12,24,36,48,60',
@@ -83,7 +83,7 @@ class PurchaseController extends Controller
             );
 
             $docPaths = [];
-            foreach (['ktp', 'npwp', 'salary_slip'] as $file) {
+            foreach (['ktp', 'npwp', 'salary'] as $file) {
                 $docPaths[$file] = ($request->hasFile($file) && $request->file($file)->isValid())
                     ? $request->file($file)->store('documents', 'public')
                     : '';
@@ -94,7 +94,7 @@ class PurchaseController extends Controller
                 [
                     'ktp_doc' => $docPaths['ktp'],
                     'npwp_doc' => $docPaths['npwp'],
-                    'salary_doc' => $docPaths['salary_slip'],
+                    'salary_doc' => $docPaths['salary'],
                 ]
             );
 

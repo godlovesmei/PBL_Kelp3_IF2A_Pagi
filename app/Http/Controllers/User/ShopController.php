@@ -34,12 +34,21 @@ if (auth()->check() && auth()->user()->customer) {
     }
 
     // Detail mobil
-    public function show($id)
-    {
-        $car = Car::with('colors')->findOrFail($id);
-        $carPrice = $car->price;
-        return view('pages.car-details', compact('car', 'carPrice'));
-    }
+  public function show($id)
+{
+    $car = Car::with(['colors', 'galleries'])->findOrFail($id);
+    $carPrice = $car->price;
+
+    $exteriorGalleries = $car->galleries->where('type', 'eksterior')->values();
+    $interiorGalleries = $car->galleries->where('type', 'interior')->values();
+
+    return view('pages.car-details', [
+        'car' => $car,
+        'carPrice' => $carPrice,
+        'exteriorGalleries' => $exteriorGalleries,
+        'interiorGalleries' => $interiorGalleries,
+    ]);
+}
 
     // Filtering mobil
     private function applyFilters(Request $request)
@@ -71,7 +80,10 @@ if (auth()->check() && auth()->user()->customer) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('model', 'like', "%{$search}%")
-                  ->orWhere('brand', 'like', "%{$search}%");
+                  ->orWhere('brand', 'like', "%{$search}%")
+                  ->orWhere('specifications', 'like', "%{$search}%")
+                  ->orWhere('year', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
             });
         }
 
@@ -79,7 +91,19 @@ if (auth()->check() && auth()->user()->customer) {
 
         return $query;
     }
+public function autocomplete(Request $request)
+{
+    $keyword = $request->query('query');
+    $cars = Car::where('model', 'like', "%$keyword%")
+        ->orWhere('brand', 'like', "%$keyword%")
+        ->orWhere('year', 'like', "%$keyword%")
+        ->orWhere('category', 'like', "%$keyword%")
+        ->orWhere('specifications', 'like', "%$keyword%")
+        ->limit(8)
+        ->get(['id', 'brand', 'model', 'year', 'category', 'image as photo', 'price']);
 
+    return response()->json($cars);
+}
     // Sorting logic
     private function sortColumn(Request $request)
     {

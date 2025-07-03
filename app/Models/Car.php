@@ -20,6 +20,11 @@ class Car extends Model
         return $this->hasMany(CarColor::class);
     }
 
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class, 'car_id', 'id');
+    }
+
    public function dealer()
     {
         return $this->belongsTo(Dealer::class, 'dealer_id', 'dealer_id');
@@ -41,6 +46,6 @@ class Car extends Model
 
     public function wishlists()
 {
-    return $this->hasMany(Wishlist::class, 'car_id', 'car_id');
+    return $this->hasMany(Wishlist::class, 'car_id', 'id');
 }
 }

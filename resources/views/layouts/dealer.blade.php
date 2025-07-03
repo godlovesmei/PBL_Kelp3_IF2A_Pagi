@@ -7,7 +7,7 @@
     <meta name="author" content="Venus Cars" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <title>Dealer Dashboard / Venus Cars</title>
+    <title>@yield('title', 'Dealer Dashboard / Venus Cars')</title>
 
     {{-- ✅ Load Tailwind & JS via Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -27,7 +27,7 @@
     @stack('styles')
 </head>
 <body
-    class="bg-gray-100 font-sans antialiased"
+    class="bg-gray-100 font-sans antialiased min-h-screen"
     x-data
     x-init="
         Alpine.store('sidebar', {
@@ -36,7 +36,7 @@
         $watch('$store.sidebar.open', value => localStorage.setItem('sidebarOpen', value));
     "
 >
-    {{-- 🔔 Alert (Success & Error) --}}
+    <!-- Alert (Success & Error) -->
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />
     @endif
@@ -47,7 +47,7 @@
     {{-- Sidebar --}}
     @include('partials.side-deal')
 
-    <div class="flex-1 flex flex-col transition-all duration-300 ease-in-out"
+    <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out"
         :class="{
                 'ml-0': true,
                 'md:ml-60': $store.sidebar.open,
@@ -57,20 +57,32 @@
         {{-- Navbar --}}
         @include('partials.nav-deal')
 
-        <main class="flex-1 sm:px-6 px-3 pb-10 overflow-auto">
+        <main class="flex-1 sm:px-6 px-3 pb-32 pt-4 overflow-x-auto">
             @yield('content')
         </main>
 
-        <footer class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+        <footer class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-center py-4 text-sm text-gray-500 dark:text-gray-400 mt-auto" style="position: static;">
             &copy; {{ date('Y') }} Venus Cars. All rights reserved.
         </footer>
     </div>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
-    <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
     {{-- 🟢 Scripts stack for per-page JS --}}
     @stack('scripts')
+
+    {{-- Optional: Auto scroll to first error --}}
+    @if ($errors->any())
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const errorInput = document.querySelector('.is-invalid, .border-red-500');
+        if (errorInput) {
+          errorInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          errorInput.focus();
+        }
+      });
+    </script>
+    @endif
 </body>
 </html>

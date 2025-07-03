@@ -30,7 +30,7 @@
 
     <!-- Header Mobile -->
     <div class="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800 lg:hidden">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Inventory</h2>
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">Inventory</h2>
         <button type="button"
             id="filter-close"
             class="p-2 rounded-full text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -78,11 +78,11 @@
                 @foreach ($categories as $category)
                     <label for="category-{{ $category }}"
                         class="flex items-center gap-2 border px-3 py-2 rounded-full cursor-pointer transition
-                            hover:border-indigo-500 hover:bg-indigo-50 dark:hover:border-indigo-400 dark:hover:bg-indigo-900
-                            focus-within:ring-2 focus-within:ring-indigo-400 focus-within:outline-none text-gray-700 dark:text-gray-200"
+                            hover:border-indigo-500 hover:bg-blue-50 dark:hover:border-indigo-400 dark:hover:bg-indigo-900
+                            focus-within:ring-2 focus-within:ring-blue-400 focus-within:outline-none text-gray-700 dark:text-gray-200"
                         tabindex="0">
                         <input id="category-{{ $category }}" type="checkbox" name="category[]" value="{{ $category }}"
-                            class="accent-indigo-500 focus:ring-0 rounded w-5 h-5"
+                            class="accent--500 focus:ring-0 rounded w-5 h-5"
                             {{ in_array($category, request()->get('category', [])) ? 'checked' : '' }}
                             onchange="onFilterChange()">
                         <span class="capitalize">{{ $category }}</span>

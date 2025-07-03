@@ -10,12 +10,22 @@ class CarController extends Controller
     // Menampilkan detail mobil berdasarkan ID
     public function show($id)
     {
-        // Ambil mobil beserta warna-warnanya
-        $car = Car::with('colors')->findOrFail($id);
+        // Ambil mobil beserta warna-warna dan galeri
+        $car = Car::with(['colors', 'galleries'])->findOrFail($id);
 
-        // Ambil warna default (warna pertama dalam daftar)
+        // Kelompokkan galleries berdasarkan type
+        $exteriorGalleries = $car->galleries->where('type', 'eksterior')->values();
+        $interiorGalleries = $car->galleries->where('type', 'interior')->values();
+
+        // (opsional) Ambil warna default (warna pertama)
         $defaultColor = $car->colors->first();
 
-        return view('pages.car-details', compact('car', 'defaultColor'));
+        // Kirim data ke view
+        return view('pages.car-details', [
+            'car' => $car,
+            'exteriorGalleries' => $exteriorGalleries,
+            'interiorGalleries' => $interiorGalleries,
+            'defaultColor' => $defaultColor,
+        ]);
     }
 }

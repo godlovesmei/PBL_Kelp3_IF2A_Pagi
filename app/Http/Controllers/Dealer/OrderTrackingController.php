@@ -11,7 +11,7 @@ use App\Models\Customer;
 
 class OrderTrackingController extends Controller
 {
-    // List order dengan filter user-friendly dan best practice
+    // Menampilkan daftar order dengan filter
     public function index(Request $request)
     {
         $dealerId = Auth::id();
@@ -28,7 +28,7 @@ class OrderTrackingController extends Controller
                 $q->where('dealer_id', $dealerId);
             });
 
-        // Search (order_id, customer name, email, phone)
+        // Pencarian
         if ($search) {
             $orders->where(function ($q) use ($search) {
                 $q->where('order_id', 'like', "%{$search}%")
@@ -42,19 +42,19 @@ class OrderTrackingController extends Controller
             });
         }
 
-        // Status
+        // Filter status
         if ($status) {
             $orders->where('order_status', $status);
         }
 
-        // Payment Method (cek ke relasi payments)
+        // Filter metode pembayaran
         if ($paymentMethod) {
             $orders->whereHas('payments', function ($q) use ($paymentMethod) {
                 $q->where('payment_method', $paymentMethod);
             });
         }
 
-        // Quick date filter
+        // Filter berdasarkan tanggal cepat
         if ($quickDate) {
             if ($quickDate === 'today') {
                 $orders->whereDate('created_at', now()->toDateString());
@@ -71,8 +71,6 @@ class OrderTrackingController extends Controller
                 $orders->orderBy('created_at', 'asc');
                 break;
             case 'created_at_desc':
-                $orders->orderBy('created_at', 'desc');
-                break;
             default:
                 $orders->orderBy('created_at', 'desc');
         }
@@ -89,47 +87,70 @@ class OrderTrackingController extends Controller
         ]);
     }
 
-    // Update status order dengan validasi dan feedback
+    // Update status order dan kurangi stok jika perlu
     public function updateStatus(Request $request, Order $order)
     {
         $validated = $request->validate([
             'status' => 'required|in:pending,confirm,processing,shipped,completed',
         ]);
 
-        $order->order_status = $validated['status'];
+        $newStatus = $validated['status'];
+
+        // Jika status berubah menjadi 'shipped' dan belum pernah dikirim sebelumnya
+        if ($newStatus === 'shipped' && $order->order_status !== 'shipped') {
+            $car = $order->car;
+
+            if ($car && $car->stock > 0) {
+                $car->decrement('stock');
+            } else {
+                return back()->withErrors('Stok mobil tidak mencukupi untuk mengirim order ini.');
+            }
+        }
+
+        $order->order_status = $newStatus;
         $order->save();
 
-        // Redirect ke halaman filter sesuai status baru agar daftar terupdate otomatis
         return redirect()->route('pages.dealer.order-index', ['status' => $order->order_status])
                          ->with('success', 'Order status updated successfully.');
     }
+
+    // Status checker khusus, bisa disesuaikan logikanya
     public function changeStatus(Request $request, $orderId)
-{
-    $order = Order::findOrFail($orderId);
+    {
+        $order = Order::findOrFail($orderId);
+        $newStatus = $request->input('status');
 
-    // Contoh validasi status
-    $newStatus = $request->input('status');
-
-    if ($newStatus == 'confirm' && $order->order_status == 'pending') {
-        $order->order_status = 'confirm';
-        $order->save();
-        return back()->with('success', 'Order sudah di konfirmasi');
-    }
-
-    if ($newStatus == 'processing' && $order->order_status == 'confirm') {
-        // Pastikan sudah ada pembayaran DP
-        $dpPayment = $order->payments()->where('payment_method', 'down_payment')->first();
-        if (!$dpPayment) {
-            return back()->withErrors('Belum ada bukti DP dari pembeli.');
+        if ($newStatus == 'confirm' && $order->order_status == 'pending') {
+            $order->order_status = 'confirm';
+            $order->save();
+            return back()->with('success', 'Order sudah dikonfirmasi.');
         }
 
-        $order->order_status = 'processing';
-        $order->save();
+        if ($newStatus == 'processing' && $order->order_status == 'confirm') {
+            $dpPayment = $order->payments()->where('payment_method', 'down_payment')->first();
+            if (!$dpPayment) {
+                return back()->withErrors('Belum ada bukti DP dari pembeli.');
+            }
 
-        return back()->with('success', 'Status order diubah menjadi Processing');
+            $order->order_status = 'processing';
+            $order->save();
+            return back()->with('success', 'Status order diubah menjadi Processing.');
+        }
+
+        // Tambahan: logic shipped di sini juga kalau pakai route ini
+        if ($newStatus == 'shipped' && $order->order_status == 'processing') {
+            $car = $order->car;
+            if ($car && $car->stock > 0) {
+                $car->decrement('stock');
+            } else {
+                return back()->withErrors('Stok mobil tidak mencukupi untuk dikirim.');
+            }
+
+            $order->order_status = 'shipped';
+            $order->save();
+            return back()->with('success', 'Order telah dikirim.');
+        }
+
+        return back()->withErrors('Status tidak valid atau aksi tidak diizinkan.');
     }
-
-    return back()->withErrors('Status tidak valid atau aksi tidak diizinkan');
-}
-
 }

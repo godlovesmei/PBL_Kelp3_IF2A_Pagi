@@ -44,7 +44,7 @@ public function index(Request $request)
         $paymentsQuery->whereDate('payment_date', '<=', $request->to);
     }
 
-    $payments = $paymentsQuery->latest('payment_date')->paginate(20)->appends($request->except('page'));
+    $payments = $paymentsQuery->latest('payment_date')->paginate(30)->appends($request->except('page'));
 
     return view('pages.dealer.payments', compact('payments'));
 }

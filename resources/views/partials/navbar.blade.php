@@ -21,7 +21,7 @@
                 'pages.contact' => 'Contact',
             ] as $route => $label)
                 <a href="{{ route($route) }}"
-                   class="px-3 py-2 rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#8ee4d9]
+                   class="px-3 py-2 rounded-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#f5f5f5]
                           {{ request()->routeIs($route)
                                 ? 'underline underline-offset-8 decoration-2 text-[#188e9c] dark:text-[#7de2d1] font-semibold'
                                 : 'hover:bg-[#e0f4f7] hover:text-[#0f766e] dark:hover:bg-[#183c3d] text-gray-600 dark:text-gray-300' }}"

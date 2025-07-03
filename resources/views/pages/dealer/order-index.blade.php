@@ -159,7 +159,7 @@
     @if($docs->salary_doc)
       <a href="{{ asset('storage/'.$docs->salary_doc) }}" target="_blank"
          class="hover:underline bg-gray-100 dark:bg-gray-800 rounded px-3 py-1 truncate max-w-xs">
-        <i class="fas fa-money-check-alt mr-1"></i> Salary Slip
+        <i class="fas fa-money-check-alt mr-1"></i> Salary
       </a>
     @endif
   </div>

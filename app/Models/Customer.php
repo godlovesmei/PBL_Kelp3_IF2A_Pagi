@@ -57,7 +57,7 @@ class Customer extends Model
         return [
             'ktp' => $this->ktp_doc,
             'npwp' => $this->npwp_doc,
-            'salary_slip' => $this->salary_doc,
+            'salary' => $this->salary_doc,
         ];
     }
 

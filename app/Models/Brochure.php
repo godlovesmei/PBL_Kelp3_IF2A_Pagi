@@ -9,6 +9,8 @@ class Brochure extends Model
     protected $fillable = [
         'dealer_id',  // tambah dealer_id
         'title',
+        'month',
+        'year',
         'pdf_path',
         'image_path',
         'size',

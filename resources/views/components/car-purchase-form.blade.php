@@ -108,62 +108,48 @@
                     <x-textarea id="address" name="address" class="w-full" placeholder="Enter your full address" required />
                     <x-input-error :messages="$errors->get('address')" class="mt-2" />
                 </div>
-                <div class="md:col-span-2">
-                    <div class="font-semibold text-gray-800 mb-3">Upload Supporting Documents</div>
-                    <div class="grid md:grid-cols-3 gap-4">
-                        <div>
-                            <x-input-label for="ktp" value="ID Card" />
-                            <input id="ktp" name="ktp" type="file" accept=".jpg,.jpeg,.png,.pdf" required class="block w-full border text-sm border-gray-300 p-2 rounded" />
-                            <x-input-error :messages="$errors->get('ktp')" class="mt-2" />
-                        </div>
-                        <div>
-                            <x-input-label for="npwp" value="Tax ID" />
-                            <input id="npwp" name="npwp" type="file" accept=".jpg,.jpeg,.png,.pdf" required class="block w-full border text-sm border-gray-300 p-2 rounded" />
-                            <x-input-error :messages="$errors->get('npwp')" class="mt-2" />
-                        </div>
-                        <div>
-                            <x-input-label for="salary_slip" value="Salary Slip" />
-                            <input id="salary_slip" name="salary_slip" type="file" accept=".jpg,.jpeg,.png,.pdf" required class="block w-full border text-sm border-gray-300 p-2 rounded" />
-                            <x-input-error :messages="$errors->get('salary_slip')" class="mt-2" />
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            @if($car)
-                <input type="hidden" name="car_id" value="{{ $car->id }}">
-            @endif
+                <!-- Upload Supporting Documents -->
+        <div class="md:col-span-2">
+            <x-upload-documents :errors="$errors" />
+        </div>
+    </div> <!-- Tutup grid -->
 
-            {{-- Credit Simulation Section --}}
-            <x-credit-simulation :carPrice="$carPrice" />
-            <br>
-                    @if($car)
-            <div class="text-center mb-6">
-                <p class="text-lg text-gray-700 font-medium">
-                    <strong>{{ $car->name }}</strong> - Total Price:
-                    <span class="text-green-600 font-semibold">Rp {{ number_format($carPrice, 0, ',', '.') }}</span>
-                </p>
-            </div>
-        @endif
+    @if($car)
+        <input type="hidden" name="car_id" value="{{ $car->id }}">
+    @endif
 
-            <div class="flex justify-center gap-4 mt-8">
-                <x-button type="button" color="gray" onclick="window.history.back()">
-                    CANCEL
-                </x-button>
-                @auth
-                    <x-button type="submit" color="black">
-                        SUBMIT
-                    </x-button>
-                @else
-                    <x-button
-                        type="button"
-                        color="black"
-                        onclick="window.location='{{ route('login') }}'"
-                    >
-                        SUBMIT
-                    </x-button>
-                @endauth
-            </div>
-        </form>
+    {{-- Credit Simulation Section --}}
+    <x-credit-simulation :carPrice="$carPrice" />
+
+    <br>
+    @if($car)
+        <div class="text-center mb-6">
+            <p class="text-lg text-gray-700 font-medium">
+                <strong>{{ $car->name }}</strong> - Total Price:
+                <span class="text-green-600 font-semibold">Rp {{ number_format($carPrice, 0, ',', '.') }}</span>
+            </p>
+        </div>
+    @endif
+
+    <div class="flex justify-center gap-4 mt-8">
+        <x-button type="button" color="gray" onclick="window.history.back()">
+            CANCEL
+        </x-button>
+        @auth
+            <x-button type="submit" color="black">
+                SUBMIT
+            </x-button>
+        @else
+            <x-button
+                type="button"
+                color="black"
+                onclick="window.location='{{ route('login') }}'"
+            >
+                Log in to submit
+            </x-button>
+        @endauth
+    </div>
+</form>
     </div>
 </div>

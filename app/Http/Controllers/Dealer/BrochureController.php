@@ -12,37 +12,37 @@ class BrochureController extends Controller
 {
     // Fungsi helper untuk validasi akses brosur sesuai dealer login
     protected function authorizeBrochure($id)
-{
-    $dealer = auth()->user()->dealer;
+    {
+        $dealer = auth()->user()->dealer;
 
-    if (!$dealer) {
-        abort(403, 'Dealer not found');
+        if (!$dealer) {
+            abort(403, 'Dealer not found');
+        }
+
+        return $dealer->brochures()->where('id', $id)->firstOrFail();
     }
 
-    return $dealer->brochures()->where('id', $id)->firstOrFail();
-}
 
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+        $dealer = auth()->user()->dealer;
 
-   public function index(Request $request)
-{
-    $search = $request->input('search');
-    $dealer = auth()->user()->dealer;
+        if (!$dealer) {
+            abort(403, 'Dealer not found');
+        }
 
-    if (!$dealer) {
-        abort(403, 'Dealer not found');
+        $brochures = $dealer->brochures()
+            ->when($search, function ($query, $search) {
+                return $query->where('title', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(10);
+
+        $brochures->appends(['search' => $search]);
+
+        return view('pages.dealer.brochure-index', compact('brochures'));
     }
-
-    $brochures = $dealer->brochures()
-        ->when($search, function ($query, $search) {
-            return $query->where('title', 'like', '%' . $search . '%');
-        })
-        ->latest()
-        ->paginate(10);
-
-    $brochures->appends(['search' => $search]);
-
-    return view('pages.dealer.brochure-index', compact('brochures'));
-}
 
 
     public function create()
@@ -54,6 +54,8 @@ class BrochureController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'month' => 'required|string|max:20',
+            'year' => 'required|digits:4|integer|min:2000|max:' . date('Y'),
             'pdf_path' => 'required|file|mimes:pdf|max:5120',
             'image_path' => 'nullable|image|max:5120',
         ]);
@@ -71,6 +73,8 @@ class BrochureController extends Controller
 
         $dealer->brochures()->create([
             'title' => $request->title,
+            'month' => $request->month,
+            'year' => $request->year,
             'pdf_path' => $pdfPath,
             'image_path' => $imagePath,
             'size' => $pdfSize,
@@ -92,6 +96,8 @@ class BrochureController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
+            'month' => 'required|string|max:20',
+            'year' => 'required|digits:4|integer|min:2000|max:' . date('Y'),
             'pdf_path' => 'nullable|file|mimes:pdf|max:5120',
             'image_path' => 'nullable|image|max:5120',
         ]);
@@ -113,6 +119,8 @@ class BrochureController extends Controller
         }
 
         $brochure->title = $request->title;
+        $brochure->month = $request->month;
+        $brochure->year = $request->year;
         $brochure->save();
 
         return redirect()->route('pages.dealer.brochure.index')->with('success', 'Brochure updated successfully.');

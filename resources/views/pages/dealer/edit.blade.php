@@ -1,163 +1,119 @@
 @extends('layouts.dealer')
 
 @section('content')
-<div class="max-w-3xl mx-auto mt-10 px-4 sm:px-6 lg:px-8">
-  <h2 class="text-3xl font-extrabold text-blue-900 mb-6 flex items-center gap-2">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M3 13l2-2m0 0l7-7 7 7M13 5v6h6" />
-    </svg>
-    Edit
-  </h2>
-  <hr class="border-t-4 border-blue-700 mb-8 rounded">
-
-  <form action="{{ route('pages.dealer.update', $car->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-lg space-y-6">
+<div class="w-full max-w-7xl mx-auto mt-10 px-2 sm:px-4 lg:px-8">
+  <h2 class="text-3xl font-extrabold text-blue-900 mb-8">Edit Product</h2>
+  <form action="{{ route('pages.dealer.update', $car->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-xl shadow-lg space-y-8">
     @csrf
     @method('PUT')
-
-    <!-- Brand -->
-    <div>
-      <label for="brand" class="block text-sm font-semibold text-gray-700 mb-1">Brand</label>
-      <input type="text" id="brand" name="brand" value="{{ $car->brand }}" required
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+      <div>
+        <label for="brand" class="block text-sm font-semibold text-gray-700 mb-1">Brand</label>
+        <input type="text" id="brand" name="brand" required value="{{ old('brand', $car->brand) }}"
+          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label for="model" class="block text-sm font-semibold text-gray-700 mb-1">Model</label>
+        <input type="text" id="model" name="model" required value="{{ old('model', $car->model) }}"
+          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label for="year" class="block text-sm font-semibold text-gray-700 mb-1">Year</label>
+        <input type="number" id="year" name="year" required min="1900" max="{{ now()->year }}" value="{{ old('year', $car->year) }}"
+          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label for="category" class="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+        <select id="category" name="category" required
+          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled>-- Select Category --</option>
+          @foreach (['MPV', 'Sedan', 'Sports', 'SUV', 'Hatchback'] as $cat)
+            <option value="{{ $cat }}" {{ old('category', $car->category) == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+          @endforeach
+        </select>
+      </div>
+      <div>
+        <label for="price" class="block text-sm font-semibold text-gray-700 mb-1">Price</label>
+        <input type="number" id="price" name="price" required min="0" value="{{ old('price', $car->price) }}"
+          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label for="stock" class="block text-sm font-semibold text-gray-700 mb-1">Stock</label>
+        <input type="number" id="stock" name="stock" required min="0" value="{{ old('stock', $car->stock) }}"
+          class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
     </div>
 
-    <!-- Model -->
     <div>
-      <label for="model" class="block text-sm font-semibold text-gray-700 mb-1">Model</label>
-      <input type="text" id="model" name="model" value="{{ $car->model }}" required
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    </div>
-
-    <!-- Year -->
-    <div>
-      <label for="year" class="block text-sm font-semibold text-gray-700 mb-1">Year</label>
-      <input type="number" id="year" name="year" value="{{ $car->year }}" required min="1900" max="{{ date('Y') }}"
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    </div>
-
-    <!-- Image -->
-    <div>
-      <label for="image" class="block text-sm font-semibold text-gray-700 mb-1">Image <span class="text-gray-400">(leave blank if not changing)</span></label>
+      <label for="image" class="block text-sm font-semibold text-gray-700 mb-1">Main Image <span class="text-gray-400">(leave blank if not changing)</span></label>
       <input type="file" id="image" name="image" accept="image/*"
-        class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        onchange="previewMainImage()" />
+      <div id="main-image-preview" class="mt-2"></div>
+      @if($car->image)
+        <div class="mt-2">
+          <label class="block text-xs text-gray-500 mb-0.5">Current Main Image</label>
+          <img src="{{ asset('images/' . $car->image) }}" alt="Car Image"
+            class="w-40 h-28 object-contain rounded-lg border border-gray-300 bg-gray-50 shadow-sm" />
+        </div>
+      @endif
     </div>
 
-    <!-- Current Image Preview -->
-    @if($car->image)
-    <div>
-      <label class="block text-sm font-semibold text-gray-700 mb-2">Current Image</label>
-      <img src="{{ asset('images/' . $car->image) }}" alt="Car Image"
-        class="w-48 rounded-lg border border-gray-300 shadow-sm object-contain" />
-    </div>
-    @endif
-
-    <!-- Category -->
-    <div>
-      <label for="category" class="block text-sm font-semibold text-gray-700 mb-1">Category</label>
-      <input type="text" id="category" name="category" value="{{ $car->category }}" required
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    </div>
-
-    <!-- Specifications -->
     <div>
       <label for="specifications" class="block text-sm font-semibold text-gray-700 mb-1">Specifications</label>
-      <input type="text" id="specifications" name="specifications" value="{{ $car->specifications }}" required
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <textarea id="specifications" name="specifications" required rows="4"
+        class="w-full rounded-md border border-gray-300 px-4 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('specifications', $car->specifications) }}</textarea>
     </div>
 
-<!-- Colors -->
-<div>
-  <label class="block text-sm font-semibold text-gray-700 mb-1">Colors</label>
-  @foreach ($car->colors as $index => $color)
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
-    <!-- color_name -->
-    <input
-      type="text"
-      name="colors[{{ $index }}][color_name]"
-      value="{{ $color->color_name }}"
-      placeholder="Color Name"
-      required
-      class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-
-    <!-- hex -->
-    <input
-      type="color"
-      name="colors[{{ $index }}][hex]"
-      value="{{ $color->hex ?? '#000000' }}"
-      class="w-full rounded-md border border-gray-300 px-4 py-2 cursor-pointer"
-      title="Main Hex Color"
-      required
-    />
-
-    <!-- alt_hex -->
-    <input
-      type="color"
-      name="colors[{{ $index }}][alt_hex]"
-      value="{{ $color->alt_hex ?? '#000000' }}"
-      class="w-full rounded-md border border-gray-300 px-4 py-2 cursor-pointer"
-      title="Alternate Hex Color"
-      required
-    />
-  </div>
-  @endforeach
-</div>
-    <!-- Price -->
+    {{-- Colors --}}
     <div>
-      <label for="price" class="block text-sm font-semibold text-gray-700 mb-1">Price</label>
-      <input type="number" id="price" name="price" value="{{ $car->price }}" required min="0"
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Colors</label>
+      <div id="colors-wrapper" class="space-y-4">
+        @php
+          $oldColors = old('colors', $car->colors ?? []);
+        @endphp
+        @forelse($oldColors as $idx => $color)
+        <div class="flex space-x-3 items-center">
+          <input type="text" name="colors[{{ $idx }}][color_name]" placeholder="Color name" required value="{{ old("colors.$idx.color_name", is_array($color) ? $color['color_name'] : $color->color_name ?? '') }}"
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="text" name="colors[{{ $idx }}][hex]" placeholder="#hexcode" pattern="^#([A-Fa-f0-9]{6})$" title="Hex format like #FFFFFF" required value="{{ old("colors.$idx.hex", is_array($color) ? $color['hex'] : $color->hex ?? '') }}"
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 color-hex-input" oninput="updateColorPreview(this)" />
+          <span class="inline-block w-8 h-8 rounded border ml-1 color-preview" style="background: {{ old("colors.$idx.hex", is_array($color) ? $color['hex'] : $color->hex ?? '') }}"></span>
+          <input type="text" name="colors[{{ $idx }}][alt_hex]" placeholder="#alt_hex" pattern="^#([A-Fa-f0-9]{6})$" title="Hex format like #FFFFFF" required value="{{ old("colors.$idx.alt_hex", is_array($color) ? $color['alt_hex'] : $color->alt_hex ?? '') }}"
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 color-hex-input" oninput="updateColorPreview(this)" />
+          <span class="inline-block w-8 h-8 rounded border ml-1 color-preview" style="background: {{ old("colors.$idx.alt_hex", is_array($color) ? $color['alt_hex'] : $color->alt_hex ?? '') }}"></span>
+          <button type="button" onclick="removeColor(this)" class="text-red-600 font-bold text-xl px-2">&times;</button>
+        </div>
+        @empty
+        <div class="flex space-x-3 items-center">
+          <input type="text" name="colors[0][color_name]" placeholder="Color name" required
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="text" name="colors[0][hex]" placeholder="#hexcode" pattern="^#([A-Fa-f0-9]{6})$" title="Hex format like #FFFFFF" required
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 color-hex-input" oninput="updateColorPreview(this)" />
+          <span class="inline-block w-8 h-8 rounded border ml-1 color-preview"></span>
+          <input type="text" name="colors[0][alt_hex]" placeholder="#alt_hex" pattern="^#([A-Fa-f0-9]{6})$" title="Hex format like #FFFFFF" required
+            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 color-hex-input" oninput="updateColorPreview(this)" />
+          <span class="inline-block w-8 h-8 rounded border ml-1 color-preview"></span>
+          <button type="button" onclick="removeColor(this)" class="text-red-600 font-bold text-xl px-2">&times;</button>
+        </div>
+        @endforelse
+      </div>
+      <button type="button" onclick="addColor()"
+        class="mt-3 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition">
+        + Add Color
+      </button>
     </div>
 
-    <!-- Stock -->
-    <div>
-      <label for="stock" class="block text-sm font-semibold text-gray-700 mb-1">Stock</label>
-      <input type="number" id="stock" name="stock" value="{{ $car->stock }}" required min="0"
-        class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    </div>
-
-    <!-- Submit Button -->
     <div class="flex justify-end">
       <button type="submit"
-        class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-md shadow-md transition-colors duration-300">
+        class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-8 py-2 rounded-md shadow-md transition-colors duration-300 text-lg">
         Update
       </button>
     </div>
   </form>
-
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const form = document.querySelector('form');
-      const imageInput = document.querySelector('input[name="image"]');
-
-      form.addEventListener('submit', function (e) {
-        const file = imageInput.files[0];
-        if (file) {
-          const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-          if (!allowedTypes.includes(file.type)) {
-            e.preventDefault();
-            Swal.fire({
-              icon: 'error',
-              title: 'Unsupported format',
-              text: 'Please upload an image file (JPEG, JPG, or PNG).'
-            });
-            return;
-          }
-
-          if (file.size > 2 * 1024 * 1024) { // 2MB
-            e.preventDefault();
-            Swal.fire({
-              icon: 'warning',
-              title: 'File too large',
-              text: 'The file size must not exceed 2MB.'
-            });
-            return;
-          }
-        }
-      });
-    });
-  </script>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/product/edit.js') }}"></script>
+@endpush

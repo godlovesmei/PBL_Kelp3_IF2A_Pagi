@@ -11,17 +11,20 @@ use App\Models\Installment;
 class InstallmentTrackingController extends Controller
 {
     /**
-     * Menampilkan daftar order atau detail cicilan order khusus dealer login.
+     * Tampilkan daftar order kredit milik dealer atau detail cicilan per order.
      */
 public function index(Request $request)
 {
     $dealerId = Auth::id();
 
-    if ($request->has('order_id')) {
-        $order = Order::with(['customer.user', 'car', 'installments.payments'])
-            ->whereHas('car', function ($q) use ($dealerId) {
-                $q->where('dealer_id', $dealerId);
-            })
+    // Detail cicilan jika ada order_id
+    if ($request->filled('order_id')) {
+        $order = Order::with([
+                'customer.user',
+                'car',
+                'installments' => fn ($q) => $q->with('payments')->orderBy('due_date')
+            ])
+            ->whereHas('car', fn ($q) => $q->where('dealer_id', $dealerId))
             ->findOrFail($request->order_id);
 
         $installments = $order->installments;
@@ -29,32 +32,104 @@ public function index(Request $request)
         return view('pages.dealer.installments', compact('order', 'installments'));
     }
 
-    $ordersQuery = Order::where('payment_method', 'credit')
-        ->whereHas('car', function ($q) use ($dealerId) {
+    // Ambil recentInstallments di sini
+    $recentInstallments = Installment::with(['order.customer.user', 'order.car'])
+        ->whereHas('order.car', function($q) use ($dealerId) {
             $q->where('dealer_id', $dealerId);
         })
+        ->where('status', 'paid')
+        ->orderBy('paid_at', 'desc')
+        ->take(10)
+        ->get();
+
+        $installmentsToConfirm = Installment::with(['order.customer.user', 'order.car'])
+    ->whereHas('order.car', function($q) use ($dealerId) {
+        $q->where('dealer_id', $dealerId);
+    })
+    ->whereIn('status', ['waiting_confirmation', 'pending'])
+    ->orderBy('due_date', 'asc')
+    ->get();
+
+    // Daftar semua order kredit milik dealer
+    $ordersQuery = Order::select('orders.*')
+        ->selectSub(
+            Installment::select('due_date')
+                ->whereColumn('installments.order_id', 'orders.order_id')
+                ->orderBy('due_date')
+                ->limit(1),
+            'nearest_due_date'
+        )
+        ->join('cars', 'orders.car_id', '=', 'cars.id')
+        ->where('orders.payment_method', 'credit')
+        ->where('cars.dealer_id', $dealerId)
         ->with(['customer.user', 'car']);
 
+    // Filter: nama customer
     if ($request->filled('customer')) {
-        $ordersQuery->whereHas('customer.user', function ($q) use ($request) {
-            $q->where('name', 'like', '%' . $request->customer . '%');
-        });
+        $ordersQuery->whereHas('customer.user', fn ($q) =>
+            $q->where('name', 'like', '%' . $request->customer . '%')
+        );
     }
 
+    // Filter: status pembayaran
     if ($request->filled('status')) {
-        $ordersQuery->where('payment_status', $request->status);
+        $ordersQuery->where('orders.payment_status', $request->status);
     }
 
+    // Filter: rentang tanggal
     if ($request->filled('date_from')) {
-        $ordersQuery->whereDate('created_at', '>=', $request->date_from);
+        $ordersQuery->whereDate('orders.created_at', '>=', $request->date_from);
     }
-
     if ($request->filled('date_to')) {
-        $ordersQuery->whereDate('created_at', '<=', $request->date_to);
+        $ordersQuery->whereDate('orders.created_at', '<=', $request->date_to);
     }
 
-    $orders = $ordersQuery->latest()->paginate(15)->appends($request->except('page'));
+    // Urutan: unpaid -> due soonest, paid -> terbaru
+    $orders = $ordersQuery
+        ->orderByRaw("CASE WHEN orders.payment_status = 'unpaid' THEN 0 ELSE 1 END")
+        ->orderByRaw("CASE WHEN orders.payment_status = 'unpaid' THEN nearest_due_date ELSE NULL END ASC")
+        ->orderByRaw("CASE WHEN orders.payment_status = 'paid' THEN orders.created_at ELSE NULL END DESC")
+        ->paginate(15)
+        ->appends($request->except('page'));
 
-    return view('pages.dealer.installments', compact('orders'));
+    // KIRIM keduanya ke view
+    return view('pages.dealer.installments', compact('orders', 'recentInstallments', 'installmentsToConfirm'));
 }
+
+    /**
+     * Konfirmasi pembayaran cicilan oleh dealer.
+     */
+    public function confirm($installmentId)
+    {
+        $installment = Installment::findOrFail($installmentId);
+
+        if (!in_array($installment->status, ['pending', 'waiting_confirmation'])) {
+            return back()->with('error', 'Installment cannot be confirmed at this stage.');
+        }
+
+        $installment->update([
+            'status' => 'paid',
+            'paid_at' => now(),
+        ]);
+
+        return back()->with('success', 'Installment has been confirmed as paid.');
+    }
+
+    /**
+     * Tolak pembayaran cicilan oleh dealer.
+     */
+    public function reject($installmentId)
+    {
+        $installment = Installment::findOrFail($installmentId);
+
+        if (!in_array($installment->status, ['pending', 'waiting_confirmation'])) {
+            return back()->with('error', 'Installment cannot be rejected at this stage.');
+        }
+
+        $installment->update([
+            'status' => 'rejected',
+        ]);
+
+        return back()->with('error', 'Installment payment has been rejected.');
+    }
 }

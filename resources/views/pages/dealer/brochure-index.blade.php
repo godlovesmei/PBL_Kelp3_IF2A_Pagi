@@ -54,6 +54,7 @@
                         <th class="px-4 py-3 border text-center">Image</th>
                         <th class="px-4 py-3 border text-center">PDF</th>
                         <th class="px-4 py-3 border">Title</th>
+                        <th class="px-4 py-3 border text-center">Release</th>
                         <th class="px-4 py-3 border text-center">Size</th>
                         <th class="px-4 py-3 border text-center">Actions</th>
                     </tr>
@@ -80,6 +81,7 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 border">{{ $brochure->title }}</td>
+                            <td class="px-4 py-3 border text-center">{{ $brochure->month }} {{ $brochure->year }}</td>
                             <td class="px-4 py-3 border text-center">{{ $brochure->size }} MB</td>
                             <td class="px-4 py-3 border text-center space-x-1">
                                 <a href="{{ route('pages.dealer.brochure.edit', $brochure->id) }}"

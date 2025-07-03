@@ -11,7 +11,6 @@ use App\Http\Controllers\User\CarController;
 use App\Http\Controllers\Dealer\DashboardController;
 use App\Http\Controllers\Dealer\CarController as DealerCarController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\TransactionController;
 use App\Http\Controllers\User\SimulatePriceController;
 use App\Http\Controllers\User\PurchaseController;
 use App\Http\Controllers\User\OrderController;
@@ -24,6 +23,7 @@ use App\Http\Controllers\Dealer\AnalyticsController;
 use App\Http\Controllers\Dealer\SalesController;
 use App\Http\Controllers\Dealer\InstallmentTrackingController;
 use App\Http\Controllers\Dealer\PaymentTrackingController;
+use App\Http\Controllers\Dealer\GalleryController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -33,11 +33,11 @@ Route::get('/', function () {
 // ✅ Halaman publik (dapat diakses tanpa login)
 Route::get('/home', [HomeController::class, 'index'])->name('pages.home');
 Route::get('/shop', [ShopController::class, 'index'])->name('pages.shop');
+Route::get('/search-autocomplete', [ShopController::class, 'autocomplete']);
 Route::get('/about', [AboutController::class, 'index'])->name('pages.about');
 Route::get('/contact', [ContactController::class, 'index'])->name('pages.contact');
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('pages.wishlist'); // Wishlist tetap bisa dilihat tanpa login
 Route::get('/cars/{id}', [ShopController::class, 'show'])->name('pages.cars.show');
-Route::get('/transactions', [TransactionController::class, 'index'])->name('pages.user.transactions');
 Route::get('simulate-price/{car}', [SimulatePriceController::class, 'simulate']);
 Route::get('/brochures', [BrochureController::class, 'index'])->name('pages.brochure.index');
 
@@ -55,16 +55,14 @@ Route::middleware(['auth', RoleMiddleware::class . ':customer'])->group(function
     Route::post('/wishlist', [WishlistController::class, 'store'])->name('pages.wishlist.store');
     Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('pages.wishlist.destroy');
 
-// Order routes — note naming konsisten 'user.orders'
 Route::prefix('my-orders')->name('user.orders.')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('index');
     Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-
-    // Upload bukti pembayaran
     Route::post('/upload-cash', [OrderController::class, 'uploadCash'])->name('uploadCash');
     Route::post('/upload-dp', [OrderController::class, 'uploadDP'])->name('uploadDP');
     Route::post('/upload-installment', [OrderController::class, 'uploadInstallment'])->name('uploadInstallment');
     Route::get('/{order_id}/invoice', [OrderController::class, 'downloadInvoice'])->name('downloadInvoice');
+    Route::get('/{order_id}/recap', [OrderController::class, 'downloadInvoiceRecap'])->name('recap');
 });
 });
 
@@ -83,20 +81,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/read-and-redirect/{id}', [NotificationController::class, 'readAndRedirect'])->name('notifications.readAndRedirect');
 });
 
-// Group routes protected by authentication for dealers
+    // Group routes protected by authentication for dealers
 Route::middleware(['auth', RoleMiddleware::class . ':dealer'])->group(function () {
     // Dashboard dealer
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('pages.dealer.dashboard');
+
     // Analytics dealer
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('pages.dealer.analytics');
-    // Rute untuk melacak cicilan
+
+    // Tracking
     Route::get('/installments', [InstallmentTrackingController::class, 'index'])->name('pages.dealer.installments');
-    // Rute untuk melacak pembayaran
+    Route::post('/dealer/installments/{installment}/confirm', [InstallmentTrackingController::class, 'confirm'])->name('dealer.installments.confirm');
+    Route::post('/dealer/installments/{installment}/reject', [InstallmentTrackingController::class, 'reject'])->name('dealer.installments.reject');
     Route::get('/payments', [PaymentTrackingController::class, 'index'])->name('pages.dealer.payments');
-    // Rute untuk melihat penjualan
     Route::get('/sales', [SalesController::class, 'index'])->name('pages.dealer.sales');
 
-    // CRUD mobil untuk dealer
+    // CRUD products
     Route::resource('car', DealerCarController::class)->names([
         'index'   => 'pages.dealer.index',
         'create'  => 'pages.dealer.create',
@@ -106,7 +106,16 @@ Route::middleware(['auth', RoleMiddleware::class . ':dealer'])->group(function (
         'destroy' => 'pages.dealer.destroy',
     ]);
 
-    // Brosur dealer
+// Gallery per mobil dan tipe (eksterior/interior)
+Route::get('/dealer/galleries', [GalleryController::class, 'index'])->name('dealer.gallery.index');
+Route::get('/dealer/galleries/create', [GalleryController::class, 'create'])->name('dealer.gallery.create');
+Route::post('/dealer/galleries', [GalleryController::class, 'store'])->name('dealer.gallery.store');
+Route::get('/dealer/galleries/{id}/edit', [GalleryController::class, 'edit'])->name('dealer.gallery.edit');
+Route::put('/dealer/galleries/{id}', [GalleryController::class, 'update'])->name('dealer.gallery.update');
+Route::delete('/dealer/galleries/{id}', [GalleryController::class, 'destroy'])->name('dealer.gallery.destroy');
+
+
+    // Brochure
     Route::resource('brochure', DealerBrochureController::class)->names([
         'index'   => 'pages.dealer.brochure.index',
         'create'  => 'pages.dealer.brochure.create',
@@ -116,12 +125,13 @@ Route::middleware(['auth', RoleMiddleware::class . ':dealer'])->group(function (
         'destroy' => 'pages.dealer.brochure.destroy',
     ]);
 
-    // Pesanan dealer
+    // Orders
     Route::get('/orders', [OrderTrackingController::class, 'index'])->name('pages.dealer.order-index');
     Route::get('/orders/{order}', [OrderTrackingController::class, 'show'])->name('pages.dealer.order-show');
     Route::get('/orders/filter/{status}', [OrderTrackingController::class, 'filter'])->name('pages.dealer.order-filter');
     Route::post('/orders/{order}/update', [OrderTrackingController::class, 'updateStatus'])->name('pages.dealer.order-update');
 });
+
 
 // ✅ Rute fallback untuk user dengan role tidak dikenali
 Route::fallback(function () {
