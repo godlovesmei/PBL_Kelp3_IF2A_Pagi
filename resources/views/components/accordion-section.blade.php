@@ -3,7 +3,7 @@
     'title',
 ])
 
-<div class="border rounded-xl shadow bg-white">
+<div class="border shadow bg-white">
     <button
         @click="
             if (openSections.includes({{ $number }})) {

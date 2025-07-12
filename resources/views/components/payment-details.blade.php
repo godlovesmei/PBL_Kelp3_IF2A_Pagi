@@ -1,11 +1,13 @@
 @props(['order', 'cashPayment' => null, 'dpPayment' => null])
 
 <div class="mb-2 space-y-3">
-    {{-- Payment Info --}}
-    <div>
-        <span class="text-gray-500">Method:</span>
-        <span class="font-medium capitalize">{{ $order->payment_method ?? '-' }}</span>
-    </div>
+    {{-- Ringkasan Total & Metode --}}
+    <x-order-total-card
+        :total="$order->total_payment"
+        :method="$order->payment_method"
+    />
+
+    {{-- Detail Lain --}}
     <div>
         <span class="text-gray-500">Down Payment:</span>
         <span>
@@ -20,24 +22,23 @@
 
     {{-- Credit Extra Info --}}
     @if($order->payment_method === 'credit')
-    <div class="border-t pt-3 mt-4 space-y-1">
-        <div class="font-semibold mb-1">Credit Info</div>
-        <div>
-            <span class="text-gray-500">Tenor:</span>
-            <span>{{ $order->tenor ?? '-' }} months</span>
+        <div class="border-t pt-3 mt-4 space-y-1">
+            <div class="font-semibold mb-1">Credit Info</div>
+            <div>
+                <span class="text-gray-500">Tenor:</span>
+                <span>{{ $order->tenor ?? '-' }} months</span>
+            </div>
+            <div>
+                <span class="text-gray-500">Financed:</span>
+                <span>Rp {{ number_format($order->amount_financed ?? 0, 0, ',', '.') }}</span>
+            </div>
+            <div>
+                <span class="text-gray-500">Monthly:</span>
+                <span>Rp {{ number_format($order->monthly_installment ?? 0, 0, ',', '.') }}</span>
+            </div>
         </div>
-        <div>
-            <span class="text-gray-500">Financed:</span>
-            <span>Rp {{ number_format($order->amount_financed ?? 0, 0, ',', '.') }}</span>
-        </div>
-        <div>
-            <span class="text-gray-500">Monthly:</span>
-            <span>Rp {{ number_format($order->monthly_installment ?? 0, 0, ',', '.') }}</span>
-        </div>
-    </div>
     @endif
 </div>
-
 {{-- Payment Proof Section --}}
 <div class="mt-5">
     @if($order->payment_method === 'cash')

@@ -91,7 +91,7 @@ class OrderTrackingController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $validated = $request->validate([
-            'status' => 'required|in:pending,confirm,processing,shipped,completed',
+            'status' => 'required|in:pending,confirm,processing,shipped,completed,cancelled',
         ]);
 
         $newStatus = $validated['status'];

@@ -64,13 +64,6 @@ public function index(Request $request)
         ->where('cars.dealer_id', $dealerId)
         ->with(['customer.user', 'car']);
 
-    // Filter: nama customer
-    if ($request->filled('customer')) {
-        $ordersQuery->whereHas('customer.user', fn ($q) =>
-            $q->where('name', 'like', '%' . $request->customer . '%')
-        );
-    }
-
     // Filter: status pembayaran
     if ($request->filled('status')) {
         $ordersQuery->where('orders.payment_status', $request->status);
@@ -82,6 +75,16 @@ public function index(Request $request)
     }
     if ($request->filled('date_to')) {
         $ordersQuery->whereDate('orders.created_at', '<=', $request->date_to);
+    }
+
+    // Filter: search by Order ID dan Customer
+    if ($request->filled('search')) {
+        $ordersQuery->where(function ($query) use ($request) {
+        $query->where('orders.order_id', 'like', '%' . $request->search . '%')
+              ->orWhereHas('customer.user', function ($q) use ($request) {
+                  $q->where('name', 'like', '%' . $request->search . '%');
+              });
+    });
     }
 
     // Urutan: unpaid -> due soonest, paid -> terbaru

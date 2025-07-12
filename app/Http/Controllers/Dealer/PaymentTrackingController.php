@@ -23,19 +23,30 @@ public function index(Request $request)
             $query->where('dealer_id', $dealerId);
         });
 
-    // Filter by payment method
+    // Filter: payment method
     if ($request->filled('method')) {
         $paymentsQuery->where('payment_method', $request->method);
     }
 
-    // Filter by customer name
-    if ($request->filled('customer')) {
-        $paymentsQuery->whereHas('order.customer.user', function ($q) use ($request) {
-            $q->where('name', 'like', '%' . $request->customer . '%');
-        });
-    }
+// Filter: general keyword (customer name, car code, order ID)
+if ($request->filled('search')) {
+    $search = strtolower($request->search);
 
-    // Filter by date range (fix name)
+    $paymentsQuery->where(function ($query) use ($search) {
+        $query->whereHas('order.customer.user', function ($q) use ($search) {
+            $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
+        })
+        ->orWhereHas('order.car', function ($q) use ($search) {
+            $q->whereRaw('LOWER(car_code) LIKE ?', ["%{$search}%"]);
+        })
+        ->orWhereHas('order', function ($q) use ($search) {
+            $q->where('order_id', 'like', "%{$search}%");
+        });
+    });
+}
+
+
+    // Filter: date range
     if ($request->filled('from')) {
         $paymentsQuery->whereDate('payment_date', '>=', $request->from);
     }

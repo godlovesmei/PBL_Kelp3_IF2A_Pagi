@@ -1,7 +1,7 @@
 <div x-data="{ openChat: false, chatMessage: '' }" class="fixed bottom-5 right-5 z-50">
     <!-- WhatsApp Floating Button -->
     <button
-        class="w-10 h-10 sm:w-12 sm:h-12 bg-[#25D366] text-white rounded-full shadow-lg hover:bg-[#1DA851] transition duration-300 flex items-center justify-center"
+        class="w-10 h-10 sm:w-12 sm:h-12 bg-[#257f6f] text-white rounded-full shadow-lg hover:bg-[#22544c] transition duration-300 flex items-center justify-center"
         @click="openChat = true"
         aria-label="Open WhatsApp Chat"
     >

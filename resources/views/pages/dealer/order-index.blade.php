@@ -27,7 +27,7 @@
       <select name="status"
               class="w-full border rounded px-3 py-2 text-sm dark:bg-gray-900 dark:text-white dark:border-gray-700">
         <option value="">All</option>
-        @foreach(['pending', 'confirm', 'processing', 'shipped', 'completed'] as $status)
+        @foreach(['pending', 'confirm', 'processing', 'shipped', 'completed', 'cancelled'] as $status)
           <option value="{{ $status }}" {{ request('status') === $status ? 'selected' : '' }}>
             {{ ucfirst($status) }}
           </option>
@@ -131,6 +131,7 @@
             'processing' => 'bg-yellow-400 text-black',
             'shipped' => 'bg-purple-600',
             'completed' => 'bg-green-600',
+            'cancelled' => 'bg-red-500',
             default => 'bg-gray-400'
           } }}">
           {{ ucfirst($order->order_status) }}
@@ -185,7 +186,7 @@
         <select name="status" x-model="selectedStatus"
           class="w-full sm:w-64 rounded-lg border-gray-300 dark:border-gray-700 px-4 py-2 text-sm dark:bg-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition">
           <option value="" disabled selected>Set status</option>
-          @foreach(['confirm', 'processing', 'shipped', 'completed'] as $statusOption)
+          @foreach(['confirm', 'processing', 'shipped', 'completed', 'cancelled'] as $statusOption)
             <option value="{{ $statusOption }}" @if($order->order_status === $statusOption) disabled @endif>
               {{ ucfirst($statusOption) }}
             </option>

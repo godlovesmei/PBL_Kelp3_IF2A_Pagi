@@ -39,11 +39,12 @@ SVG,
 </svg>
 SVG,
 
-    'package' => <<<SVG
+'wrench-screwdriver' => <<<SVG
 <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2">
-  <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4a2 2 0 001-1.73z"/>
-  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-  <line x1="12" y1="22.08" x2="12" y2="12"/>
+  <path d="M14.7 6.3L12 3.6 8.3 7.3l2.7 2.7 3.7-3.7z"/>
+  <path d="M13.4 10.6l-5.4 5.4-2.1.7.7-2.1 5.4-5.4"/>
+  <path d="M16 17l4 4"/>
+  <path d="M20 17l-4 4"/>
 </svg>
 SVG,
 

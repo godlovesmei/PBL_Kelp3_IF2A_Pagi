@@ -171,10 +171,6 @@ public function show($orderId)
             'payment_proof' => $path,
         ]);
 
-        $order->update([
-            'order_status' => 'processing',
-        ]);
-
         return back()->with('success', 'Down payment proof uploaded successfully.');
     }
 

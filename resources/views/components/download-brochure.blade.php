@@ -1,7 +1,7 @@
 <a
     href="{{ route('pages.brochure.index') }}"
     target="_blank"
-    class="fixed bottom-20 right-5 z-50 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition duration-300"
+    class="fixed bottom-20 right-5 z-50 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-red-600 text-gray-200 rounded-full shadow-lg hover:bg-red-700 transition duration-300"
     aria-label="Download Brochure"
 >
     <!-- Download Brochure Icon -->

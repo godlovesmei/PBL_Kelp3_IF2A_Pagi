@@ -5,277 +5,242 @@
     <title>Invoice</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f5f7fa;
-            color: #333;
-            padding: 40px;
-            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            margin: 40px;
+            color: #1f2937;
+            background-color: #fff;
         }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+        .logo {
+            width: 120px;
+            margin-bottom: 0;
+            float: left;
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 40px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 15px;
+            margin-bottom: 35px;
         }
 
-        .header p {
+        .header-title {
+            text-align: right;
+            flex: 1;
+        }
+
+        .header-title h2 {
+            font-size: 26px;
+            color: #111827;
+            margin: 5px 0;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .header-title p {
             color: #888;
             margin-bottom: 4px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-top: 0;
         }
 
-        .header h2 {
-            font-size: 28px;
-            margin: 0;
-            color: #0f1530;
+        .info {
+            margin-bottom: 25px;
+            line-height: 1.6;
         }
 
-        .header h3 {
-            font-size: 18px;
-            font-weight: 400;
-            color: #666;
+        .info p {
+            margin: 5px 0;
         }
 
-        .success-box {
-            background-color: #e0f7ec;
-            color: #2e7d32;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .success-box span {
-            font-weight: bold;
-        }
-
-        .section {
-            margin-bottom: 32px;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #374151;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 6px;
-        }
-
-        /* Ensure label and value always align in two columns */
-        .info-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 2px;
-            margin-bottom: 0;
-        }
-        .info-table td {
-            font-size: 15px;
-            padding: 4px 0;
-            vertical-align: top;
-        }
-        .info-label {
-            width: 180px;
-            color: #666;
-            font-weight: 500;
-            text-align: left;
-            padding-right: 16px;
-            padding-left: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kiri */
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-        .info-value {
-            color: #111827;
-            font-weight: 500;
-            word-break: break-word;
-            padding-left: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kiri */
-            padding-right: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kanan */
-            letter-spacing: 0.5px;
-        }
-
-        .success {
-            color: #16a34a;
-            font-weight: bold;
-            padding-left: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kiri */
-            padding-right: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kanan */
-            padding: 2px 8px;
-            background: #e5fbe5;
-            border-radius: 4px;
-        }
-
-        .paid {
-            color: #16a34a;
-            font-weight: bold;
-            padding: 2px 8px;
-            padding-left: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kiri */
-            padding-right: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kanan */
-            background: #e5fbe5;
-            border-radius: 4px;
+        h3 {
+            color: #2563eb;
+            margin-top: 30px;
+            font-size: 17px;
+            border-left: 5px solid #3b82f6;
+            padding-left: 12px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 12px;
-        }
-
-        th, td {
-            border: 1px solid #d1d5db;
-            padding: 8px;
-            padding-left: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kiri */
-            padding-right: 16px; /* Tambahkan ini untuk memberi ruang dari sisi kanan */
-            text-align: left;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         th {
             background-color: #f3f4f6;
+            font-weight: 600;
+            color: #1f2937;
+            text-align: left;
         }
 
-        .total {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: right;
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 10px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .summary-box {
             margin-top: 30px;
-            color: #1f2937;
+            padding: 14px 18px;
+            background-color: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            font-weight: 600;
         }
 
         .footer {
-            text-align: center;
+            margin-top: 45px;
+            font-size: 11px;
             color: #6b7280;
-            font-size: 14px;
-            margin-top: 40px;
+            text-align: center;
+            border-top: 1px dashed #d1d5db;
+            padding-top: 10px;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 12px;
-            }
-            .info-label {
-                width: 110px;
-            }
+        /* Clear floats after the header */
+        .header::after {
+            content: "";
+            display: table;
+            clear: both;
         }
     </style>
 </head>
 <body>
-    <div class="container">
 
-        <div class="header">
-            <p>Invoice {{ strtoupper($type) }}</p>
-            <h2>Thank You!</h2>
-            <h3>Your transaction has been completed</h3>
-        </div>
-
-        <div class="success-box">
-            Your order <span>{{ $order->order_id }}</span> has been successfully processed.
-        </div>
-
-        <div class="section">
-            <div class="section-title">Order Details</div>
-            <table class="info-table">
-                <tr>
-                    <td class="info-label">Product</td>
-                    <td class="info-value">{{ $order->car->brand }} - {{ $order->car->model }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Invoice Number</td>
-                    <td class="info-value">{{ $order->order_id }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Transaction Status</td>
-                    <td><span class="success">SUCCESS</span></td>
-                </tr>
-                <tr>
-                    <td class="info-label">Payment Status</td>
-                    <td><span class="paid">PAID</span></td>
-                </tr>
-                <tr>
-                    <td class="info-label">Date</td>
-                    <td class="info-value">{{ \Carbon\Carbon::parse($payment->payment_date)->format('Y/m/d H:i:s') }} WIB</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section">
-            <div class="section-title">Account Information</div>
-            <table class="info-table">
-                <tr>
-                    <td class="info-label">Name</td>
-                    <td class="info-value">{{ $order->customer->user->name ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Address</td>
-                    <td class="info-value">{{ $order->customer->user->address ?? '-' }}</td>
-                </tr>
-            </table>
-        </div>
-
-        @if($type === 'dp' && $payment)
-            <div class="section">
-                <div class="section-title">Down Payment Details</div>
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th>Amount</th>
-                    </tr>
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y H:i:s') }} WIB</td>
-                        <td>Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
-                    </tr>
-                </table>
-            </div>
-        @elseif($type === 'cash' && $payment)
-            <div class="section">
-                <div class="section-title">Cash Payment Details</div>
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th>Amount</th>
-                    </tr>
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
-                        <td>Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
-                    </tr>
-                </table>
-            </div>
-        @elseif($type === 'installment' && $payment && $installment)
-            <div class="section">
-                <div class="section-title">Installment Payment #{{ $installment->installment_number }}</div>
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th>Due Date</th>
-                        <th>Amount</th>
-                    </tr>
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('d M Y') }}</td>
-                        <td>Rp {{ number_format($installment->amount, 0, ',', '.') }}</td>
-                    </tr>
-                </table>
-            </div>
-        @endif
-
-        <div class="total">
-            Total Payment: Rp {{ number_format($payment->amount ?? 0, 0, ',', '.') }}
-        </div>
-
-        <div class="footer">
-            Thank you for your payment.<br>
-            Please keep this invoice as a valid proof of payment.
-        </div>
-
+    {{-- Header --}}
+   <div class="header">
+    <img src="{{ public_path('images/companylogo.png') }}" class="logo" alt="Company Logo">
+    <div class="header-title">
+        <p>
+            @if($type === 'dp')
+                DOWN PAYMENT
+            @elseif($type === 'installment')
+                INSTALLMENT
+            @elseif($type === 'cash')
+                CASH
+            @else
+                INVOICE
+            @endif
+        </p>
+        <h2>INVOICE</h2>
     </div>
+</div>
+
+    {{-- Info Pembeli --}}
+    <div class="info">
+        <p><strong>Nama Pelanggan:</strong> {{ $order->customer->user->name ?? '-' }}</p>
+        <p><strong>No. Order:</strong> {{ $order->order_id }}</p>
+        <p><strong>Mobil:</strong> {{ $order->car->brand }} {{ $order->car->model }}</p>
+    </div>
+
+    {{-- Detail Order --}}
+    <h3>Order Details</h3>
+    <table>
+        <tbody>
+            <tr>
+                <th>Invoice Number</th>
+                <td>{{ $order->order_id }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Status</th>
+                <td><span style="color:#16a34a;font-weight:bold;background:#e5fbe5;padding:2px 8px;border-radius:4px;">SUCCESS</span></td>
+            </tr>
+            <tr>
+                <th>Payment Status</th>
+                <td><span style="color:#16a34a;font-weight:bold;background:#e5fbe5;padding:2px 8px;border-radius:4px;">PAID</span></td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ \Carbon\Carbon::parse($order->created_at)->format('Y/m/d H:i:s') }} WIB</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{-- Detail Akun --}}
+    <h3>Account Information</h3>
+    <table>
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ $order->customer->user->name ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ $order->customer->user->address ?? '-' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    @if($type === 'dp' && $payment)
+        <h3>Down Payment Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y H:i:s') }} WIB</td>
+                    <td>Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    @elseif($type === 'cash' && $payment)
+        <h3>Cash Payment Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
+                    <td>Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    @elseif($type === 'installment' && $payment && $installment)
+        <h3>Installment Payment #{{ $installment->installment_number }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Due Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($installment->due_date)->format('d M Y') }}</td>
+                    <td>Rp {{ number_format($installment->amount, 0, ',', '.') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    @endif
+
+    <div class="summary-box">
+        Total Payment: Rp {{ number_format($payment->amount ?? 0, 0, ',', '.') }}
+    </div>
+
+    <div class="footer">
+        Thank you for your payment.<br>
+        Please keep this invoice as a valid proof of payment.
+    </div>
+
 </body>
 </html>

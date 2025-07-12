@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="mt-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
-      <h2 class="mb-6 text-2xl font-bold uppercase text-blue-900 flex items-center">
+    <h2 class="mb-6 text-2xl font-bold uppercase text-blue-900 flex items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13l2-2m0 0l7-7 7 7M13 5v6h6" />
         </svg>
@@ -10,7 +10,7 @@
     </h2>
     <div class="border-t-4 border-blue-700 mb-6"></div>
 
-@if(isset($installmentsToConfirm) && $installmentsToConfirm->count())
+    @if(isset($installmentsToConfirm) && $installmentsToConfirm->count())
     <div class="mb-6 bg-yellow-50 border border-yellow-200 rounded-xl shadow p-6">
         <h2 class="font-bold text-lg mb-2 text-yellow-800 flex items-center">
             <i class="fas fa-exclamation-circle mr-2 text-yellow-600"></i>
@@ -18,47 +18,52 @@
         </h2>
         <div class="divide-y divide-yellow-200">
             @foreach($installmentsToConfirm as $cicilan)
-                <div class="py-3 flex flex-col sm:flex-row sm:items-center">
-                    <div class="flex-1">
-                        <div>
-                            <span class="font-semibold">{{ $cicilan->order->customer->user->name ?? '-' }}</span>
-                            <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded">
-                                {{ $cicilan->order->car->brand ?? '-' }} {{ $cicilan->order->car->model ?? '-' }}
-                            </span>
-                        </div>
-                        <div class="text-xs text-gray-500 mt-1">
-                            Due: {{ \Carbon\Carbon::parse($cicilan->due_date)->format('d M Y') }} |
-                            Amount: <span class="font-mono">Rp{{ number_format($cicilan->amount, 0, ',', '.') }}</span>
-                        </div>
+            <div class="py-3 flex flex-col sm:flex-row sm:items-center">
+                <div class="flex-1">
+                    <div>
+                        <span class="font-semibold">{{ $cicilan->order->customer->user->name ?? '-' }}</span>
+                        <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded">
+                            {{ $cicilan->order->car->brand ?? '-' }} {{ $cicilan->order->car->model ?? '-' }}
+                        </span>
                     </div>
-                    <div class="flex gap-2 mt-2 sm:mt-0 sm:ml-4">
-                        <form method="POST" action="{{ route('dealer.installments.confirm', $cicilan->installment_id) }}">
-                            @csrf
-                            <button type="submit" class="text-green-600 hover:bg-green-100 rounded-full p-2 transition"
-                                title="Confirm Payment"
-                                onclick="return confirm('Confirm this installment payment?')">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </form>
-                        <form method="POST" action="{{ route('dealer.installments.reject', $cicilan->installment_id) }}">
-                            @csrf
-                            <button type="submit" class="text-red-600 hover:bg-red-100 rounded-full p-2 transition"
-                                title="Reject Payment"
-                                onclick="return confirm('Reject this installment payment?')">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </form>
+                    <div class="text-xs text-gray-500 mt-1">
+                        Due: {{ \Carbon\Carbon::parse($cicilan->due_date)->format('d M Y') }} |
+                        Amount: <span class="font-mono">Rp{{ number_format($cicilan->amount, 0, ',', '.') }}</span>
                     </div>
                 </div>
+                <div class="flex gap-2 mt-2 sm:mt-0 sm:ml-4">
+                    <form method="POST" action="{{ route('dealer.installments.confirm', $cicilan->installment_id) }}">
+                        @csrf
+                        <button type="submit" class="text-green-600 hover:bg-green-100 rounded-full p-2 transition"
+                            title="Confirm Payment"
+                            onclick="return confirm('Confirm this installment payment?')">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ route('dealer.installments.reject', $cicilan->installment_id) }}">
+                        @csrf
+                        <button type="submit" class="text-red-600 hover:bg-red-100 rounded-full p-2 transition"
+                            title="Reject Payment"
+                            onclick="return confirm('Reject this installment payment?')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
             @endforeach
         </div>
     </div>
-@endif
+    @endif
 
     {{-- FILTER FORM --}}
     @if(!isset($order))
     <form method="GET" action="{{ route('pages.dealer.installments') }}" class="mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label class="text-xs font-semibold text-gray-600">Search</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Customer, Car, Order ID..."
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            </div>
             <div>
                 <label class="text-xs font-semibold text-gray-600">Payment Status</label>
                 <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
@@ -69,11 +74,13 @@
             </div>
             <div>
                 <label class="text-xs font-semibold text-gray-600">Order Date From</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                <input type="date" name="date_from" value="{{ request('date_from') }}"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
             </div>
             <div>
                 <label class="text-xs font-semibold text-gray-600">Order Date To</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                <input type="date" name="date_to" value="{{ request('date_to') }}"
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
             </div>
         </div>
         <div class="flex flex-wrap justify-end gap-3 mt-4">
@@ -192,9 +199,6 @@
         <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
             <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-4">Installment Orders</h4>
             {{-- Sticky search bar --}}
-            <div class="sticky top-0 z-10 bg-white dark:bg-gray-900 py-2 mb-2 shadow-sm rounded">
-                <input type="search" placeholder="Quick search by customer, order, car..." class="w-full border px-3 py-2 rounded-lg text-sm" oninput="filterTable(this)">
-            </div>
             <div class="overflow-x-auto">
                 <table id="orderTable" class="min-w-full table-auto text-sm text-gray-700 dark:text-gray-100">
                     <thead class="bg-blue-100 dark:bg-gray-800 text-blue-900 dark:text-gray-300">
@@ -289,38 +293,3 @@
     @endif
 </div>
 @endsection
-
-@push('scripts')
-<script>
-function filterTable(input) {
-    const filter = input.value.toLowerCase();
-    const table = document.getElementById('orderTable');
-    const rows = table.querySelectorAll('tbody tr');
-    let anyVisible = false;
-
-    rows.forEach(row => {
-        // Jangan filter baris kosong (misal "No installment orders found.")
-        if (row.querySelectorAll('td').length === 1) {
-            row.style.display = '';
-            return;
-        }
-        // Gabung seluruh teks cell dalam satu string
-        const rowText = Array.from(row.querySelectorAll('td'))
-            .map(td => td.innerText.toLowerCase())
-            .join(' ');
-        if (rowText.includes(filter)) {
-            row.style.display = '';
-            anyVisible = true;
-        } else {
-            row.style.display = 'none';
-        }
-    });
-
-    // Tampilkan/hidden baris "No installment orders found."
-    const emptyRow = table.querySelector('tbody tr td[colspan]');
-    if (emptyRow) {
-        emptyRow.parentElement.style.display = anyVisible ? 'none' : '';
-    }
-}
-</script>
-@endpush
