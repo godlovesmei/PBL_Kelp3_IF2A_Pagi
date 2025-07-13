@@ -1,7 +1,10 @@
-- Link Video Presentasi: https://youtu.be/ewwh3TE3lyk?si=Nefud2H52_xEkf5q
-- Link PPT dan Laporan ATS: https://drive.google.com/drive/folders/1uMICl7Z-YArTyE_wBuG7Snr23ZVJ4xrV?usp=sharing
-
 # Venus Cars – Web-Based Car Trading Application
+
+📽️ **Presentation Video (ATS)**: [Watch on YouTube](https://youtu.be/ewwh3TE3lyk?si=Nefud2H52_xEkf5q)  
+📽️ **Presentation Video (AAS)**: [Watch on YouTube](https://youtu.be/ewwh3TE3lyk?si=Nefud2H52_xEkf5q)  
+🎞️ **Full Application Walkthrough**: [Watch on YouTube](https://youtu.be/your-demo-link)  
+📂 **ATS Documents**: [Open Google Drive Folder](https://drive.google.com/drive/folders/1uMICl7Z-YArTyE_wBuG7Snr23ZVJ4xrV?usp=sharing)  
+📂 **AAS Documents**: [Open Google Drive Folder](https://drive.google.com/drive/folders/1uMICl7Z-YArTyE_wBuG7Snr23ZVJ4xrV?usp=sharing)
 
 This is the official repository for **Venus Cars**, a web-based car trading platform developed as part of the *Proyek Berbasis Pembelajaran (PBL)* course in the Informatics Engineering Study Program, Department of Informatics Engineering, Politeknik Negeri Batam.
 
@@ -10,6 +13,19 @@ This is the official repository for **Venus Cars**, a web-based car trading plat
 ## 🚘 About the Project
 
 Venus Cars is an online platform that allows users to browse, filter, and purchase cars with various payment methods such as cash or credit. The system includes two main user roles: **Seller (Dealer)** and **Buyer (Customer)**, each with their own dashboard and functionality.
+
+---
+
+## 👥 Project Developers
+
+This application was developed by the following students from Politeknik Negeri Batam:
+
+- **Meiske Priskilla Sahertian** – Project Leader / 3312401001  
+- **Marsha Olivia** – 3312401006  
+- **Neli Fauziyah** – 3312401007 
+- **Fitri Nabila** – 3312401012  
+
+Supervised by: *Yeni Rokhayati, S.Si., M.Sc*
 
 ---
 
@@ -44,7 +60,7 @@ Venus Cars is an online platform that allows users to browse, filter, and purcha
 | FR-30 | Make Payment             | Buyer     | Perform payments: down payment, cash, or installments             |
 | FR-31 | Download Invoice         | Buyer     | Download purchase invoice in digital format                       |
 
-> 📌 *For full functional requirement list, refer to the `docs/requirements.md` (optional).*
+> 📌 *For full functional requirement list, refer to the `https://drive.google.com/drive/folders/1kdFlhHaBG9p1BQb1ac9227wTVZM8qhNw?usp=sharing`.*
 
 ---
 
@@ -81,7 +97,7 @@ Update `.env` to match your local database configuration.
 php artisan migrate
 ```
 
-> Alternatively, you can import the provided `db_vcars.sql` into MySQL manually.
+> Alternatively, you can manually import the provided `db_vcars.sql` file into your MySQL database (see the previous Google Drive link).
 
 ### 5. Run the Server
 
@@ -91,19 +107,6 @@ php artisan serve
 
 Then access the app at:  
 [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
----
-
-## 👥 Project Developers
-
-This application was developed by the following students from Politeknik Negeri Batam:
-
-- **Meiske Priskilla Sahertian** – Project Leader & Frontend Developer  
-- **Marsha Olivia** – Backend Developer  
-- **Neli Fauziyah** – Database & Integration  
-- **Fitri Nabila** – UI/UX Designer & Tester  
-
-Supervised by: *Yeni Rokhayati, S.Si., M.Sc*
 
 ---
 
