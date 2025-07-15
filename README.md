@@ -1,10 +1,11 @@
-# Venus Cars – Web-Based Car Trading Application
+# Venus Cars – Web-Based Car Sales Application
 
+📽️ **Presentation Video (AAS)**: [Watch on YouTube](https://youtu.be/YTQ31TIfkBg?si=6taJc82NuBjANB4v)
 📽️ **Presentation Video (ATS)**: [Watch on YouTube](https://youtu.be/ewwh3TE3lyk?si=Nefud2H52_xEkf5q)  
-📽️ **Presentation Video (AAS)**: [Watch on YouTube](https://youtu.be/ewwh3TE3lyk?si=Nefud2H52_xEkf5q)  
-🎞️ **Full Application Walkthrough**: [Watch on YouTube](https://youtu.be/your-demo-link)  
+📽️ **Product Demonstration**: [Watch on YouTube](https://youtu.be/90eOflVbOpo?si=5Cwjt-RvVxRrgb8U)
+🎞️ **Full Application Walkthrough**: [Watch on YouTube](https://youtu.be/your-demo-link)
+📂 **AAS Documents**: [Open Google Drive Folder](https://drive.google.com/drive/folders/1kdFlhHaBG9p1BQb1ac9227wTVZM8qhNw?usp=sharing)
 📂 **ATS Documents**: [Open Google Drive Folder](https://drive.google.com/drive/folders/1uMICl7Z-YArTyE_wBuG7Snr23ZVJ4xrV?usp=sharing)  
-📂 **AAS Documents**: [Open Google Drive Folder](https://drive.google.com/drive/folders/1uMICl7Z-YArTyE_wBuG7Snr23ZVJ4xrV?usp=sharing)
 
 This is the official repository for **Venus Cars**, a web-based car trading platform developed as part of the *Proyek Berbasis Pembelajaran (PBL)* course in the Informatics Engineering Study Program, Department of Informatics Engineering, Politeknik Negeri Batam.
 
