@@ -7,7 +7,7 @@ This is the official repository for **Venus Cars**, a web-based car trading plat
 - 📽️ **AAS Presentation**: [Watch on YouTube](https://youtu.be/YTQ31TIfkBg?si=6taJc82NuBjANB4v)  
 - 📽️ **ATS Presentation**: [Watch on YouTube](https://youtu.be/ewwh3TE3lyk?si=Nefud2H52_xEkf5q)  
 - 🎞️ **Product Demonstration**: [Watch on YouTube](https://youtu.be/90eOflVbOpo?si=5Cwjt-RvVxRrgb8U)  
-- 📺 **Full Walkthrough**: [Watch on YouTube](https://youtu.be/your-demo-link) <!-- Replace with actual link -->
+- 📺 **All Features Explained!**: [Watch on YouTube](https://youtu.be/Dq1YVKdbofI?si=FOPYtZSYKDsSh1U-)
 
 ---
 
@@ -105,7 +105,7 @@ Update `.env` to match your local database configuration.
 php artisan migrate
 ```
 
-> Alternatively, you can manually import the provided `db_vcars.sql` file into your MySQL database (see the previous Google Drive link).
+> Alternatively, you can manually import the provided `db_vcars.sql` file into your MySQL database (see the previous Google Drive AAS Documents link).
 
 ### 5. Run the Server
 
