@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,18 +26,21 @@
 
     <!-- Alpine.js cloak -->
     <style>
-        [x-cloak] { display: none !important; }
+        [x-cloak] {
+            display: none !important;
+        }
     </style>
 
     @stack('styles')
 </head>
+
 <body class="relative flex flex-col min-h-screen bg-white text-gray-900 overflow-x-hidden">
 
     <!-- Alert -->
-    @if(session('error'))
+    @if (session('error'))
         <x-alert type="error" :message="session('error')" />
     @endif
-    @if(session('success'))
+    @if (session('success'))
         <x-alert type="success" :message="session('success')" />
     @endif
 
@@ -61,4 +65,5 @@
 
     @stack('scripts')
 </body>
+
 </html>

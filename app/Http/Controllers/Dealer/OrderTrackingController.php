@@ -32,13 +32,13 @@ class OrderTrackingController extends Controller
         if ($search) {
             $orders->where(function ($q) use ($search) {
                 $q->where('order_id', 'like', "%{$search}%")
-                  ->orWhereHas('customer.user', function ($userQuery) use ($search) {
-                      $userQuery->where(function ($sub) use ($search) {
-                          $sub->where('name', 'like', "%{$search}%")
-                              ->orWhere('email', 'like', "%{$search}%")
-                              ->orWhere('phone', 'like', "%{$search}%");
-                      });
-                  });
+                ->orWhereHas('customer.user', function ($userQuery) use ($search) {
+                    $userQuery->where(function ($sub) use ($search) {
+                        $sub->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%");
+                    });
+                });
             });
         }
 
@@ -111,7 +111,7 @@ class OrderTrackingController extends Controller
         $order->save();
 
         return redirect()->route('pages.dealer.order-index', ['status' => $order->order_status])
-                         ->with('success', 'Order status updated successfully.');
+        ->with('success', 'Order status updated successfully.');
     }
 
     // Status checker khusus, bisa disesuaikan logikanya
